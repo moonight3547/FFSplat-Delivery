@@ -2,9 +2,11 @@
 
 核查日期：2026-10-30。读取项目 AGENTS、ProblemDesc、HANDOFF、研究文档、SUMMARY、配方 JSON、交付三例原始摘要和关键研究脚本。下述仅描述本地证据，未访问 GPU 当前队列。
 
+**06:10状态修订**：本文主体保留首轮本地归档的历史锐化配方。连续研究已访问主GPU并完成两次证据同步，见 [AUTO_RESEARCH](AUTO_RESEARCH.md) 与 [同步02](SYNC_20261030_02.md)。控制端当前 `run_pipeline.py` 已改回 **raw ReSplat初始化**；后续实验统一用 C_raw（5K、匹配LR、无reset、DSSIM .6、scaling LR .01、结构截止1250），不再把gain=2设为默认。新raw/sharp配对原始JSON仍待核验，历史60.20不迁移到新配方。
+
 ## 已建立的工作基础
 
-固定 ReSplat 初始化，FastGS 短程优化已经比默认 10K 调度更合算。当前统一交付配方为：一次 16 context 前馈 → opacity logit 放大 2 倍 → FastGS 5K，位置 LR 日程 5K，关闭 opacity reset，DSSIM 权重 0.6，scaling LR 0.01，结构操作截止 1250 步。
+固定 ReSplat 初始化，FastGS 短程优化已经比默认 10K 调度更合算。下表历史统一配方为：一次 16 context 前馈 → opacity logit 放大 2 倍 → FastGS 5K，位置 LR 日程 5K，关闭 opacity reset，DSSIM 权重 0.6，scaling LR 0.01，结构操作截止 1250 步。
 
 来源：`research/experiments/delivery_check.sh`；原始记录在 `records/artifacts-20261030b/h1-delivery/*/summary.json`。
 

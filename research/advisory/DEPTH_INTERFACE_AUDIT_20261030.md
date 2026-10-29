@@ -35,7 +35,7 @@ ReSplat `src/geometry/projection.py::get_world_rays` 把相机射线除以其z�
 1. 单高斯、单射线的normalized-depth值与alpha梯度检查；双层遮挡例核对expected/accumulated定义。
 2. 固定已知相机和少量高斯，比较编码RGB解码的alpha、camera-Z和值域，检查实际CUDA中的颜色clamp与SH约定。
 3. 真实sidecar做图像名、尺度、分辨率、camera-Z语义检查；同时保存先验stage、字段名及生产代码hash。
-4. 修复版depth-weight=0与原控制完全配对，然后才进入 EXEPERIMENTS 的全图/双mask对照。pose保持关闭。
+4. 修复版depth-weight=0与原控制完全配对，然后才进入 EXPERIMENTS 的全图/双mask对照。pose保持关闭。
 
 这几项针对真实数学/接口风险，值得先验证；本轮不要求新增一套泛化测试框架，也不对尚未运行的深度方案预判增益。
 

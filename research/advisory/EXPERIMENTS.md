@@ -4,7 +4,9 @@
 
 ## 共同基线与裁决规则
 
-控制组 C = 本目录 CURRENT_STATE 中的统一交付配方。相同代码/依赖/GPU UUID、prepared input、训练/测试划分、seed 和最终官方渲染。默认三例，单卡串行、无并发；控制和候选交错顺序运行，失败或超预算 case 保留，不从完整集合均值删除。
+**06:10控制组修订**：后续 C 统一指 C_raw = **未做opacity锐化的原始ReSplat初始化** + FastGS5K、位置LR长度5K、无reset、DSSIM .6、scaling LR .01、结构截止1250。历史锐化h1-delivery另记 C_sharp；其指标不替代新C_raw对照。先同步新配方原始记录并锁定run identity。
+
+相同代码/依赖/GPU UUID、prepared input、训练/测试划分、seed 和最终官方渲染。默认三例，单卡串行、无并发；控制和候选交错顺序运行，失败或超预算 case 保留，不从完整集合均值删除。
 
 先处理 CODING_NOTES 的计时问题。记录 A、R、B、E2E 和各自进程墙钟；预处理、先验提取、统计预计算、读写、导出都不免费。评价成本另列，不能混入候选而不混入参考。参考仍是同卡同输入随机 FastGS30K。
 

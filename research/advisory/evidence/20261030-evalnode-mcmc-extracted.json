@@ -1,0 +1,146 @@
+[
+  {
+    "tag": "w_hw_b90_c3_r50",
+    "file": "outputs/experiments/mcmcGrid/w_hw_b90_c3_r50/module_b.json",
+    "record": {
+      "total_seconds": 77.19154,
+      "train_seconds": 73.184651,
+      "steps": 3990,
+      "num_init_gaussians": 387019,
+      "num_final_gaussians": 1161057,
+      "init_format": "ply",
+      "init_path": null,
+      "cap": 1161057,
+      "budget_seconds": 90.0,
+      "psnr": 22.94,
+      "ssim": 0.8094,
+      "lpips": 0.1446
+    }
+  },
+  {
+    "tag": "w_hw_b90_c3",
+    "file": "outputs/experiments/mcmcGrid/w_hw_b90_c3/module_b.json",
+    "record": {
+      "total_seconds": 77.328659,
+      "train_seconds": 73.063962,
+      "steps": 4386,
+      "num_init_gaussians": 387019,
+      "num_final_gaussians": 1161057,
+      "init_format": "ply",
+      "init_path": null,
+      "cap": 1161057,
+      "budget_seconds": 90.0,
+      "psnr": 22.916,
+      "ssim": 0.81,
+      "lpips": 0.1448
+    }
+  },
+  {
+    "tag": "w_co_b90_c3_r50",
+    "file": "outputs/experiments/mcmcGrid/w_co_b90_c3_r50/module_b.json",
+    "record": {
+      "total_seconds": 78.044566,
+      "train_seconds": 73.040157,
+      "steps": 2628,
+      "num_init_gaussians": 488831,
+      "num_final_gaussians": 1466493,
+      "init_format": "ply",
+      "init_path": null,
+      "cap": 1466493,
+      "budget_seconds": 90.0,
+      "psnr": 27.597,
+      "ssim": 0.8917,
+      "lpips": 0.1975
+    }
+  },
+  {
+    "tag": "w_hw_b90_c2",
+    "file": "outputs/experiments/mcmcGrid/w_hw_b90_c2/module_b.json",
+    "record": {
+      "total_seconds": 76.326063,
+      "train_seconds": 73.166665,
+      "steps": 5293,
+      "num_init_gaussians": 387019,
+      "num_final_gaussians": 774038,
+      "init_format": "ply",
+      "init_path": null,
+      "cap": 774038,
+      "budget_seconds": 90.0,
+      "psnr": 22.905,
+      "ssim": 0.8082,
+      "lpips": 0.1459
+    }
+  },
+  {
+    "tag": "w_hw_b45_c2",
+    "file": "outputs/experiments/mcmcGrid/w_hw_b45_c2/module_b.json",
+    "record": {
+      "total_seconds": 39.044702,
+      "train_seconds": 35.843705,
+      "steps": 2577,
+      "num_init_gaussians": 387019,
+      "num_final_gaussians": 774038,
+      "init_format": "ply",
+      "init_path": null,
+      "cap": 774038,
+      "budget_seconds": 45.0,
+      "psnr": 22.809,
+      "ssim": 0.8008,
+      "lpips": 0.164
+    }
+  },
+  {
+    "tag": "w_co_b60_c2",
+    "file": "outputs/experiments/mcmcGrid/w_co_b60_c2/module_b.json",
+    "record": {
+      "total_seconds": 51.761445,
+      "train_seconds": 48.050398,
+      "steps": 2034,
+      "num_init_gaussians": 488831,
+      "num_final_gaussians": 921756,
+      "init_format": "ply",
+      "init_path": null,
+      "cap": 977662,
+      "budget_seconds": 60.0,
+      "psnr": 27.074,
+      "ssim": 0.8763,
+      "lpips": 0.2214
+    }
+  },
+  {
+    "tag": "w_co_b90_c3",
+    "file": "outputs/experiments/mcmcGrid/w_co_b90_c3/module_b.json",
+    "record": {
+      "total_seconds": 77.825265,
+      "train_seconds": 72.960904,
+      "steps": 3042,
+      "num_init_gaussians": 488831,
+      "num_final_gaussians": 1429939,
+      "init_format": "ply",
+      "init_path": null,
+      "cap": 1466493,
+      "budget_seconds": 90.0,
+      "psnr": 27.558,
+      "ssim": 0.8912,
+      "lpips": 0.1978
+    }
+  },
+  {
+    "tag": "w_hw_b90_c4",
+    "file": "outputs/experiments/mcmcGrid/w_hw_b90_c4/module_b.json",
+    "record": {
+      "total_seconds": 78.269185,
+      "train_seconds": 73.245529,
+      "steps": 3970,
+      "num_init_gaussians": 387019,
+      "num_final_gaussians": 1548076,
+      "init_format": "ply",
+      "init_path": null,
+      "cap": 1548076,
+      "budget_seconds": 90.0,
+      "psnr": 23.048,
+      "ssim": 0.8119,
+      "lpips": 0.1444
+    }
+  }
+]

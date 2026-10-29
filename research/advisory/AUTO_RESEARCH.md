@@ -38,3 +38,11 @@ SAD-GS 深读已完成第一轮：补充专用统计 buffer、计时边界、标
 新增 OPTIMIZER_OPTIONS：将低成本单步信赖域作为E6，不照搬完整二阶框架；VIEW_SELECTION_FEASIBILITY：prepared work没有真实tracks，E2增加来源检查，并排除9份现有相机的主点偏移假设；FASTGS_MECHANISM_AUDIT：基线已有多视角误差结构控制，阈值5不是5视角票数，E4须明确差异，E7仅在支持归一化诊断成立后考虑。
 
 研究持续进行，目标结束时间仍为17:43:57 +08:00；未达到12小时，不标完成。
+
+## 06:07 — 新MCMC叙述与深度梯度前置问题
+
+提交 `c3c1ee5` 在RESEARCH §15记录MCMC容量/预算网格：已试配置在约77秒达到与25–34秒FastGS接近或更差质量。暂维持FastGS优先；这是新增叙述证据，原始逐run JSON、GPU配对仍未同步，不能升级为“所有MCMC只在>250秒才有效”的普遍结论。
+
+发现 `depth_reg.decode_depth_rgb` 仅detach归一化分母的梯度问题，CPU单高斯反例已保存：真实dD/da=0，当前代理为7.5（a=.4,z=3）。新增DEPTH_INTERFACE_AUDIT，要求先澄清expected/accumulated深度和修正梯度，再进行E3。源代码未修改。
+
+后续工作：继续跟踪06:20左右的候选/baseline和raw/sharp原始证据；研究只拟外观/分阶段参数更新、预算内的几何可信度，避免新增loss堆叠；按现有约束持续至17:43:57。
