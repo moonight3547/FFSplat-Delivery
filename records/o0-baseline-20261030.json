@@ -1,0 +1,85 @@
+{
+  "work": "outputs/O0-20261030",
+  "rows": [
+    {
+      "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+      "psnr": 32.782,
+      "ssim": 0.9498,
+      "lpips": 0.1514,
+      "points": {
+        "psnr": 14.225599999999998,
+        "ssim": 19.984,
+        "lpips": 19.72
+      },
+      "quality_points": 53.9296,
+      "b_seconds": 56.09,
+      "budget_seconds": 94.29,
+      "ratio": 0.5948668999893945,
+      "time_points": 9.002957778013457,
+      "total_points": 62.93255777801346,
+      "valid": true,
+      "iterations": 10000,
+      "gaussians": 210611,
+      "a_seconds": 51.12952518463135,
+      "resplat_seconds": 31.76,
+      "e2e_seconds": 138.97952518463137
+    },
+    {
+      "case": "hw/billboard",
+      "psnr": 22.648,
+      "ssim": 0.7987,
+      "lpips": 0.1598,
+      "points": {
+        "psnr": 6.118399999999999,
+        "ssim": 7.896000000000001,
+        "lpips": 18.04
+      },
+      "quality_points": 32.0544,
+      "b_seconds": 49.31,
+      "budget_seconds": 99.49,
+      "ratio": 0.49562770127651024,
+      "time_points": 11.208273304966438,
+      "total_points": 43.26267330496644,
+      "valid": true,
+      "iterations": 10000,
+      "gaussians": 322684,
+      "a_seconds": 181.86658191680908,
+      "resplat_seconds": 26.76,
+      "e2e_seconds": 257.9365819168091
+    },
+    {
+      "case": "mipnerf360/counter",
+      "psnr": 27.726,
+      "ssim": 0.8879,
+      "lpips": 0.2071,
+      "points": {
+        "psnr": 10.180799999999998,
+        "ssim": 15.032000000000005,
+        "lpips": 8.579999999999998
+      },
+      "quality_points": 33.7928,
+      "b_seconds": 55.5,
+      "budget_seconds": 92.57,
+      "ratio": 0.599546289294588,
+      "time_points": 8.898971349009155,
+      "total_points": 42.69177134900916,
+      "valid": true,
+      "iterations": 10000,
+      "gaussians": 257365,
+      "a_seconds": 89.99262309074402,
+      "resplat_seconds": 34.57,
+      "e2e_seconds": 180.062623090744
+    }
+  ],
+  "mean": {
+    "psnr": 27.718666666666664,
+    "ssim": 0.8788,
+    "lpips": 0.17276666666666668,
+    "quality_points": 39.9256,
+    "time_points": 9.703400810663016,
+    "total_points": 49.62900081066302,
+    "mean_b_seconds": 53.63333333333333,
+    "mean_e2e_seconds": 192.32624339739482,
+    "all_valid": true
+  }
+}
