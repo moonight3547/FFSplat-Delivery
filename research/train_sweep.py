@@ -84,6 +84,10 @@ def main(argv=None):
                         help="sampled-view count needed to densify (upstream hardcodes 5)")
     parser.add_argument("--max_gaussians", type=int, default=None,
                         help="hard cap on Gaussian count, weakest pruned first")
+    parser.add_argument("--limit_seconds", type=float, default=None,
+                        help="stop before this module-B wall clock (train phase only)")
+    parser.add_argument("--limit_reserve", type=float, default=1.5,
+                        help="seconds kept back from --limit_seconds for export")
     parser.add_argument("--lpips_weight", type=float, default=0.0,
                         help="weight of VGG-LPIPS (the scored metric) in the training loss")
     parser.add_argument("--lpips_every", type=int, default=1,
@@ -176,9 +180,15 @@ def main(argv=None):
     ema_loss = 0.0
 
     t_train0 = time.perf_counter()
+    stop_reason = "iterations"
     progress = tqdm(range(1, iterations + 1), desc="FastGS", disable=args.quiet,
                     file=sys.stdout, mininterval=1.0)
     for iteration in range(1, iterations + 1):
+        if args.limit_seconds is not None:
+            spent = time.perf_counter() - t_train0
+            if spent >= args.limit_seconds - args.limit_reserve:
+                stop_reason = "wall_clock"
+                break
         gaussians.update_learning_rate(iteration)
         if iteration % sh_up_every == 0:
             gaussians.oneupSHdegree()
@@ -269,10 +279,11 @@ def main(argv=None):
     record = dict(
         init_ply=str(args.init_ply), init_mode=f"ply:{os.path.basename(args.init_ply)}",
         num_init_gaussians=n_init, num_final_gaussians=int(gaussians.get_xyz.shape[0]),
-        iterations=iterations, snapshots=snaps,
+        iterations=iterations, completed_iterations=iteration, stop_reason=stop_reason,
+        limit_seconds=args.limit_seconds, snapshots=snaps,
         scene_load_seconds=round(scene_load_s, 3), init_seconds=round(init_s, 3),
         train_seconds=round(train_s, 3), total_seconds=round(total_s, 3),
-        iterations_per_second=round(iterations / train_s, 2) if train_s else None,
+        iterations_per_second=round(iteration / train_s, 2) if train_s else None,
         quick_test_psnr=round(final_psnr, 4) if final_psnr is not None else None,
         num_train_views=len(cams_by_scale[scales[-1]]),
         num_test_views=len(scene.getTestCameras()), res_scales=scales, res_until=cuts,
