@@ -34,6 +34,8 @@
 
 不改变ReSplat网络、权重、refine数或context集合，不再调用额外ReSplat来择优。PLY与NPZ的SH必须同步修正，防止B/播放器读到不同资产；位置/scale/quaternion/opacity及高斯数量应一致。
 
+本轮也核对了几何旋转路径：encoder及forward_update的covariance用context局部旋转构建后转到batch/world，固定导出再用原context c2w与local quaternion构造最终world quaternion；两端xyzw约定一致。当前未找到需要“再旋转一次几何”的证据；SH修正不要顺带对means/quaternion重复施加pivot。
+
 ## 最小实验：先接口，再效果
 
 1. **F0**：单次已知旋转/系数检查，至少包括绕y或x的旋转；以实际FastGS/gsplat渲染颜色或其一致的basis evaluator验证。identity通过不足以验收。

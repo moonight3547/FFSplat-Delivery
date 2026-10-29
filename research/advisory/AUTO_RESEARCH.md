@@ -80,3 +80,9 @@ DEPTH_INTERFACE补充alpha/匹配峰值/先验可靠性的区别，以及16个co
 新读CVPR2026 Faster-GS：先抽出E8-F fused dense Adam，不替换整套CUDA后端，不改更新频率。只读元数据确认H1为Torch2.4.0+cu124且接口支持fused；未做性能测试。Morton重排与其per-Gaussian backward协同，不能独立套用；2–5倍不是对当前FastGS的保证。
 
 AA-Splat完整方法重训DepthSplat且逐像素alpha归一化，不能直接变成冻结ReSplat+官方标准PLY后处理；暂不排期。3dee717新增E8-L负结果叙述，赞同停止扩展同类降频网格，但不据此否定其他优化器机制。细化收益门槛：重型算法的+2参考不应用来否定低成本、稳定正收益的系统改进。
+
+## 06:40 — 第五次同步：9例与bicycle来源
+
+H1日志本轮done、有9例候选，无baseline配对；新节点真实目录为round-new/round-test，新增bicycle最终指标差且N增长至86万。其100秒预算来源未找到，不能宣称同卡有效总分；默认三例在该节点有新raw质量，但不同于H1锐化和docs缓存表，继续分开记录。SYNC05补充最小0步/5K、context/非context训练残差诊断，避免单凭最终LPIPS断言前馈不可修复。
+
+新增E10仅作为诊断后备选：主训练mult.5与官方mult1的差距是否真实存在；全程mult1已有旧负证据，先不重跑网格。12小时研究继续，目标结束时间仍为17:43:57；约07:00进行下一轮常规同步，重要完成结果提前核验。

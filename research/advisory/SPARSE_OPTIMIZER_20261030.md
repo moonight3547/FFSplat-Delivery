@@ -48,6 +48,8 @@ coding agent已提交 `dd266a7`，新增time_breakdown入口，尚非完成实�
 
 E8-L负结果只能否定该更新/累积/LR日程，不能证明可见性稀疏Adam无效，也不能证明所有后期外观求解无效。先保持最初的机制标签，再按原始质量/实际墙钟裁决；不因一个相邻实现失败而封闭整个优化器方向。
 
+一个独立标量例足以排除“乘LR就等价”：从零m/v出发、beta=.9/.999，依次给梯度1和−.5，逐步Adam的两次归一化更新总量约1.2663×LR；把梯度相加后只更新一次并乘2×LR，总量约2×LR（忽略极小eps）。这不是本项目质量实验，只说明两条日程不存在一般位移等价。
+
 ## 与真正appearance-only的关系
 
 E8仍更新可见高斯的几何，不是只拟外观。真正appearance-only应显式冻结xyz、scale、rotation，说明opacity是否仍训练，且保留前期结构阶段；即便冻结参数，渲染器backward仍可能计算几何导数，不承诺速度收益。历史 `--no_densify` 没有冻结几何，不构成该实验的负证据。
@@ -67,3 +69,5 @@ E8仍更新可见高斯的几何，不是只拟外观。真正appearance-only应
 ## 06:35：E8-L已出现负结果叙述
 
 `3dee717` 记录两例中降频没有稳定净收益，赞同停止继续扩大同类步频网格；原始JSON尚未在所读节点找到。其解释“同步计时高估optimizer占比”还混有前述结构段口径问题，没有单独profiling证据就不把CPU/GPU重叠当作已证明原因。该负结果不改变E8-F/可见性稀疏/E9彼此不同的机制边界。
+
+通常同一默认CUDA stream中的backward和step kernel按顺序执行；所读train_sweep没有显式建立多stream。逐段synchronize会改变CPU派发与GPU执行的重叠并增加空隙，但不能仅由降频没提速推断“optimizer GPU kernel与render/backward同时运行”。若需要因果解释，使用一次有限窗口的timeline，而不是从总秒数反推并发。
