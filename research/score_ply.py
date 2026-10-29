@@ -62,7 +62,9 @@ def main(argv=None):
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
 
-    render_args = [f"--source={args.work}", f"--out={out}"]
+    # The held-out split only exists when the reader runs with --eval (llffhold=8),
+    # exactly like the organizer's render stage.
+    render_args = [f"--source={args.work}", f"--out={out}", "--eval", "-r", "1", "--sh_degree", "3"]
     for ply, name in zip(args.ply, args.name):
         render_args.extend(["--ply", ply, "--name", name])
     run([profile["conda"], "run", "--no-capture-output", "-n", profile["environments"]["fastgs"],

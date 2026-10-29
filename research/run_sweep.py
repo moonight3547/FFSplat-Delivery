@@ -140,7 +140,8 @@ def main(argv=None):
         renders.extend(["--ply", snap["ply"]])
         names.extend(["--name", name])
     run(conda_python(profile, "fastgs", "-m", "research.render_eval",
-                     f"--source={args.work}", f"--out={eval_root}", *renders, *names))
+                     f"--source={args.work}", f"--out={eval_root}", "--eval", "-r", "1",
+                     "--sh_degree", "3", *renders, *names))
 
     results = []
     for snap in record["snapshots"]:
