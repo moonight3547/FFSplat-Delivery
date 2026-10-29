@@ -34,10 +34,11 @@ def conda_python(profile, runtime, *argv):
             "python", *map(str, argv)]
 
 
-def run(argv, cwd=REPO):
+def run(argv, cwd=REPO, profile=None):
     environment = os.environ.copy()
     environment["PYTHONPATH"] = str(REPO)
-    environment.update(read(DEFAULT_PROFILE).get("environment", {}))
+    # use the *selected* profile, not the default: it carries CUDA_VISIBLE_DEVICES
+    environment.update((profile or read(DEFAULT_PROFILE)).get("environment", {}))
     print("+ " + " ".join(map(str, argv)), flush=True)
     subprocess.run(argv, cwd=cwd, env=environment, check=True)
 
@@ -146,7 +147,7 @@ def main(argv=None):
     if args.no_densify:
         train_argv.append("--no_densify")
 
-    run(conda_python(profile, "fastgs", "-m", "research.train_sweep", *train_argv))
+    run(conda_python(profile, "fastgs", "-m", "research.train_sweep", *train_argv), profile=profile)
     record = read(out / "train_record.json")
 
     renders, names = [], []
@@ -156,14 +157,14 @@ def main(argv=None):
         names.extend(["--name", name])
     run(conda_python(profile, "fastgs", "-m", "research.render_eval",
                      f"--source={args.work}", f"--out={eval_root}", "--eval", "-r", "1",
-                     "--sh_degree", "3", *renders, *names))
+                     "--sh_degree", "3", *renders, *names), profile=profile)
 
     results = []
     for snap in record["snapshots"]:
         name = f"iter{snap['iteration']:05d}"
         target = eval_root / name
         run(conda_python(profile, "resplat", str(REPO / "competition/upstream/baseline/evaluate.py"),
-                         "--model_path", target, "--device", profile["device"]))
+                         "--model_path", target, "--device", profile["device"]), profile=profile)
         metrics = read(target / "metrics.json")["mean"]
         b_seconds = (record["scene_load_seconds"] + record["init_seconds"]
                      + snap["train_seconds"] + 0.5)
