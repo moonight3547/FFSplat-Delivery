@@ -46,6 +46,7 @@ run_one() {  # variant case iters budget
   tag="$variant-$(echo "$case" | tr '/' '-')"
   dir="$D/$tag"
   [ -e "$dir/summary.json" ] && return
+  [ -e "$dir" ] && rm -rf "$dir"   # incomplete leftover from an interrupted attempt
   echo "start $tag lane$LANE $(date -Is)" >>"$D/queue.log"
   if [ "$variant" = "random" ]; then
     $PY run --no-capture-output -n fastgs python -m research.run_sweep \

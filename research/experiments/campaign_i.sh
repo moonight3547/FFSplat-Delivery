@@ -38,6 +38,7 @@ run_one() {  # tag case iters budget plymode extra...
   local tag="$1" case="$2" iters="$3" budget="$4" plymode="$5"; shift 5
   local dir="$D/$tag" ply
   [ -e "$dir/summary.json" ] && return
+  [ -e "$dir" ] && rm -rf "$dir"   # incomplete leftover from an interrupted attempt
   if [ "$plymode" = sharp ]; then ply=$(sharp_ply "$case"); else ply="outputs/O0-20261030/results/$case/resplat/resplat_world.ply"; fi
   echo "start $tag lane$LANE $(date -Is)" >>"$D/queue.log"
   $PY run --no-capture-output -n fastgs python -m research.run_sweep \

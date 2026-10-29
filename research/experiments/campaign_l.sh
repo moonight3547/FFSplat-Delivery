@@ -29,6 +29,7 @@ OPTS="--opacity-reset-interval 0 --lambda-dssim 0.6 --scaling-lr 0.01"
 sweep() {  # tag case iters budget
   local tag="$1" case="$2" iters="$3" budget="$4" dir="$D/$tag"
   [ -e "$dir/summary.json" ] && return
+  [ -e "$dir" ] && rm -rf "$dir"   # incomplete leftover from an interrupted attempt
   echo "start $tag lane$LANE $(date -Is)" >>"$D/queue.log"
   $PY run --no-capture-output -n "$ENV" python -m research.run_sweep \
     --profile "competition/profiles/gpufree-$LANE.json" --case "$case" \
