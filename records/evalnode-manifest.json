@@ -1,0 +1,20 @@
+[
+  {
+    "case": "hw/billboard",
+    "work": "outputs/O0-20261030/work/hw/billboard",
+    "init": "outputs/O0-20261030/results/hw/billboard/resplat/resplat_world.ply",
+    "budget_seconds": 99.49
+  },
+  {
+    "case": "mipnerf360/counter",
+    "work": "outputs/O0-20261030/work/mipnerf360/counter",
+    "init": "outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+    "budget_seconds": 92.57
+  },
+  {
+    "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "work": "outputs/O0-20261030/work/dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "init": "outputs/O0-20261030/results/dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f/resplat/resplat_world.ply",
+    "budget_seconds": 94.29
+  }
+]
