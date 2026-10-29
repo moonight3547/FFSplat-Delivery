@@ -38,7 +38,7 @@ s = json.load(open(src))
 train = s["train"]
 n = 16
 # set A: organizer's uniform-16 over the train order; set B: same spacing, offset
-idx = [int(round(i)) for i in __import__("numpy").linspace(0, len(train) - 1, n)]
+idx = [int(round(k * (len(train) - 1) / (n - 1))) for k in range(n)]
 idx_b = [(i + offset) % len(train) for i in idx]
 s["context"] = [train[i] for i in sorted(set(idx_b))]
 s["context"] = s["context"][:n]
