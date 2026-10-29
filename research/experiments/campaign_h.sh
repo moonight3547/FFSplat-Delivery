@@ -26,7 +26,7 @@ HW=hw/billboard;        BHW=99.49
 CO=mipnerf360/counter;  BCO=92.57
 DL=dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f; BDL=94.29
 
-OPTS="--opacity_reset_interval 0 --lambda_dssim 0.6 --scaling_lr 0.01"
+OPTS="--opacity-reset-interval 0 --lambda-dssim 0.6 --scaling-lr 0.01"
 
 prep() {  # name case -> echoes ply path
   local variant="$1" case="$2" tag src
