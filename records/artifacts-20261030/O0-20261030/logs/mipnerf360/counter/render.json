@@ -1,0 +1,29 @@
+{
+  "case": "mipnerf360/counter",
+  "stage": "render",
+  "subprocess_wall_seconds": 28.2376781150233,
+  "argv": [
+    "/usr/local/miniconda3/bin/conda",
+    "run",
+    "--no-capture-output",
+    "-n",
+    "organizer-fastgs",
+    "python",
+    "/workspace/organizer-projects/FFSplat-Hackathon/competition/upstream/baseline/render_test.py",
+    "-s",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/work/mipnerf360/counter",
+    "--eval",
+    "-r",
+    "1",
+    "--sh_degree",
+    "3",
+    "--quiet",
+    "-m",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/results/mipnerf360/counter/module_b",
+    "--backend",
+    "fastgs",
+    "--iteration",
+    "10000"
+  ],
+  "status": "complete"
+}

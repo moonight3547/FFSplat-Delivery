@@ -1,0 +1,90 @@
+{
+  "case": "mipnerf360/counter",
+  "work": "outputs/O0-20261030/work/mipnerf360/counter",
+  "init_ply": "outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+  "budget_seconds": 92.57,
+  "train_record": {
+    "init_ply": "outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+    "init_mode": "ply:resplat_world.ply",
+    "num_init_gaussians": 488831,
+    "num_final_gaussians": 314830,
+    "iterations": 8000,
+    "scene_load_seconds": 9.379,
+    "init_seconds": 0.506,
+    "train_seconds": 45.78,
+    "total_seconds": 55.731,
+    "iterations_per_second": 174.75,
+    "quick_test_psnr": 27.6186,
+    "num_train_views": 210,
+    "num_test_views": 30,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "settings": {
+      "position_lr_max_steps": 30000,
+      "position_lr_init": 0.00016,
+      "position_lr_final": 1.6e-06,
+      "densify_from_iter": 500,
+      "densify_until_iter": 15000,
+      "densification_interval": 100,
+      "opacity_reset_interval": 8001,
+      "mult": 0.5,
+      "lambda_dssim": 0.2,
+      "scaling_lr": 0.005,
+      "opacity_lr": 0.025,
+      "position_lr_delay_mult": 0.01,
+      "no_densify": false,
+      "seed": 20261015,
+      "res_scales": [
+        1.0
+      ],
+      "res_until": [],
+      "lpips_weight": 0.0,
+      "lpips_every": 1,
+      "lpips_scale": 0.5,
+      "densify_count_thresh": null,
+      "max_gaussians": null
+    }
+  },
+  "results": [
+    {
+      "iteration": 4000,
+      "num_gaussians": 357859,
+      "train_seconds": 21.41,
+      "b_seconds_estimate": 31.79,
+      "psnr": 26.427,
+      "ssim": 0.8499,
+      "lpips": 0.2467,
+      "score": {
+        "psnr_points": 9.1416,
+        "ssim_points": 11.992000000000003,
+        "lpips_points": 0.6599999999999995,
+        "time_points": 14.590160783560513,
+        "quality_points": 21.7936,
+        "total_points": 36.38376078356052,
+        "budget_ratio": 0.34344276473977686,
+        "valid": true
+      }
+    },
+    {
+      "iteration": 8000,
+      "num_gaussians": 314830,
+      "train_seconds": 43.57,
+      "b_seconds_estimate": 53.95,
+      "psnr": 27.552,
+      "ssim": 0.8833,
+      "lpips": 0.2079,
+      "score": {
+        "psnr_points": 10.041599999999999,
+        "ssim_points": 14.664000000000001,
+        "lpips_points": 8.42,
+        "time_points": 9.269925010498374,
+        "quality_points": 33.1256,
+        "total_points": 42.395525010498375,
+        "budget_ratio": 0.5828533745275731,
+        "valid": true
+      }
+    }
+  ]
+}

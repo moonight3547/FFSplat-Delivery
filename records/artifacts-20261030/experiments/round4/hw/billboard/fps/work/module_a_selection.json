@@ -1,0 +1,191 @@
+{
+  "context": [
+    "248756513556922.png",
+    "248758713778079.png",
+    "248760613969078.png",
+    "248762547496922.png",
+    "248764214331078.png",
+    "248765981175078.png",
+    "248767981376078.png",
+    "248771481727234.png",
+    "248773015215078.png",
+    "248775048752235.png",
+    "248777082290079.png",
+    "248779182501078.png",
+    "248780949345078.png",
+    "248782416159078.png",
+    "248784416360234.png",
+    "248786516571079.png"
+  ],
+  "policy": "fps",
+  "scores": {
+    "context_size": 16,
+    "mean_nearest_separation": 0.188879734068,
+    "min_separation": 0.169326545183,
+    "num_images": 64,
+    "num_test": 8,
+    "num_train": 56,
+    "objective": {
+      "name": "maximin_camera_center_distance_normalized",
+      "value": 0.169326545183
+    },
+    "parameters": {
+      "normalization": "median pairwise camera-centre distance",
+      "start": "camera centre closest to the train centroid",
+      "tie_break": "lowest train index"
+    },
+    "policy": "fps",
+    "scene_scale": 3.886949222863,
+    "selection_indices": [
+      27,
+      55,
+      0,
+      42,
+      14,
+      34,
+      8,
+      48,
+      21,
+      38,
+      18,
+      29,
+      11,
+      5,
+      50,
+      46
+    ],
+    "selection_order": [
+      "248771481727234.png",
+      "248786516571079.png",
+      "248756513556922.png",
+      "248779182501078.png",
+      "248764214331078.png",
+      "248775048752235.png",
+      "248760613969078.png",
+      "248782416159078.png",
+      "248767981376078.png",
+      "248777082290079.png",
+      "248765981175078.png",
+      "248773015215078.png",
+      "248762547496922.png",
+      "248758713778079.png",
+      "248784416360234.png",
+      "248780949345078.png"
+    ],
+    "start_view": "248771481727234.png",
+    "views": [
+      {
+        "min_separation": 0.16985837494,
+        "name": "248756513556922.png",
+        "score": 1.506331179337,
+        "selection_step": 2,
+        "train_index": 0
+      },
+      {
+        "min_separation": 0.16985837494,
+        "name": "248758713778079.png",
+        "score": 0.16985837494,
+        "selection_step": 13,
+        "train_index": 5
+      },
+      {
+        "min_separation": 0.201065399008,
+        "name": "248760613969078.png",
+        "score": 0.375210213053,
+        "selection_step": 6,
+        "train_index": 8
+      },
+      {
+        "min_separation": 0.178505389598,
+        "name": "248762547496922.png",
+        "score": 0.178505389598,
+        "selection_step": 12,
+        "train_index": 11
+      },
+      {
+        "min_separation": 0.178505389598,
+        "name": "248764214331078.png",
+        "score": 0.751700596057,
+        "selection_step": 4,
+        "train_index": 14
+      },
+      {
+        "min_separation": 0.211448633743,
+        "name": "248765981175078.png",
+        "score": 0.211448633743,
+        "selection_step": 10,
+        "train_index": 18
+      },
+      {
+        "min_separation": 0.231677694554,
+        "name": "248767981376078.png",
+        "score": 0.368339462545,
+        "selection_step": 8,
+        "train_index": 21
+      },
+      {
+        "min_separation": 0.183804015097,
+        "name": "248771481727234.png",
+        "score": 0.134235913182,
+        "selection_step": 0,
+        "train_index": 27
+      },
+      {
+        "min_separation": 0.183804015097,
+        "name": "248773015215078.png",
+        "score": 0.183804015097,
+        "selection_step": 11,
+        "train_index": 29
+      },
+      {
+        "min_separation": 0.217787383271,
+        "name": "248775048752235.png",
+        "score": 0.421657092638,
+        "selection_step": 5,
+        "train_index": 34
+      },
+      {
+        "min_separation": 0.217787383271,
+        "name": "248777082290079.png",
+        "score": 0.217787383271,
+        "selection_step": 9,
+        "train_index": 38
+      },
+      {
+        "min_separation": 0.200635287462,
+        "name": "248779182501078.png",
+        "score": 0.761529757485,
+        "selection_step": 3,
+        "train_index": 42
+      },
+      {
+        "min_separation": 0.169326545183,
+        "name": "248780949345078.png",
+        "score": 0.169326545183,
+        "selection_step": 15,
+        "train_index": 46
+      },
+      {
+        "min_separation": 0.169326545183,
+        "name": "248782416159078.png",
+        "score": 0.369791069017,
+        "selection_step": 7,
+        "train_index": 48
+      },
+      {
+        "min_separation": 0.169342657073,
+        "name": "248784416360234.png",
+        "score": 0.169342657073,
+        "selection_step": 14,
+        "train_index": 50
+      },
+      {
+        "min_separation": 0.169342657073,
+        "name": "248786516571079.png",
+        "score": 1.588254783656,
+        "selection_step": 1,
+        "train_index": 55
+      }
+    ]
+  }
+}

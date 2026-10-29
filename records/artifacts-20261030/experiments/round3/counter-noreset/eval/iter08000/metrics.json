@@ -1,0 +1,190 @@
+{
+  "num_views": 30,
+  "mean": {
+    "psnr": 27.552,
+    "ssim": 0.8833,
+    "lpips": 0.2079
+  },
+  "per_view": [
+    {
+      "name": "DSCF5857.png",
+      "psnr": 24.971,
+      "ssim": 0.8326,
+      "lpips": 0.245
+    },
+    {
+      "name": "DSCF5865.png",
+      "psnr": 27.3838,
+      "ssim": 0.865,
+      "lpips": 0.2092
+    },
+    {
+      "name": "DSCF5873.png",
+      "psnr": 27.3202,
+      "ssim": 0.8728,
+      "lpips": 0.1856
+    },
+    {
+      "name": "DSCF5881.png",
+      "psnr": 25.52,
+      "ssim": 0.8437,
+      "lpips": 0.2331
+    },
+    {
+      "name": "DSCF5889.png",
+      "psnr": 30.6301,
+      "ssim": 0.932,
+      "lpips": 0.1646
+    },
+    {
+      "name": "DSCF5897.png",
+      "psnr": 28.0297,
+      "ssim": 0.876,
+      "lpips": 0.2731
+    },
+    {
+      "name": "DSCF5905.png",
+      "psnr": 27.9557,
+      "ssim": 0.8874,
+      "lpips": 0.1835
+    },
+    {
+      "name": "DSCF5913.png",
+      "psnr": 27.0242,
+      "ssim": 0.8795,
+      "lpips": 0.1747
+    },
+    {
+      "name": "DSCF5921.png",
+      "psnr": 29.8802,
+      "ssim": 0.8735,
+      "lpips": 0.3268
+    },
+    {
+      "name": "DSCF5929.png",
+      "psnr": 25.0676,
+      "ssim": 0.8336,
+      "lpips": 0.23
+    },
+    {
+      "name": "DSCF5937.png",
+      "psnr": 26.865,
+      "ssim": 0.8608,
+      "lpips": 0.1926
+    },
+    {
+      "name": "DSCF5945.png",
+      "psnr": 29.0914,
+      "ssim": 0.903,
+      "lpips": 0.3036
+    },
+    {
+      "name": "DSCF5953.png",
+      "psnr": 25.8184,
+      "ssim": 0.866,
+      "lpips": 0.1964
+    },
+    {
+      "name": "DSCF5961.png",
+      "psnr": 26.7716,
+      "ssim": 0.8754,
+      "lpips": 0.1994
+    },
+    {
+      "name": "DSCF5969.png",
+      "psnr": 23.5974,
+      "ssim": 0.8497,
+      "lpips": 0.257
+    },
+    {
+      "name": "DSCF5977.png",
+      "psnr": 26.5855,
+      "ssim": 0.899,
+      "lpips": 0.1944
+    },
+    {
+      "name": "DSCF5985.png",
+      "psnr": 27.4158,
+      "ssim": 0.9011,
+      "lpips": 0.1641
+    },
+    {
+      "name": "DSCF5993.png",
+      "psnr": 25.1166,
+      "ssim": 0.8925,
+      "lpips": 0.2285
+    },
+    {
+      "name": "DSCF6001.png",
+      "psnr": 27.8095,
+      "ssim": 0.8842,
+      "lpips": 0.1984
+    },
+    {
+      "name": "DSCF6009.png",
+      "psnr": 27.291,
+      "ssim": 0.8953,
+      "lpips": 0.1881
+    },
+    {
+      "name": "DSCF6017.png",
+      "psnr": 29.3064,
+      "ssim": 0.9027,
+      "lpips": 0.1929
+    },
+    {
+      "name": "DSCF6025.png",
+      "psnr": 27.8671,
+      "ssim": 0.8855,
+      "lpips": 0.2539
+    },
+    {
+      "name": "DSCF6033.png",
+      "psnr": 28.8192,
+      "ssim": 0.9092,
+      "lpips": 0.1622
+    },
+    {
+      "name": "DSCF6041.png",
+      "psnr": 29.5745,
+      "ssim": 0.9203,
+      "lpips": 0.1612
+    },
+    {
+      "name": "DSCF6049.png",
+      "psnr": 29.8583,
+      "ssim": 0.9102,
+      "lpips": 0.1972
+    },
+    {
+      "name": "DSCF6057.png",
+      "psnr": 31.2235,
+      "ssim": 0.9305,
+      "lpips": 0.1421
+    },
+    {
+      "name": "DSCF6065.png",
+      "psnr": 31.4237,
+      "ssim": 0.9319,
+      "lpips": 0.1401
+    },
+    {
+      "name": "DSCF6073.png",
+      "psnr": 26.4584,
+      "ssim": 0.8821,
+      "lpips": 0.1717
+    },
+    {
+      "name": "DSCF6081.png",
+      "psnr": 27.9563,
+      "ssim": 0.8971,
+      "lpips": 0.1782
+    },
+    {
+      "name": "DSCF6089.png",
+      "psnr": 23.9413,
+      "ssim": 0.8054,
+      "lpips": 0.2892
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+  "stage": "resplat",
+  "subprocess_wall_seconds": 40.03425803594291,
+  "argv": [
+    "/usr/local/miniconda3/bin/conda",
+    "run",
+    "--no-capture-output",
+    "-n",
+    "ffsplat-enhance",
+    "python",
+    "-m",
+    "competition.resplat",
+    "--work",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/work/dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "--out",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/results/dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f/resplat",
+    "--checkpoint",
+    "/workspace/organizer-assets/resplat-base-dl3dv-540x960-view16-a72dc6d0.pth",
+    "--num_refine",
+    "2",
+    "--device",
+    "cuda:0",
+    "--upstream",
+    "/workspace/organizer-projects/FFSplat-Hackathon/competition/upstream"
+  ],
+  "status": "complete"
+}

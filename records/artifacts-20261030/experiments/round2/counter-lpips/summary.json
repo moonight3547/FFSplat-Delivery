@@ -1,0 +1,109 @@
+{
+  "case": "mipnerf360/counter",
+  "work": "outputs/O0-20261030/work/mipnerf360/counter",
+  "init_ply": "outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+  "budget_seconds": 92.57,
+  "train_record": {
+    "init_ply": "outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+    "init_mode": "ply:resplat_world.ply",
+    "num_init_gaussians": 488831,
+    "num_final_gaussians": 311668,
+    "iterations": 12000,
+    "scene_load_seconds": 8.839,
+    "init_seconds": 0.401,
+    "train_seconds": 178.159,
+    "total_seconds": 188.909,
+    "iterations_per_second": 67.36,
+    "quick_test_psnr": 9.8651,
+    "num_train_views": 210,
+    "num_test_views": 30,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "settings": {
+      "position_lr_max_steps": 30000,
+      "position_lr_init": 0.00016,
+      "position_lr_final": 1.6e-06,
+      "densify_from_iter": 500,
+      "densify_until_iter": 15000,
+      "densification_interval": 100,
+      "opacity_reset_interval": 3000,
+      "mult": 0.5,
+      "lambda_dssim": 0.2,
+      "scaling_lr": 0.005,
+      "opacity_lr": 0.025,
+      "position_lr_delay_mult": 0.01,
+      "no_densify": false,
+      "seed": 20261015,
+      "res_scales": [
+        1.0
+      ],
+      "res_until": [],
+      "lpips_weight": 0.2,
+      "lpips_every": 1,
+      "lpips_scale": 0.5,
+      "densify_count_thresh": null,
+      "max_gaussians": null
+    }
+  },
+  "results": [
+    {
+      "iteration": 4000,
+      "num_gaussians": 470748,
+      "train_seconds": 60.15,
+      "b_seconds_estimate": 69.89,
+      "psnr": 24.97,
+      "ssim": 0.7933,
+      "lpips": 0.2787,
+      "score": {
+        "psnr_points": 7.975999999999999,
+        "ssim_points": 7.464000000000004,
+        "lpips_points": 0.0,
+        "time_points": 5.445005865851549,
+        "quality_points": 15.440000000000003,
+        "total_points": 20.885005865851554,
+        "budget_ratio": 0.7549747360366803,
+        "valid": true
+      }
+    },
+    {
+      "iteration": 8000,
+      "num_gaussians": 358755,
+      "train_seconds": 119.13,
+      "b_seconds_estimate": 128.87,
+      "psnr": 26.716,
+      "ssim": 0.8559,
+      "lpips": 0.2199,
+      "score": {
+        "psnr_points": 9.372800000000002,
+        "ssim_points": 12.472000000000003,
+        "lpips_points": 6.019999999999998,
+        "time_points": 0.0,
+        "quality_points": 27.864800000000002,
+        "total_points": 27.864800000000002,
+        "budget_ratio": 1.3920974982376233,
+        "valid": false
+      }
+    },
+    {
+      "iteration": 12000,
+      "num_gaussians": 311668,
+      "train_seconds": 176.08,
+      "b_seconds_estimate": 185.82,
+      "psnr": 9.579,
+      "ssim": 0.2104,
+      "lpips": 0.6114,
+      "score": {
+        "psnr_points": 0.0,
+        "ssim_points": 0.0,
+        "lpips_points": 0.0,
+        "time_points": 0.0,
+        "quality_points": 0.0,
+        "total_points": 0.0,
+        "budget_ratio": 2.0073986029166093,
+        "valid": false
+      }
+    }
+  ]
+}

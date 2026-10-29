@@ -1,0 +1,29 @@
+{
+  "case": "hw/billboard",
+  "stage": "train",
+  "subprocess_wall_seconds": 56.303719422081485,
+  "argv": [
+    "/usr/local/miniconda3/bin/conda",
+    "run",
+    "--no-capture-output",
+    "-n",
+    "organizer-fastgs",
+    "python",
+    "/workspace/organizer-projects/FFSplat-Hackathon/competition/upstream/baseline/module_b/train_from_ply_fastgs.py",
+    "-s",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/work/hw/billboard",
+    "--eval",
+    "-r",
+    "1",
+    "--sh_degree",
+    "3",
+    "--quiet",
+    "-m",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/results/hw/billboard/module_b",
+    "--iterations",
+    "10000",
+    "--init_ply",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/results/hw/billboard/resplat/resplat_world.ply"
+  ],
+  "status": "complete"
+}

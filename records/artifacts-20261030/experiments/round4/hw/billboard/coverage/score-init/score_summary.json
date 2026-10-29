@@ -1,0 +1,23 @@
+{
+  "work": "outputs/experiments/round4/hw/billboard/coverage/work",
+  "budget_seconds": null,
+  "b_seconds": null,
+  "rows": [
+    {
+      "name": "coverage",
+      "psnr": 19.708,
+      "ssim": 0.635,
+      "lpips": 0.2952,
+      "score": {
+        "quality_points": 3.7663999999999986,
+        "time_points": null,
+        "total_points": 3.7663999999999986,
+        "components": {
+          "psnr": 3.7663999999999986,
+          "ssim": 0.0,
+          "lpips": 0.0
+        }
+      }
+    }
+  ]
+}

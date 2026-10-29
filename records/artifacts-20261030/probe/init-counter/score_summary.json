@@ -1,0 +1,23 @@
+{
+  "work": "outputs/O0-20261030/work/mipnerf360/counter",
+  "budget_seconds": 92.57,
+  "b_seconds": null,
+  "rows": [
+    {
+      "name": "refine2",
+      "psnr": 21.448,
+      "ssim": 0.6688,
+      "lpips": 0.3788,
+      "score": {
+        "quality_points": 5.1584,
+        "time_points": null,
+        "total_points": 5.1584,
+        "components": {
+          "psnr": 5.1584,
+          "ssim": 0.0,
+          "lpips": 0.0
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+  "stage": "render",
+  "subprocess_wall_seconds": 28.74904775293544,
+  "argv": [
+    "/usr/local/miniconda3/bin/conda",
+    "run",
+    "--no-capture-output",
+    "-n",
+    "organizer-fastgs",
+    "python",
+    "/workspace/organizer-projects/FFSplat-Hackathon/competition/upstream/baseline/render_test.py",
+    "-s",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/work/dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "--eval",
+    "-r",
+    "1",
+    "--sh_degree",
+    "3",
+    "--quiet",
+    "-m",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/results/dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f/module_b",
+    "--backend",
+    "fastgs",
+    "--iteration",
+    "10000"
+  ],
+  "status": "complete"
+}

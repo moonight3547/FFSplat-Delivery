@@ -1,0 +1,16 @@
+{
+  "group": "mipnerf360",
+  "scene_dir": "/workspace/organizer-assets/datasets/mipnerf360/counter",
+  "pose_source": "colmap.bin",
+  "pose_estimation_seconds": 0.0,
+  "resize_seconds": 89.10917806625366,
+  "total_seconds": 89.99262309074402,
+  "num_images": 240,
+  "num_train": 210,
+  "num_test": 30,
+  "num_context": 16,
+  "resolution": [
+    576,
+    960
+  ]
+}

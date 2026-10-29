@@ -1,0 +1,64 @@
+{
+  "init_ply": "outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+  "init_mode": "ply:resplat_world.ply",
+  "num_init_gaussians": 488831,
+  "num_final_gaussians": 311668,
+  "iterations": 12000,
+  "snapshots": [
+    {
+      "iteration": 4000,
+      "train_seconds": 60.14801131491549,
+      "num_gaussians": 470748,
+      "ply": "outputs/experiments/round2/counter-lpips/snaps/iter04000.ply"
+    },
+    {
+      "iteration": 8000,
+      "train_seconds": 119.12646541185677,
+      "num_gaussians": 358755,
+      "ply": "outputs/experiments/round2/counter-lpips/snaps/iter08000.ply"
+    },
+    {
+      "iteration": 12000,
+      "train_seconds": 176.08488867199048,
+      "num_gaussians": 311668,
+      "ply": "outputs/experiments/round2/counter-lpips/snaps/iter12000.ply"
+    }
+  ],
+  "scene_load_seconds": 8.839,
+  "init_seconds": 0.401,
+  "train_seconds": 178.159,
+  "total_seconds": 188.909,
+  "iterations_per_second": 67.36,
+  "quick_test_psnr": 9.8651,
+  "num_train_views": 210,
+  "num_test_views": 30,
+  "res_scales": [
+    1.0
+  ],
+  "res_until": [],
+  "settings": {
+    "position_lr_max_steps": 30000,
+    "position_lr_init": 0.00016,
+    "position_lr_final": 1.6e-06,
+    "densify_from_iter": 500,
+    "densify_until_iter": 15000,
+    "densification_interval": 100,
+    "opacity_reset_interval": 3000,
+    "mult": 0.5,
+    "lambda_dssim": 0.2,
+    "scaling_lr": 0.005,
+    "opacity_lr": 0.025,
+    "position_lr_delay_mult": 0.01,
+    "no_densify": false,
+    "seed": 20261015,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "lpips_weight": 0.2,
+    "lpips_every": 1,
+    "lpips_scale": 0.5,
+    "densify_count_thresh": null,
+    "max_gaussians": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "work": "outputs/O0-20261030/work/hw/billboard",
+  "budget_seconds": 99.49,
+  "b_seconds": null,
+  "rows": [
+    {
+      "name": "refine2",
+      "psnr": 19.766,
+      "ssim": 0.641,
+      "lpips": 0.2916,
+      "score": {
+        "quality_points": 3.8127999999999984,
+        "time_points": null,
+        "total_points": 3.8127999999999984,
+        "components": {
+          "psnr": 3.8127999999999984,
+          "ssim": 0.0,
+          "lpips": 0.0
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "group": "dl3dv",
+  "scene_dir": "/workspace/organizer-assets/datasets/DL3DV/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+  "pose_source": "transforms.json",
+  "pose_estimation_seconds": 0.0,
+  "resize_seconds": 50.98019051551819,
+  "total_seconds": 51.12952518463135,
+  "num_images": 330,
+  "num_train": 288,
+  "num_test": 42,
+  "num_context": 16,
+  "resolution": [
+    512,
+    960
+  ]
+}

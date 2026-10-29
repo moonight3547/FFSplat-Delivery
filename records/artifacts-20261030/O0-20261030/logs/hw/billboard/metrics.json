@@ -1,0 +1,19 @@
+{
+  "case": "hw/billboard",
+  "stage": "metrics",
+  "subprocess_wall_seconds": 11.498236066894606,
+  "argv": [
+    "/usr/local/miniconda3/bin/conda",
+    "run",
+    "--no-capture-output",
+    "-n",
+    "ffsplat-enhance",
+    "python",
+    "/workspace/organizer-projects/FFSplat-Hackathon/competition/upstream/baseline/evaluate.py",
+    "--model_path",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/results/hw/billboard/module_b",
+    "--device",
+    "cuda:0"
+  ],
+  "status": "complete"
+}

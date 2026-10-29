@@ -1,0 +1,250 @@
+{
+  "context": [
+    "248756513556922.png",
+    "248757013608079.png",
+    "248757713677922.png",
+    "248759213829078.png",
+    "248761614069922.png",
+    "248764214331078.png",
+    "248765214431078.png",
+    "248766981274922.png",
+    "248767981376078.png",
+    "248769481527079.png",
+    "248770981677078.png",
+    "248774048652079.png",
+    "248777582340078.png",
+    "248781416059234.png",
+    "248783916310079.png",
+    "248786516571079.png"
+  ],
+  "policy": "coverage",
+  "scores": {
+    "context_size": 16,
+    "coverage": {
+      "bounds": [
+        [
+          -7.957494940996,
+          -2.33843494921,
+          -1.741452755541
+        ],
+        [
+          6.373607026837,
+          2.429151377649,
+          7.457842873286
+        ]
+      ],
+      "cell_size": 0.447846936495,
+      "central_crop_fraction": 0.5,
+      "covered_voxels": 2267,
+      "grid_dims": [
+        32,
+        11,
+        21
+      ],
+      "proxy_margin_scale": 0.5,
+      "unweighted_fraction": 0.976313522825,
+      "visible_voxels": 2322,
+      "voxel_weight": "1/sqrt(number of candidate views whose frustum contains the voxel)",
+      "voxels": 7392,
+      "weighted_fraction": 0.946198491445
+    },
+    "mean_nearest_separation": 0.171816024436,
+    "min_separation": 0.021343149371,
+    "num_images": 64,
+    "num_test": 8,
+    "num_train": 56,
+    "objective": {
+      "name": "weighted_frustum_coverage",
+      "value": 789.265446453403
+    },
+    "parameters": {
+      "grid_axis": 32,
+      "projection": "pinhole, central 50%x50% crop (distortion ignored)",
+      "tie_break": "lowest train index"
+    },
+    "policy": "coverage",
+    "scene_scale": 3.886949222863,
+    "selection_indices": [
+      55,
+      0,
+      23,
+      14,
+      32,
+      20,
+      47,
+      3,
+      6,
+      49,
+      39,
+      9,
+      26,
+      16,
+      21,
+      1
+    ],
+    "selection_order": [
+      "248786516571079.png",
+      "248756513556922.png",
+      "248769481527079.png",
+      "248764214331078.png",
+      "248774048652079.png",
+      "248766981274922.png",
+      "248781416059234.png",
+      "248757713677922.png",
+      "248759213829078.png",
+      "248783916310079.png",
+      "248777582340078.png",
+      "248761614069922.png",
+      "248770981677078.png",
+      "248765214431078.png",
+      "248767981376078.png",
+      "248757013608079.png"
+    ],
+    "views": [
+      {
+        "min_separation": 0.021343149371,
+        "name": "248756513556922.png",
+        "new_voxels": 550,
+        "score": 156.148555498868,
+        "selection_step": 1,
+        "train_index": 0,
+        "visible_voxels": 1126
+      },
+      {
+        "min_separation": 0.021343149371,
+        "name": "248757013608079.png",
+        "new_voxels": 5,
+        "score": 4.707106781187,
+        "selection_step": 15,
+        "train_index": 1,
+        "visible_voxels": 1059
+      },
+      {
+        "min_separation": 0.063752610168,
+        "name": "248757713677922.png",
+        "new_voxels": 20,
+        "score": 15.153955897757,
+        "selection_step": 7,
+        "train_index": 3,
+        "visible_voxels": 1046
+      },
+      {
+        "min_separation": 0.150804039862,
+        "name": "248759213829078.png",
+        "new_voxels": 22,
+        "score": 14.425416516382,
+        "selection_step": 8,
+        "train_index": 6,
+        "visible_voxels": 1032
+      },
+      {
+        "min_separation": 0.250067404367,
+        "name": "248761614069922.png",
+        "new_voxels": 14,
+        "score": 8.165542140607,
+        "selection_step": 11,
+        "train_index": 9,
+        "visible_voxels": 984
+      },
+      {
+        "min_separation": 0.115043115154,
+        "name": "248764214331078.png",
+        "new_voxels": 99,
+        "score": 43.549400567683,
+        "selection_step": 3,
+        "train_index": 14,
+        "visible_voxels": 917
+      },
+      {
+        "min_separation": 0.115043115154,
+        "name": "248765214431078.png",
+        "new_voxels": 8,
+        "score": 5.991563831563,
+        "selection_step": 13,
+        "train_index": 16,
+        "visible_voxels": 858
+      },
+      {
+        "min_separation": 0.113981366153,
+        "name": "248766981274922.png",
+        "new_voxels": 48,
+        "score": 23.326347112239,
+        "selection_step": 5,
+        "train_index": 20,
+        "visible_voxels": 825
+      },
+      {
+        "min_separation": 0.113981366153,
+        "name": "248767981376078.png",
+        "new_voxels": 7,
+        "score": 4.949747468306,
+        "selection_step": 14,
+        "train_index": 21,
+        "visible_voxels": 763
+      },
+      {
+        "min_separation": 0.155825169261,
+        "name": "248769481527079.png",
+        "new_voxels": 159,
+        "score": 57.44618973066,
+        "selection_step": 2,
+        "train_index": 23,
+        "visible_voxels": 722
+      },
+      {
+        "min_separation": 0.158595333941,
+        "name": "248770981677078.png",
+        "new_voxels": 13,
+        "score": 6.856607800987,
+        "selection_step": 12,
+        "train_index": 26,
+        "visible_voxels": 688
+      },
+      {
+        "min_separation": 0.365339981265,
+        "name": "248774048652079.png",
+        "new_voxels": 82,
+        "score": 26.717894299015,
+        "selection_step": 4,
+        "train_index": 32,
+        "visible_voxels": 623
+      },
+      {
+        "min_separation": 0.37858993335,
+        "name": "248777582340078.png",
+        "new_voxels": 22,
+        "score": 9.49525496934,
+        "selection_step": 10,
+        "train_index": 39,
+        "visible_voxels": 655
+      },
+      {
+        "min_separation": 0.277414858722,
+        "name": "248781416059234.png",
+        "new_voxels": 34,
+        "score": 16.428036030964,
+        "selection_step": 6,
+        "train_index": 47,
+        "visible_voxels": 971
+      },
+      {
+        "min_separation": 0.223965899339,
+        "name": "248783916310079.png",
+        "new_voxels": 18,
+        "score": 9.566951232032,
+        "selection_step": 9,
+        "train_index": 49,
+        "visible_voxels": 544
+      },
+      {
+        "min_separation": 0.223965899339,
+        "name": "248786516571079.png",
+        "new_voxels": 1166,
+        "score": 386.336876575813,
+        "selection_step": 0,
+        "train_index": 55,
+        "visible_voxels": 1166
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "trainer": "fastgs",
+  "init_mode": "ply:resplat_world.ply",
+  "num_init_gaussians": 488831,
+  "num_final_gaussians": 257365,
+  "iterations": 10000,
+  "mult": 0.5,
+  "num_train_views": 210,
+  "num_test_views": 30,
+  "scene_load_seconds": 8.86,
+  "init_seconds": 0.43,
+  "train_seconds": 44.45,
+  "total_seconds": 55.5,
+  "test_psnr_quick": 27.767
+}

@@ -1,0 +1,16 @@
+{
+  "group": "hw",
+  "scene_dir": "/workspace/organizer-assets/datasets/hw/billboard",
+  "pose_source": "colmap_run",
+  "pose_estimation_seconds": 172.84572958946228,
+  "resize_seconds": 8.902257680892944,
+  "total_seconds": 181.86658191680908,
+  "num_images": 64,
+  "num_train": 56,
+  "num_test": 8,
+  "num_context": 16,
+  "resolution": [
+    768,
+    512
+  ]
+}

@@ -1,0 +1,250 @@
+{
+  "context": [
+    "DSCF5870.png",
+    "DSCF5879.png",
+    "DSCF5888.png",
+    "DSCF5902.png",
+    "DSCF5911.png",
+    "DSCF5920.png",
+    "DSCF5930.png",
+    "DSCF5949.png",
+    "DSCF5964.png",
+    "DSCF5994.png",
+    "DSCF6000.png",
+    "DSCF6020.png",
+    "DSCF6046.png",
+    "DSCF6068.png",
+    "DSCF6086.png",
+    "DSCF6092.png"
+  ],
+  "policy": "coverage",
+  "scores": {
+    "context_size": 16,
+    "coverage": {
+      "bounds": [
+        [
+          -6.860313363017,
+          -4.582392995251,
+          -4.40532103062
+        ],
+        [
+          6.856934170314,
+          6.467049080155,
+          7.824705831867
+        ]
+      ],
+      "cell_size": 0.428663985417,
+      "central_crop_fraction": 0.5,
+      "covered_voxels": 9821,
+      "grid_dims": [
+        32,
+        26,
+        29
+      ],
+      "proxy_margin_scale": 0.5,
+      "unweighted_fraction": 0.934621240959,
+      "visible_voxels": 10508,
+      "voxel_weight": "1/sqrt(number of candidate views whose frustum contains the voxel)",
+      "voxels": 24128,
+      "weighted_fraction": 0.878906994408
+    },
+    "mean_nearest_separation": 0.257315900697,
+    "min_separation": 0.074969915592,
+    "num_images": 240,
+    "num_test": 30,
+    "num_train": 210,
+    "objective": {
+      "name": "weighted_frustum_coverage",
+      "value": 3019.631623479194
+    },
+    "parameters": {
+      "grid_axis": 32,
+      "projection": "pinhole, central 50%x50% crop (distortion ignored)",
+      "tie_break": "lowest train index"
+    },
+    "policy": "coverage",
+    "scene_scale": 5.186816526357,
+    "selection_indices": [
+      27,
+      184,
+      125,
+      200,
+      11,
+      47,
+      119,
+      63,
+      19,
+      142,
+      93,
+      55,
+      165,
+      205,
+      80,
+      39
+    ],
+    "selection_order": [
+      "DSCF5888.png",
+      "DSCF6068.png",
+      "DSCF6000.png",
+      "DSCF6086.png",
+      "DSCF5870.png",
+      "DSCF5911.png",
+      "DSCF5994.png",
+      "DSCF5930.png",
+      "DSCF5879.png",
+      "DSCF6020.png",
+      "DSCF5964.png",
+      "DSCF5920.png",
+      "DSCF6046.png",
+      "DSCF6092.png",
+      "DSCF5949.png",
+      "DSCF5902.png"
+    ],
+    "views": [
+      {
+        "min_separation": 0.293617031916,
+        "name": "DSCF5870.png",
+        "new_voxels": 848,
+        "score": 252.375015760378,
+        "selection_step": 4,
+        "train_index": 11,
+        "visible_voxels": 1161
+      },
+      {
+        "min_separation": 0.240533865019,
+        "name": "DSCF5879.png",
+        "new_voxels": 621,
+        "score": 166.78128836762,
+        "selection_step": 8,
+        "train_index": 19,
+        "visible_voxels": 1097
+      },
+      {
+        "min_separation": 0.240533865019,
+        "name": "DSCF5888.png",
+        "new_voxels": 1054,
+        "score": 426.863096384639,
+        "selection_step": 0,
+        "train_index": 27,
+        "visible_voxels": 1054
+      },
+      {
+        "min_separation": 0.207053484787,
+        "name": "DSCF5902.png",
+        "new_voxels": 96,
+        "score": 34.669592753292,
+        "selection_step": 15,
+        "train_index": 39,
+        "visible_voxels": 559
+      },
+      {
+        "min_separation": 0.207053484787,
+        "name": "DSCF5911.png",
+        "new_voxels": 582,
+        "score": 250.795159615424,
+        "selection_step": 5,
+        "train_index": 47,
+        "visible_voxels": 809
+      },
+      {
+        "min_separation": 0.358037006511,
+        "name": "DSCF5920.png",
+        "new_voxels": 274,
+        "score": 89.786598205418,
+        "selection_step": 11,
+        "train_index": 55,
+        "visible_voxels": 426
+      },
+      {
+        "min_separation": 0.379651541054,
+        "name": "DSCF5930.png",
+        "new_voxels": 625,
+        "score": 180.994433400007,
+        "selection_step": 7,
+        "train_index": 63,
+        "visible_voxels": 762
+      },
+      {
+        "min_separation": 0.33973806936,
+        "name": "DSCF5949.png",
+        "new_voxels": 124,
+        "score": 37.83915272675,
+        "selection_step": 14,
+        "train_index": 80,
+        "visible_voxels": 651
+      },
+      {
+        "min_separation": 0.33973806936,
+        "name": "DSCF5964.png",
+        "new_voxels": 542,
+        "score": 126.559762922092,
+        "selection_step": 10,
+        "train_index": 93,
+        "visible_voxels": 1138
+      },
+      {
+        "min_separation": 0.171489541122,
+        "name": "DSCF5994.png",
+        "new_voxels": 791,
+        "score": 241.691208352942,
+        "selection_step": 6,
+        "train_index": 119,
+        "visible_voxels": 1256
+      },
+      {
+        "min_separation": 0.171489541122,
+        "name": "DSCF6000.png",
+        "new_voxels": 1301,
+        "score": 333.222817662444,
+        "selection_step": 2,
+        "train_index": 125,
+        "visible_voxels": 1340
+      },
+      {
+        "min_separation": 0.382920748125,
+        "name": "DSCF6020.png",
+        "new_voxels": 447,
+        "score": 127.109792145634,
+        "selection_step": 9,
+        "train_index": 142,
+        "visible_voxels": 968
+      },
+      {
+        "min_separation": 0.341641299863,
+        "name": "DSCF6046.png",
+        "new_voxels": 154,
+        "score": 84.579625017318,
+        "selection_step": 12,
+        "train_index": 165,
+        "visible_voxels": 884
+      },
+      {
+        "min_separation": 0.074969915592,
+        "name": "DSCF6068.png",
+        "new_voxels": 1103,
+        "score": 337.433822952277,
+        "selection_step": 1,
+        "train_index": 184,
+        "visible_voxels": 1128
+      },
+      {
+        "min_separation": 0.293617031916,
+        "name": "DSCF6086.png",
+        "new_voxels": 1059,
+        "score": 284.597955435606,
+        "selection_step": 3,
+        "train_index": 200,
+        "visible_voxels": 1162
+      },
+      {
+        "min_separation": 0.074969915592,
+        "name": "DSCF6092.png",
+        "new_voxels": 200,
+        "score": 44.332301777353,
+        "selection_step": 13,
+        "train_index": 205,
+        "visible_voxels": 856
+      }
+    ]
+  }
+}

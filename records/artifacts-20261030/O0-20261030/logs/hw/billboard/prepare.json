@@ -1,0 +1,27 @@
+{
+  "case": "hw/billboard",
+  "stage": "prepare",
+  "subprocess_wall_seconds": 189.1976881241426,
+  "argv": [
+    "/usr/local/miniconda3/bin/conda",
+    "run",
+    "--no-capture-output",
+    "-n",
+    "ffsplat-enhance",
+    "python",
+    "/workspace/organizer-projects/FFSplat-Hackathon/competition/upstream/baseline/module_a/preprocess.py",
+    "--scene_dir",
+    "/workspace/organizer-assets/datasets/hw/billboard",
+    "--group",
+    "hw",
+    "--out",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/work/hw/billboard",
+    "--num_context",
+    "16",
+    "--llffhold",
+    "8",
+    "--max_resolution",
+    "960"
+  ],
+  "status": "complete"
+}

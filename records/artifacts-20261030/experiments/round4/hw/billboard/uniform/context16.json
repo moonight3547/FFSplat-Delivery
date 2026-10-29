@@ -1,0 +1,188 @@
+{
+  "context": [
+    "248756513556922.png",
+    "248757713677922.png",
+    "248760247266078.png",
+    "248762547496922.png",
+    "248764214331078.png",
+    "248765981175078.png",
+    "248768481426235.png",
+    "248770481627078.png",
+    "248773015215078.png",
+    "248774548702078.png",
+    "248776182200079.png",
+    "248778082389922.png",
+    "248779949245547.png",
+    "248781416059234.png",
+    "248784916410078.png",
+    "248786516571079.png"
+  ],
+  "policy": "uniform",
+  "scores": {
+    "context_size": 16,
+    "mean_nearest_separation": 0.170513616014,
+    "min_separation": 0.084916409773,
+    "num_images": 64,
+    "num_test": 8,
+    "num_train": 56,
+    "objective": {
+      "name": "organizer_linspace_baseline",
+      "value": null
+    },
+    "parameters": {
+      "rule": "np.linspace(0, len(train)-1, 16, dtype=int)"
+    },
+    "policy": "uniform",
+    "scene_scale": 3.886949222863,
+    "selection_indices": [
+      0,
+      3,
+      7,
+      11,
+      14,
+      18,
+      22,
+      25,
+      29,
+      33,
+      36,
+      40,
+      44,
+      47,
+      51,
+      55
+    ],
+    "selection_order": [
+      "248756513556922.png",
+      "248757713677922.png",
+      "248760247266078.png",
+      "248762547496922.png",
+      "248764214331078.png",
+      "248765981175078.png",
+      "248768481426235.png",
+      "248770481627078.png",
+      "248773015215078.png",
+      "248774548702078.png",
+      "248776182200079.png",
+      "248778082389922.png",
+      "248779949245547.png",
+      "248781416059234.png",
+      "248784916410078.png",
+      "248786516571079.png"
+    ],
+    "views": [
+      {
+        "min_separation": 0.084916409773,
+        "name": "248756513556922.png",
+        "score": null,
+        "selection_step": 0,
+        "train_index": 0
+      },
+      {
+        "min_separation": 0.084916409773,
+        "name": "248757713677922.png",
+        "score": null,
+        "selection_step": 1,
+        "train_index": 3
+      },
+      {
+        "min_separation": 0.248818758909,
+        "name": "248760247266078.png",
+        "score": null,
+        "selection_step": 2,
+        "train_index": 7
+      },
+      {
+        "min_separation": 0.178505389598,
+        "name": "248762547496922.png",
+        "score": null,
+        "selection_step": 3,
+        "train_index": 11
+      },
+      {
+        "min_separation": 0.178505389598,
+        "name": "248764214331078.png",
+        "score": null,
+        "selection_step": 4,
+        "train_index": 14
+      },
+      {
+        "min_separation": 0.211448633743,
+        "name": "248765981175078.png",
+        "score": null,
+        "selection_step": 5,
+        "train_index": 18
+      },
+      {
+        "min_separation": 0.207736353978,
+        "name": "248768481426235.png",
+        "score": null,
+        "selection_step": 6,
+        "train_index": 22
+      },
+      {
+        "min_separation": 0.207736353978,
+        "name": "248770481627078.png",
+        "score": null,
+        "selection_step": 7,
+        "train_index": 25
+      },
+      {
+        "min_separation": 0.181871234755,
+        "name": "248773015215078.png",
+        "score": null,
+        "selection_step": 8,
+        "train_index": 29
+      },
+      {
+        "min_separation": 0.17211690419,
+        "name": "248774548702078.png",
+        "score": null,
+        "selection_step": 9,
+        "train_index": 33
+      },
+      {
+        "min_separation": 0.17211690419,
+        "name": "248776182200079.png",
+        "score": null,
+        "selection_step": 10,
+        "train_index": 36
+      },
+      {
+        "min_separation": 0.21059720039,
+        "name": "248778082389922.png",
+        "score": null,
+        "selection_step": 11,
+        "train_index": 40
+      },
+      {
+        "min_separation": 0.170496067074,
+        "name": "248779949245547.png",
+        "score": null,
+        "selection_step": 12,
+        "train_index": 44
+      },
+      {
+        "min_separation": 0.170496067074,
+        "name": "248781416059234.png",
+        "score": null,
+        "selection_step": 13,
+        "train_index": 47
+      },
+      {
+        "min_separation": 0.123969889596,
+        "name": "248784916410078.png",
+        "score": null,
+        "selection_step": 14,
+        "train_index": 51
+      },
+      {
+        "min_separation": 0.123969889596,
+        "name": "248786516571079.png",
+        "score": null,
+        "selection_step": 15,
+        "train_index": 55
+      }
+    ]
+  }
+}

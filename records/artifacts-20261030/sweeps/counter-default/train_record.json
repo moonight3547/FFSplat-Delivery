@@ -1,0 +1,81 @@
+{
+  "init_ply": "outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+  "init_mode": "ply:resplat_world.ply",
+  "num_init_gaussians": 488831,
+  "num_final_gaussians": 240336,
+  "iterations": 20000,
+  "snapshots": [
+    {
+      "iteration": 1000,
+      "train_seconds": 6.100441626040265,
+      "num_gaussians": 487961,
+      "ply": "outputs/sweeps/counter-default/snaps/iter01000.ply"
+    },
+    {
+      "iteration": 2000,
+      "train_seconds": 15.401815399061888,
+      "num_gaussians": 433687,
+      "ply": "outputs/sweeps/counter-default/snaps/iter02000.ply"
+    },
+    {
+      "iteration": 3000,
+      "train_seconds": 23.794760922901332,
+      "num_gaussians": 386855,
+      "ply": "outputs/sweeps/counter-default/snaps/iter03000.ply"
+    },
+    {
+      "iteration": 4000,
+      "train_seconds": 31.583524636924267,
+      "num_gaussians": 324830,
+      "ply": "outputs/sweeps/counter-default/snaps/iter04000.ply"
+    },
+    {
+      "iteration": 6000,
+      "train_seconds": 42.90270649106242,
+      "num_gaussians": 291149,
+      "ply": "outputs/sweeps/counter-default/snaps/iter06000.ply"
+    },
+    {
+      "iteration": 8000,
+      "train_seconds": 53.717804529936984,
+      "num_gaussians": 270593,
+      "ply": "outputs/sweeps/counter-default/snaps/iter08000.ply"
+    },
+    {
+      "iteration": 12000,
+      "train_seconds": 73.97602463001385,
+      "num_gaussians": 249157,
+      "ply": "outputs/sweeps/counter-default/snaps/iter12000.ply"
+    },
+    {
+      "iteration": 20000,
+      "train_seconds": 103.70366663299501,
+      "num_gaussians": 240336,
+      "ply": "outputs/sweeps/counter-default/snaps/iter20000.ply"
+    }
+  ],
+  "scene_load_seconds": 9.636,
+  "init_seconds": 0.544,
+  "train_seconds": 105.504,
+  "total_seconds": 115.741,
+  "iterations_per_second": 189.57,
+  "quick_test_psnr": 27.9489,
+  "num_train_views": 210,
+  "num_test_views": 30,
+  "settings": {
+    "position_lr_max_steps": 30000,
+    "position_lr_init": 0.00016,
+    "position_lr_final": 1.6e-06,
+    "densify_from_iter": 500,
+    "densify_until_iter": 15000,
+    "densification_interval": 100,
+    "opacity_reset_interval": 3000,
+    "mult": 0.5,
+    "lambda_dssim": 0.2,
+    "scaling_lr": 0.005,
+    "opacity_lr": 0.025,
+    "position_lr_delay_mult": 0.01,
+    "no_densify": false,
+    "seed": 20261015
+  }
+}

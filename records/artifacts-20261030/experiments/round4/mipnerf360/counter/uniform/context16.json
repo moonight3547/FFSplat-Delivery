@@ -1,0 +1,188 @@
+{
+  "context": [
+    "DSCF5858.png",
+    "DSCF5872.png",
+    "DSCF5888.png",
+    "DSCF5904.png",
+    "DSCF5920.png",
+    "DSCF5936.png",
+    "DSCF5952.png",
+    "DSCF5968.png",
+    "DSCF5984.png",
+    "DSCF6000.png",
+    "DSCF6016.png",
+    "DSCF6032.png",
+    "DSCF6048.png",
+    "DSCF6064.png",
+    "DSCF6080.png",
+    "DSCF6096.png"
+  ],
+  "policy": "uniform",
+  "scores": {
+    "context_size": 16,
+    "mean_nearest_separation": 0.276126887599,
+    "min_separation": 0.1937588586,
+    "num_images": 240,
+    "num_test": 30,
+    "num_train": 210,
+    "objective": {
+      "name": "organizer_linspace_baseline",
+      "value": null
+    },
+    "parameters": {
+      "rule": "np.linspace(0, len(train)-1, 16, dtype=int)"
+    },
+    "policy": "uniform",
+    "scene_scale": 5.186816526357,
+    "selection_indices": [
+      0,
+      13,
+      27,
+      41,
+      55,
+      69,
+      83,
+      97,
+      111,
+      125,
+      139,
+      153,
+      167,
+      181,
+      195,
+      209
+    ],
+    "selection_order": [
+      "DSCF5858.png",
+      "DSCF5872.png",
+      "DSCF5888.png",
+      "DSCF5904.png",
+      "DSCF5920.png",
+      "DSCF5936.png",
+      "DSCF5952.png",
+      "DSCF5968.png",
+      "DSCF5984.png",
+      "DSCF6000.png",
+      "DSCF6016.png",
+      "DSCF6032.png",
+      "DSCF6048.png",
+      "DSCF6064.png",
+      "DSCF6080.png",
+      "DSCF6096.png"
+    ],
+    "views": [
+      {
+        "min_separation": 0.243194437291,
+        "name": "DSCF5858.png",
+        "score": null,
+        "selection_step": 0,
+        "train_index": 0
+      },
+      {
+        "min_separation": 0.290221308011,
+        "name": "DSCF5872.png",
+        "score": null,
+        "selection_step": 1,
+        "train_index": 13
+      },
+      {
+        "min_separation": 0.236966127955,
+        "name": "DSCF5888.png",
+        "score": null,
+        "selection_step": 2,
+        "train_index": 27
+      },
+      {
+        "min_separation": 0.236966127955,
+        "name": "DSCF5904.png",
+        "score": null,
+        "selection_step": 3,
+        "train_index": 41
+      },
+      {
+        "min_separation": 0.426185700651,
+        "name": "DSCF5920.png",
+        "score": null,
+        "selection_step": 4,
+        "train_index": 55
+      },
+      {
+        "min_separation": 0.212799899212,
+        "name": "DSCF5936.png",
+        "score": null,
+        "selection_step": 5,
+        "train_index": 69
+      },
+      {
+        "min_separation": 0.212799899212,
+        "name": "DSCF5952.png",
+        "score": null,
+        "selection_step": 6,
+        "train_index": 83
+      },
+      {
+        "min_separation": 0.447447598965,
+        "name": "DSCF5968.png",
+        "score": null,
+        "selection_step": 7,
+        "train_index": 97
+      },
+      {
+        "min_separation": 0.302523428481,
+        "name": "DSCF5984.png",
+        "score": null,
+        "selection_step": 8,
+        "train_index": 111
+      },
+      {
+        "min_separation": 0.302523428481,
+        "name": "DSCF6000.png",
+        "score": null,
+        "selection_step": 9,
+        "train_index": 125
+      },
+      {
+        "min_separation": 0.316354464358,
+        "name": "DSCF6016.png",
+        "score": null,
+        "selection_step": 10,
+        "train_index": 139
+      },
+      {
+        "min_separation": 0.280893837698,
+        "name": "DSCF6032.png",
+        "score": null,
+        "selection_step": 11,
+        "train_index": 153
+      },
+      {
+        "min_separation": 0.1937588586,
+        "name": "DSCF6048.png",
+        "score": null,
+        "selection_step": 12,
+        "train_index": 167
+      },
+      {
+        "min_separation": 0.278441788826,
+        "name": "DSCF6064.png",
+        "score": null,
+        "selection_step": 13,
+        "train_index": 181
+      },
+      {
+        "min_separation": 0.243194437291,
+        "name": "DSCF6080.png",
+        "score": null,
+        "selection_step": 14,
+        "train_index": 195
+      },
+      {
+        "min_separation": 0.1937588586,
+        "name": "DSCF6096.png",
+        "score": null,
+        "selection_step": 15,
+        "train_index": 209
+      }
+    ]
+  }
+}

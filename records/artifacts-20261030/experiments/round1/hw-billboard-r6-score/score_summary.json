@@ -1,0 +1,23 @@
+{
+  "work": "outputs/O0-20261030/work/hw/billboard",
+  "budget_seconds": 99.49,
+  "b_seconds": null,
+  "rows": [
+    {
+      "name": "r6",
+      "psnr": 19.85,
+      "ssim": 0.6411,
+      "lpips": 0.2916,
+      "score": {
+        "quality_points": 3.8800000000000012,
+        "time_points": null,
+        "total_points": 3.8800000000000012,
+        "components": {
+          "psnr": 3.8800000000000012,
+          "ssim": 0.0,
+          "lpips": 0.0
+        }
+      }
+    }
+  ]
+}

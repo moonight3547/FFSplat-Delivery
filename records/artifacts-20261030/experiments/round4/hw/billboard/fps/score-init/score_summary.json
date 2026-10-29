@@ -1,0 +1,23 @@
+{
+  "work": "outputs/experiments/round4/hw/billboard/fps/work",
+  "budget_seconds": null,
+  "b_seconds": null,
+  "rows": [
+    {
+      "name": "fps",
+      "psnr": 19.96,
+      "ssim": 0.6539,
+      "lpips": 0.2822,
+      "score": {
+        "quality_points": 3.9680000000000004,
+        "time_points": null,
+        "total_points": 3.9680000000000004,
+        "components": {
+          "psnr": 3.9680000000000004,
+          "ssim": 0.0,
+          "lpips": 0.0
+        }
+      }
+    }
+  ]
+}

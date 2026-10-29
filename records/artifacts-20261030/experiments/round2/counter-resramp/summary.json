@@ -1,0 +1,119 @@
+{
+  "case": "mipnerf360/counter",
+  "work": "outputs/O0-20261030/work/mipnerf360/counter",
+  "init_ply": "outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+  "budget_seconds": 92.57,
+  "train_record": {
+    "init_ply": "outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+    "init_mode": "ply:resplat_world.ply",
+    "num_init_gaussians": 488831,
+    "num_final_gaussians": 265241,
+    "iterations": 24000,
+    "scene_load_seconds": 31.467,
+    "init_seconds": 0.442,
+    "train_seconds": 133.752,
+    "total_seconds": 165.709,
+    "iterations_per_second": 179.44,
+    "quick_test_psnr": 12.2813,
+    "num_train_views": 210,
+    "num_test_views": 30,
+    "res_scales": [
+      0.5,
+      0.75,
+      1.0
+    ],
+    "res_until": [
+      0.6,
+      0.85
+    ],
+    "settings": {
+      "position_lr_max_steps": 30000,
+      "position_lr_init": 0.00016,
+      "position_lr_final": 1.6e-06,
+      "densify_from_iter": 500,
+      "densify_until_iter": 15000,
+      "densification_interval": 100,
+      "opacity_reset_interval": 3000,
+      "mult": 0.5,
+      "lambda_dssim": 0.2,
+      "scaling_lr": 0.005,
+      "opacity_lr": 0.025,
+      "position_lr_delay_mult": 0.01,
+      "no_densify": false,
+      "seed": 20261015,
+      "res_scales": [
+        0.5,
+        0.75,
+        1.0
+      ],
+      "res_until": [
+        0.6,
+        0.85
+      ],
+      "lpips_weight": 0.0,
+      "lpips_every": 1,
+      "lpips_scale": 0.5,
+      "densify_count_thresh": null,
+      "max_gaussians": null
+    }
+  },
+  "results": [
+    {
+      "iteration": 8000,
+      "num_gaussians": 294321,
+      "train_seconds": 56.87,
+      "b_seconds_estimate": 89.28,
+      "psnr": 27.009,
+      "ssim": 0.8712,
+      "lpips": 0.223,
+      "score": {
+        "psnr_points": 9.6072,
+        "ssim_points": 13.696000000000002,
+        "lpips_points": 5.3999999999999995,
+        "time_points": 0.7903933196331807,
+        "quality_points": 28.703200000000002,
+        "total_points": 29.493593319633185,
+        "budget_ratio": 0.9644323006165069,
+        "valid": true
+      }
+    },
+    {
+      "iteration": 16000,
+      "num_gaussians": 265241,
+      "train_seconds": 103.66,
+      "b_seconds_estimate": 136.07,
+      "psnr": 25.468,
+      "ssim": 0.8512,
+      "lpips": 0.2615,
+      "score": {
+        "psnr_points": 8.3744,
+        "ssim_points": 12.096,
+        "lpips_points": 0.0,
+        "time_points": 0.0,
+        "quality_points": 20.470399999999998,
+        "total_points": 20.470399999999998,
+        "budget_ratio": 1.4698795322999454,
+        "valid": false
+      }
+    },
+    {
+      "iteration": 24000,
+      "num_gaussians": 265241,
+      "train_seconds": 132.02,
+      "b_seconds_estimate": 164.43,
+      "psnr": 12.042,
+      "ssim": 0.4478,
+      "lpips": 0.5261,
+      "score": {
+        "psnr_points": 0.0,
+        "ssim_points": 0.0,
+        "lpips_points": 0.0,
+        "time_points": 0.0,
+        "quality_points": 0.0,
+        "total_points": 0.0,
+        "budget_ratio": 1.7762522928481117,
+        "valid": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "init_ply": "outputs/O0-20261030/results/hw/billboard/resplat/resplat_world.ply",
+  "init_mode": "ply:resplat_world.ply",
+  "num_init_gaussians": 387019,
+  "num_final_gaussians": 401031,
+  "iterations": 8000,
+  "snapshots": [
+    {
+      "iteration": 4000,
+      "train_seconds": 21.539684396004304,
+      "num_gaussians": 417358,
+      "ply": "outputs/experiments/round3/hw-dense-noreset/snaps/iter04000.ply"
+    },
+    {
+      "iteration": 8000,
+      "train_seconds": 44.768055303022265,
+      "num_gaussians": 401031,
+      "ply": "outputs/experiments/round3/hw-dense-noreset/snaps/iter08000.ply"
+    }
+  ],
+  "scene_load_seconds": 2.62,
+  "init_seconds": 0.606,
+  "train_seconds": 47.551,
+  "total_seconds": 50.798,
+  "iterations_per_second": 168.24,
+  "quick_test_psnr": 22.7555,
+  "num_train_views": 56,
+  "num_test_views": 8,
+  "res_scales": [
+    1.0
+  ],
+  "res_until": [],
+  "settings": {
+    "position_lr_max_steps": 30000,
+    "position_lr_init": 0.00016,
+    "position_lr_final": 1.6e-06,
+    "densify_from_iter": 500,
+    "densify_until_iter": 15000,
+    "densification_interval": 100,
+    "opacity_reset_interval": 8001,
+    "mult": 0.5,
+    "lambda_dssim": 0.2,
+    "scaling_lr": 0.005,
+    "opacity_lr": 0.025,
+    "position_lr_delay_mult": 0.01,
+    "no_densify": false,
+    "seed": 20261015,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "lpips_weight": 0.0,
+    "lpips_every": 1,
+    "lpips_scale": 0.5,
+    "densify_count_thresh": 2,
+    "max_gaussians": 900000
+  }
+}

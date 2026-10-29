@@ -1,0 +1,152 @@
+{
+  "benchmark": {
+    "schema_version": 2,
+    "benchmark_id": "organizer-examples3-cb29814-v1-fastgs30k",
+    "protocol": "organizer-20261028",
+    "status": "source_verified_new_hardware_calibration_required",
+    "upstream": {
+      "repository": "https://gitcode.com/gcw_yxxmv6uE/hackathon_competition.git",
+      "commit": "cb29814af7e260f03f7565e6edadb35bf42c5a93"
+    },
+    "context_views": 16,
+    "llffhold": 8,
+    "num_refine": 2,
+    "resolution": {
+      "policy": "organizer_preprocess",
+      "landscape_long_edge_max": 960,
+      "portrait_long_edge_max": 768,
+      "multiple": 64,
+      "final_metrics": "processed resolution used by organizer code; not legacy native-resolution"
+    },
+    "metrics": {
+      "implementation": "resplat/src/evaluation/metrics.py",
+      "lpips_backbone": "vgg",
+      "ssim": "skimage win_size=11 gaussian_weights=True channel_axis=0 data_range=1",
+      "aggregation": "equal scene mean for local summary; official cross-scene aggregate unspecified"
+    },
+    "timing": {
+      "scope": "A + ReSplat + B stage totals",
+      "reference": "same-machine FastGS random-init 30000 steps on identical prepared scene",
+      "strict": true,
+      "official_percent_formula": null,
+      "old_mixed10_budgets_compatible": false,
+      "reference_trainer": "fastgs",
+      "reference_iterations": 30000,
+      "reference_initialization": "random",
+      "revision": "fastgs-random30k-user-confirmed-20261029"
+    },
+    "pose_estimation_scope": "Organizer preprocess may run COLMAP on all source images before llffhold split; no held-out RGB in ReSplat or B optimization",
+    "data": {
+      "url": "https://drive.google.com/drive/folders/1CZWTj9jHh9wVdUru0za69-Mtaz5Fzn16",
+      "snapshot": {
+        "id": "organizer-download-20261029",
+        "archive_sha256": "7a1f68dfc6c9fd89a35537a04e161a3308873b079f00e61fc31eb2a99658147d",
+        "archive_bytes": 5619483272,
+        "archive_root": "datasets",
+        "archive_inventory": "references/dataset-archive.json"
+      },
+      "all_provided_scene_inventory": {
+        "scene_count": 13,
+        "groups": {
+          "DL3DV": 6,
+          "hw": 4,
+          "mipnerf360": 3
+        },
+        "catalog": "references/dataset-catalog.json"
+      }
+    },
+    "checkpoint": {
+      "name": "resplat-base-dl3dv-540x960-view16-a72dc6d0.pth",
+      "url": "https://drive.google.com/file/d/1HRZZWq-PyhhJ9zkDHhVL1IWdxnnIIjdY/view",
+      "sha256": "a72dc6d0d56f7ccc50d145c17c83d866d4aaa2c13adb1a22f7a84481001e1a4c",
+      "sha256_provenance": "observed user-supplied download; filename prefix matches; no organizer-published full SHA256"
+    },
+    "cases": [
+      {
+        "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+        "group": "dl3dv",
+        "scene": "001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+        "source": "DL3DV"
+      },
+      {
+        "id": "hw/billboard",
+        "group": "hw",
+        "scene": "billboard",
+        "source": "hw"
+      },
+      {
+        "id": "mipnerf360/counter",
+        "group": "mipnerf360",
+        "scene": "counter",
+        "source": "mipnerf360"
+      }
+    ]
+  },
+  "profile": {
+    "schema_version": 1,
+    "profile": "compshare-organizer-20261029",
+    "execution_os": "linux",
+    "device": "cuda:0",
+    "conda": "/usr/local/miniconda3/bin/conda",
+    "environments": {
+      "resplat": "ffsplat-enhance",
+      "fastgs": "organizer-fastgs",
+      "mcmc": "ffsplat-enhance"
+    },
+    "controller_os": [
+      "windows",
+      "macos",
+      "linux"
+    ],
+    "environment": {
+      "CUDA_HOME": "/usr/local/miniconda3/envs/ffsplat-enhance",
+      "CPATH": "/usr/local/miniconda3/envs/ffsplat-enhance/targets/x86_64-linux/include",
+      "LIBRARY_PATH": "/usr/local/miniconda3/envs/ffsplat-enhance/targets/x86_64-linux/lib",
+      "TORCH_CUDA_ARCH_LIST": "8.9",
+      "MAX_JOBS": "4",
+      "QT_QPA_PLATFORM": "offscreen"
+    },
+    "status": "Reuses audited Torch2.7/cu128 gsplat1.5.3 environment; fresh Torch2.4/cu124 FastGS. See execution record."
+  },
+  "hardware": {
+    "host": "cpod-1wqzm4msan2q",
+    "gpu_inventory": "GPU-db080f3e-1f31-ec8d-821e-326757e8d1e1, NVIDIA GeForce RTX 4090, 610.57.04"
+  },
+  "policy": "official-fastgs",
+  "a_policy": "uniform16",
+  "resplat_seed": 20261015,
+  "b_settings": null,
+  "checkpoint_sha256": "a72dc6d0d56f7ccc50d145c17c83d866d4aaa2c13adb1a22f7a84481001e1a4c",
+  "assets_sha256": "722d2aa9930fd92c096f9c8891e15738d86a673b968ea4daff61beed26f4b16b",
+  "source_commit": "af58a3930f612d33fde62f38d3381d5eb72ef540",
+  "source_sha256": {
+    "competition/__init__.py": "56ca2e3b9b04d3bfae7422b38dfee94ab36085f1c7245b65c87373eacd118e67",
+    "competition/assets.py": "58ecc75feddb6306f9d689723c4c11ff163a6a91dba87ff1702eb24d905cf65c",
+    "competition/bridge.py": "b6e7deeb6f004bb48dba7a87af3082fcdb0ecec58e7e2194821fc364847b4e58",
+    "competition/budget.py": "b634608adad4f26520f7f1cbd16393517779427c458d8e61705efde477fa45b3",
+    "competition/checkpoint_audit.py": "f9f4c647efd08e6a5d4fc37e0b4eb61ead206e2994673eaaecaebbd9b7f7bedf",
+    "competition/contracts.py": "2f1ddec9a1d415270c9255df8822e4c8d9d7a64ad1fac959e80aae1e46d00edc",
+    "competition/doctor.py": "a975611dfbc1201b7c8ef814eea3958737ebdf4d544d86339edebfce3c36075b",
+    "competition/environment.py": "8f73b47d6d5d651fc27aa669a66b8b433477f564243d41a3f65b6075f813d2fe",
+    "competition/gpu_smoke.py": "136dfa925c72043bc878c0d3d283d59b4029dfa9f28bd9c411568f2a9377ce4f",
+    "competition/import_assets.py": "55be02482684575d2085e4d63d63af217575b6c6a2abc07b2187f93da3f1cbd9",
+    "competition/mcmc.py": "b1faa8de932f916245a60b24ee0a76a8ea31b5fcb80f9d0b41c8f298659f73b6",
+    "competition/pairing.py": "a5c00f60b85ebac3f874fb22fd2689db73a46c7f788a452cc6f8c108c765e32d",
+    "competition/rank_resplat.py": "2d257fcb5a1e5494b5b64a912ea9de7a6932eaef6f389ee0b565dde5754c0bc0",
+    "competition/render_probe.py": "5fd3ddbf1f9e0aa09e3051cad23781fed64d30144038dfd61ea47eeebfbc511e",
+    "competition/resplat.py": "0527f1c222061311c68def2a160d2bbbc59477f794b21de80caa1092d6df62ba",
+    "competition/run.py": "deddde60ef21f694542b1101f6594f8f3924dcbe5d557a6e8d332f48bc094514",
+    "competition/runtime.py": "bc3e33733ef22ec10e1ccd89d670ead717533e41c0524196b656ed5632020b63",
+    "competition/selection.py": "a07d089894fc86fe4b408e9f980fb1a2d7a8cd20bd4e379bd48d91741cc34400",
+    "competition/source_audit.py": "b78ec059952dc6ce5530ed7bb996a809c2fe361b5d07d1a3e5017f3de163ed36",
+    "competition/suite.py": "ac1ba040082cb499e336e6ffb7ff67fbc79fae5ab8a0a0c9730015af5b2ce8de",
+    "competition/train_utils.py": "ac526488735c6b42b01eb837565010f9f58e74e86dc32784bc925fe5dc8f233b",
+    "competition/upstream-lock.json": "3d48d58e357b75e46f58de4cd9c1a657930599ed4c8b2077dd289c2b65353d70",
+    "competition/upstream-snapshot.json": "9c9d4ea52a50cf70d6682836cdb6875964f55cbcbebfc36d86199979d9c36ac2",
+    "competition/policies/mcmc-ctf.json": "67d9c2c6a015aa181e785017587ee4830abbef8bb715830b8c1426a3871f008d",
+    "competition/policies/ranked16.json": "b871973db61ab4bcf237c6048c4b6a1186d44d9b364d5ca78b1307bf973ba913",
+    "competition/profiles/compshare-20261029.json": "1e37a92310cf603b507966b36f58e12be83ef9d0dc3bc4ad3ebe9b3ce41ae39c",
+    "competition/profiles/linux-cuda.json": "77f05189c6b945217fa92627f3ff26d9163c020b833272c535f65db471df3d78",
+    "competition/profiles/organizer-fresh.json": "cd43b7051b720881d6409e36dcb8e2f7115bbaf96294dcfef95ba2a568b3e1bf"
+  }
+}

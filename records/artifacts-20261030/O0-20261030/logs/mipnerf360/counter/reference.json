@@ -1,0 +1,32 @@
+{
+  "case": "mipnerf360/counter",
+  "stage": "reference",
+  "subprocess_wall_seconds": 99.34519056393765,
+  "argv": [
+    "/usr/local/miniconda3/bin/conda",
+    "run",
+    "--no-capture-output",
+    "-n",
+    "organizer-fastgs",
+    "python",
+    "/workspace/organizer-projects/FFSplat-Hackathon/competition/upstream/baseline/module_b/train_from_ply_fastgs.py",
+    "-s",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/work/mipnerf360/counter",
+    "--eval",
+    "-r",
+    "1",
+    "--sh_degree",
+    "3",
+    "--quiet",
+    "-m",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/results/mipnerf360/counter/reference_fastgs",
+    "--iterations",
+    "30000",
+    "--position_lr_max_steps",
+    "30000",
+    "--densify_until_iter",
+    "15000",
+    "--init_random"
+  ],
+  "status": "complete"
+}

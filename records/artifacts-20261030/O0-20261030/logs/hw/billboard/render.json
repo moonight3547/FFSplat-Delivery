@@ -1,0 +1,29 @@
+{
+  "case": "hw/billboard",
+  "stage": "render",
+  "subprocess_wall_seconds": 10.623505239142105,
+  "argv": [
+    "/usr/local/miniconda3/bin/conda",
+    "run",
+    "--no-capture-output",
+    "-n",
+    "organizer-fastgs",
+    "python",
+    "/workspace/organizer-projects/FFSplat-Hackathon/competition/upstream/baseline/render_test.py",
+    "-s",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/work/hw/billboard",
+    "--eval",
+    "-r",
+    "1",
+    "--sh_degree",
+    "3",
+    "--quiet",
+    "-m",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/results/hw/billboard/module_b",
+    "--backend",
+    "fastgs",
+    "--iteration",
+    "10000"
+  ],
+  "status": "complete"
+}

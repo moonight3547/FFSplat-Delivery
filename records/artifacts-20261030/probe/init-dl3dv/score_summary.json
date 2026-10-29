@@ -1,0 +1,23 @@
+{
+  "work": "outputs/O0-20261030/work/dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+  "budget_seconds": 94.29,
+  "b_seconds": null,
+  "rows": [
+    {
+      "name": "refine2",
+      "psnr": 27.788,
+      "ssim": 0.8771,
+      "lpips": 0.2054,
+      "score": {
+        "quality_points": 33.318400000000004,
+        "time_points": null,
+        "total_points": 33.318400000000004,
+        "components": {
+          "psnr": 10.2304,
+          "ssim": 14.168000000000003,
+          "lpips": 8.92
+        }
+      }
+    }
+  ]
+}

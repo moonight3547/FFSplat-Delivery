@@ -1,0 +1,27 @@
+{
+  "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+  "stage": "prepare",
+  "subprocess_wall_seconds": 58.33437427901663,
+  "argv": [
+    "/usr/local/miniconda3/bin/conda",
+    "run",
+    "--no-capture-output",
+    "-n",
+    "ffsplat-enhance",
+    "python",
+    "/workspace/organizer-projects/FFSplat-Hackathon/competition/upstream/baseline/module_a/preprocess.py",
+    "--scene_dir",
+    "/workspace/organizer-assets/datasets/DL3DV/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "--group",
+    "dl3dv",
+    "--out",
+    "/workspace/organizer-projects/FFSplat-Hackathon/outputs/O0-20261030/work/dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "--num_context",
+    "16",
+    "--llffhold",
+    "8",
+    "--max_resolution",
+    "960"
+  ],
+  "status": "complete"
+}
