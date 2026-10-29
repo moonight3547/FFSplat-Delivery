@@ -31,7 +31,7 @@ sharp_ply() {
   tag=$(echo "$1" | tr '/' '_')
   src="outputs/O0-20261030/results/$1/resplat/resplat_world.ply"
   out="$D/ply/${tag}_sharp.ply"
-  [ -f "$out" ] || $PY run --no-capture-output -n fastgs python -m research.ply_ops \
+  [ -f "$out" ] || $PY run --no-capture-output -n ${ENV:-fastgs} python -m research.ply_ops \
       --in "$src" --out "$out" --op sharpen --gain 2.0 >/dev/null 2>&1
   echo "$out"
 }
@@ -43,7 +43,7 @@ run_one() {  # tag case iters budget ply extra...
   if [ "$plymode" = sharp ]; then ply=$(sharp_ply "$case"); else ply="outputs/O0-20261030/results/$case/resplat/resplat_world.ply"; fi
   echo "start $tag lane$LANE $(date -Is)" >>"$D/queue.log"
   prof=${PROFILE:-competition/profiles/gpufree-$LANE.json}
-  $PY run --no-capture-output -n fastgs python -m research.run_sweep \
+  $PY run --no-capture-output -n ${ENV:-fastgs} python -m research.run_sweep \
     --profile "$prof" --case "$case" \
     --work "outputs/O0-20261030/work/$case" --init-ply "$ply" \
     --out "$dir" --iterations "$iters" --snapshots "" --budget "$budget" \
