@@ -93,3 +93,9 @@ FINAL-REPORT 中“75+ is not reachable / hard ceiling ~65”超出证据。把*
 - [E11导出过滤](EXPORT_CULLING_AUDIT_20261030.md)：原生gsplat按camera-Z裁far，导出按最近相机欧氏距离，且同时opacity过滤；bicycle约5.8%高斯被删但原因未拆。下一次合法前馈先记录两个mask及实际训练图贡献，不立即取消全部过滤，也不把native→PLY落差全归为SH。
 
 评分解释同步修正：逐case LPIPS为0不等于对mean-first集合质量无贡献，新watcher的bicycle净边际为四例+.6922，见[同步08](SYNC_20261030_08.md)。报告区分连续指标、逐case诊断分和集合工作公式，避免“B无效/初始化已封顶”的过强结论。
+
+## 07:44追加：稀疏锚点与近似预算来源
+
+[E3-S](SPARSE_GEOMETRY_ANCHORS_20261030.md)提供独立于ReSplat同源depth的训练侧几何检查：源observations→候选点→留一训练观测验证→0步/5K偏差诊断。命中后才做弱监督；当前没有GPU效果证据。B实际看56–288个train，不能把只有2/3/6训练图的整套稀疏重建方法直接套入。
+
+新SKIP_REF路径应在manifest保留approx标记、reference_record和GPU身份，仅打印日志不足以防止后续按数字误报valid。预算95秒的误差不是普遍≤0.5TIME分，靠近阈值还会翻转有效性；[同步10](SYNC_20261030_10.md)给出标量反例。24c162f的NODE=none保留源码已确认，远端部署本轮未能读取，不混报为已执行验证。

@@ -1,0 +1,5 @@
+{
+  "status": "observation_failed",
+  "error": "SSH connection closed by H1 endpoint, exit255",
+  "note": "No remote state observed; retry in separate file. No task restart."
+}

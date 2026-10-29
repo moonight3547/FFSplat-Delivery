@@ -31,6 +31,8 @@ for case in "${CASES[@]}"; do
     *) budget=95 ;;
   esac
   echo "=== $case $(date -Is)" >>"$log"
+  # stale copies would silently carry the previous scene's numbers if a run fails
+  rm -f "$OUT/base_summary.json" "$OUT/del_summary.json"
   rm -rf "$d"
   $PY run --no-capture-output -n "$RESPLAT" python competition/upstream/baseline/module_a/preprocess.py \
     --scene_dir "$src" --group "$group" --out "$d" --num_context 16 --llffhold 8 --max_resolution 960 >>"$log" 2>&1

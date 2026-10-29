@@ -1,0 +1,44 @@
+{
+  "source": "20261030-0748-train-triangulation-crossfit.json",
+  "cases": [
+    {
+      "case": "mipnerf360/bicycle",
+      "crossfit_count": 326,
+      "positive_Z_count": 326,
+      "native_px_error_quantiles": {
+        "0": 0.20501193159622078,
+        "0.5": 1.8062622353189832,
+        "0.9": 3.9945783470902527,
+        "0.95": 4.626245910799312,
+        "1": 10.60776363054219
+      },
+      "raw_px_le2_count": 182
+    },
+    {
+      "case": "mipnerf360/counter",
+      "crossfit_count": 1299,
+      "positive_Z_count": 1299,
+      "native_px_error_quantiles": {
+        "0": 0.015344206934291412,
+        "0.5": 0.9329957453752575,
+        "0.9": 2.8277697159456605,
+        "0.95": 3.6060272175966923,
+        "1": 25.172087176091324
+      },
+      "raw_px_le2_count": 1045
+    },
+    {
+      "case": "mipnerf360/bonsai",
+      "crossfit_count": 2031,
+      "positive_Z_count": 2031,
+      "native_px_error_quantiles": {
+        "0": 0.008347203195443702,
+        "0.5": 1.131523478017366,
+        "0.9": 3.005682391043782,
+        "0.95": 3.774414772593003,
+        "1": 10.87600179341442
+      },
+      "raw_px_le2_count": 1565
+    }
+  ]
+}

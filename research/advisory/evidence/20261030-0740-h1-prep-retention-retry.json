@@ -1,0 +1,5 @@
+{
+  "status": "observation_failed",
+  "error": "Second SSH connection closed by H1 endpoint, exit255",
+  "note": "No current deployment/process evidence; local research continues. No restart."
+}

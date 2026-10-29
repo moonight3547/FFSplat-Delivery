@@ -1,0 +1,65 @@
+{
+  "type": "scalar proxy arithmetic; hypothetical times to test claimed bound, not observed run timings",
+  "cases": [
+    {
+      "B_seconds": 40.0,
+      "reference_cases": [
+        {
+          "reference_seconds": 92.0,
+          "valid": true,
+          "time_points": 12.560386473429952
+        },
+        {
+          "reference_seconds": 95.0,
+          "valid": true,
+          "time_points": 12.865497076023392
+        },
+        {
+          "reference_seconds": 100.0,
+          "valid": true,
+          "time_points": 13.333333333333332
+        }
+      ]
+    },
+    {
+      "B_seconds": 90.0,
+      "reference_cases": [
+        {
+          "reference_seconds": 92.0,
+          "valid": true,
+          "time_points": 0.4830917874396132
+        },
+        {
+          "reference_seconds": 95.0,
+          "valid": true,
+          "time_points": 1.169590643274855
+        },
+        {
+          "reference_seconds": 100.0,
+          "valid": true,
+          "time_points": 2.2222222222222214
+        }
+      ]
+    },
+    {
+      "B_seconds": 94.0,
+      "reference_cases": [
+        {
+          "reference_seconds": 92.0,
+          "valid": false,
+          "time_points": null
+        },
+        {
+          "reference_seconds": 95.0,
+          "valid": true,
+          "time_points": 0.23391812865497147
+        },
+        {
+          "reference_seconds": 100.0,
+          "valid": true,
+          "time_points": 1.3333333333333344
+        }
+      ]
+    }
+  ]
+}
