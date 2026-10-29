@@ -92,6 +92,9 @@ def main(argv=None):
                         help="sampled-view count needed to densify (upstream hardcodes 5)")
     parser.add_argument("--max_gaussians", type=int, default=None,
                         help="hard cap on Gaussian count, weakest pruned first")
+    parser.add_argument("--opt_step_schedule", type=str, default="",
+                        help="e.g. '2500:2,3750:4' = dense Adam every N steps after that "
+                             "iteration; the LR is scaled by N so the step size is kept")
     parser.add_argument("--time_breakdown", action="store_true",
                         help="accumulate per-section wall clock (render/backward/optimizer)")
     parser.add_argument("--image_cache", type=str, default=None,
@@ -333,7 +336,21 @@ def main(argv=None):
                     or (dataset.white_background and iteration == opt.densify_from_iter)):
                 gaussians.reset_opacity()
 
-            gaussians.optimizer_step(iteration)
+            _every = 1
+            if args.opt_step_schedule:
+                for part in args.opt_step_schedule.split(","):
+                    at, mult = part.split(":")
+                    if iteration >= int(at):
+                        _every = int(mult)
+            if _every == 1 or iteration % _every == 0:
+                if _every > 1:
+                    # keep the per-step displacement comparable: undo the LR divisor
+                    for group in gaussians.optimizer.param_groups:
+                        group["lr"] *= _every
+                gaussians.optimizer_step(iteration)
+                if _every > 1:
+                    for group in gaussians.optimizer.param_groups:
+                        group["lr"] /= _every
 
         if args.time_breakdown:
             _sync()

@@ -16,6 +16,8 @@ E2前置条件更新：[选图可行性审查](VIEW_SELECTION_FEASIBILITY_202610
 
 [实验同步03](SYNC_20261030_03.md)已核验两个场景18份三seed结构对照及8份MCMC原始结果。新增 [E8后期可见性稀疏更新](SPARSE_OPTIMIZER_20261030.md)；先诊断优化器占比，不直接换flag。[缓存计时补充](CACHE_TIME_BOUNDARY_20261030.md)说明独立cache-build成本须计入E2E，B提速不自动等于整条流水线提速。
 
+[E9固定几何后的颜色/SH求解](APPEARANCE_SOLVER_20261030.md)：2026新外观求解工作及本项目内存/混合/clamp适配边界；先与等时appearance Adam比较。和E8分别验证，不组合堆叠。
+
 ## 阅读顺序
 
 1. [当前进展与证据边界](CURRENT_STATE.md)：先确认什么已做、什么只有脚本，以及评分记录的缺口。

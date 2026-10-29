@@ -34,6 +34,12 @@
 
 若S只变快但明显掉质，先检查状态时钟/SH并集，再考虑dense前段与稀疏后段的探索差异；不能把RSR当作必然修复。如果不可见更新本来很小、可见比例接近1、或mask/索引成本吃掉收益，直接降优先级。
 
+## 06:20：新增诊断入口的口径建议
+
+coding agent已提交 `dd266a7`，新增time_breakdown入口，尚非完成实验。当前标为optimizer的时间段从backward后开始，包含loss.item、致密化统计、结构操作及其额外多视角render，再到optimizer_step；不能把这一整段占比当成Sparse Adam可节省占比。`grad_to_step`实际主要是GT加载与loss forward，也应按语义阅读。
+
+建议至少分开structure/statistics与真正step，并单独报告1250步后固定拓扑窗口。当前每步四处CUDA同步会改变流水重叠，profiling训练秒数不直接用作交付出分；先获得机制占比，再以关闭profiling的正常运行核对实际净收益。无需为了占比重复做质量评测。
+
 ## 与真正appearance-only的关系
 
 E8仍更新可见高斯的几何，不是只拟外观。真正appearance-only应显式冻结xyz、scale、rotation，说明opacity是否仍训练，且保留前期结构阶段；即便冻结参数，渲染器backward仍可能计算几何导数，不承诺速度收益。历史 `--no_densify` 没有冻结几何，不构成该实验的负证据。

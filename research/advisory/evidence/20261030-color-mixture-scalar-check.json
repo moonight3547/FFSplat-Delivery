@@ -1,0 +1,39 @@
+{
+  "captured_utc": "2026-10-29T22:20:02.950938+00:00",
+  "type": "analytic_cpu_counterexample_not_GPU_experiment",
+  "assumptions": "fixed geometry/opacity/order; linear color; no clamp; two one-pixel cameras; no ridge",
+  "weights": [
+    [
+      0.6,
+      0.4
+    ],
+    [
+      0.2,
+      0.8
+    ]
+  ],
+  "true_colors": [
+    0.8,
+    0.2
+  ],
+  "target_pixels": [
+    0.56,
+    0.32000000000000006
+  ],
+  "independent_visibility_weighted_colors": [
+    0.5,
+    0.4
+  ],
+  "independent_mse": 0.010000000000000002,
+  "one_residual_correction_colors": [
+    0.55,
+    0.3666666666666667
+  ],
+  "after_one_correction_mse": 0.006944444444444451,
+  "exact_global_colors": [
+    0.8,
+    0.2
+  ],
+  "exact_global_mse": 0.0,
+  "conclusion": "Independent per-Gaussian projection is not an exact global pixel least-squares solution when colors mix. Residual correction reduces error in this example, with no general finite-step quality guarantee."
+}
