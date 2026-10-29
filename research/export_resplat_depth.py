@@ -423,6 +423,19 @@ def self_check():
         meta3 = convert(flat, sidecar3, resolution=(8, 10))
         check(meta3["resolution"] == [8, 10], "--resolution override")
 
+        # keep=context filters a dump that also contains other train views
+        allraw = tmp / "all.npz"
+        np.savez_compressed(allraw,
+                            depth=np.repeat(depth[:1], len(train), axis=0),
+                            names=np.asarray(train))
+        sidecar_ctx = tmp / "context_only.npz"
+        meta_ctx = convert(allraw, sidecar_ctx, split=tmp / "split.json",
+                           keep="context")
+        check(meta_ctx["count"] == 16, "--keep context selects the 16 context views")
+        with np.load(sidecar_ctx, allow_pickle=False) as data:
+            check(set(data.files) == {Path(n).stem for n in split["context"]},
+                  "context-only sidecar keys")
+
         # names-from takes precedence
         names_json = tmp / "names.json"
         names_json.write_text(json.dumps({"context": split["context"]}),

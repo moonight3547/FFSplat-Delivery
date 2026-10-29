@@ -60,7 +60,7 @@ GPU usage (from the repository root, fastgs conda env)::
         --iterations 12000 --limit_seconds 100 \
         --depth-npz results/<case>/resplat/resplat_depth.npz \
         --depth-weight 0.05 --pose-lr 1e-4 \
-        --pose-start-frac 0.6 --pose-steps 3000 \
+        --pose-start-frac 0.75 \
         --record /tmp/pose/train_record.json
 
 Depth renderer assumption: the pinned FastGS wrapper
@@ -75,7 +75,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import os
 import random
 import sys
