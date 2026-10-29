@@ -48,6 +48,11 @@ except ImportError:  # pragma: no cover - environment check handles this
     FUSED_SSIM_AVAILABLE = False
 
 
+def _make_dir(path):
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
 def seed_all(seed):
     random.seed(seed)
     np.random.seed(seed)
@@ -99,6 +104,8 @@ def main(argv=None):
     parser.add_argument("--res_until", type=str, default="",
                         help="fraction of the run spent at each lower scale, e.g. 0.5,0.8")
     parser.add_argument("--no_densify", action="store_true")
+    parser.add_argument("--no_save_final", action="store_true",
+                        help="skip writing point_cloud/iteration_<N> for render_test.py")
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args(argv)
 
@@ -269,6 +276,13 @@ def main(argv=None):
             snaps.append(entry)
 
     train_s = time.perf_counter() - t_train0
+    # standard 3DGS layout so the organizer's render_test.py can load this model
+    final_ply = None
+    if not args.no_save_final:
+        final_dir = os.path.join(dataset.model_path, "point_cloud", f"iteration_{iteration}")
+        os.makedirs(final_dir, exist_ok=True)
+        final_ply = os.path.join(final_dir, "point_cloud.ply")
+        gaussians.save_ply(final_ply)
     final_psnr = None
     try:
         final_psnr = quick_test_psnr(scene, gaussians, pipe, background)
@@ -280,6 +294,7 @@ def main(argv=None):
         init_ply=str(args.init_ply), init_mode=f"ply:{os.path.basename(args.init_ply)}",
         num_init_gaussians=n_init, num_final_gaussians=int(gaussians.get_xyz.shape[0]),
         iterations=iterations, completed_iterations=iteration, stop_reason=stop_reason,
+        final_ply=final_ply,
         limit_seconds=args.limit_seconds, snapshots=snaps,
         scene_load_seconds=round(scene_load_s, 3), init_seconds=round(init_s, 3),
         train_seconds=round(train_s, 3), total_seconds=round(total_s, 3),
