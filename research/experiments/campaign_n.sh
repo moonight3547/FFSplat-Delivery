@@ -26,7 +26,9 @@ one() { local tag="$1" case="$2" steps="$3" budget="$4"; shift 4
     --work "outputs/O0-20261030/work/$case" --init-ply "$ply" \
     --out "$dir" --iterations "$steps" --snapshots "" --budget "$budget" \
     $BASE --position-lr-max-steps "$steps" "$@" >"$D/$tag.log" 2>&1
-  echo "exit=$? $tag $(date -Is)" >>"$D/queue.log"; }
+  echo "exit=$? $tag $(date -Is)" >>"$D/queue.log"
+  # keep only the JSON evidence: the host disk is small and the models are reproducible
+  rm -rf "$dir/model" "$dir/eval" "$dir/snaps" 2>/dev/null; }
 JOBS=(
   "n_hw_4k|$HW|4000|$BHW|"
   "n_hw_3k|$HW|3000|$BHW|"
