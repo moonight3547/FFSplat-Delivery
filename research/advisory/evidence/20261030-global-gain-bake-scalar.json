@@ -1,0 +1,33 @@
+{
+  "type": "independent_scalar_algebra_no_numpy_no_gpu",
+  "positive_global_gain": {
+    "gain": [
+      0.8,
+      1.1,
+      1.2
+    ],
+    "old_radiance": [
+      0.6282094791773878,
+      0.49358104164522437,
+      0.48462843753216345
+    ],
+    "new_radiance": [
+      0.5025675833419103,
+      0.5429391458097469,
+      0.5815541250385962
+    ],
+    "target": [
+      0.5025675833419102,
+      0.5429391458097469,
+      0.5815541250385962
+    ],
+    "max_error": 1.1102230246251565e-16
+  },
+  "additive_bias_counterexample_black_background": {
+    "alpha": 0.5,
+    "desired_global_bias": 0.1,
+    "baked_per_gaussian_bias": 0.05,
+    "missing_bias": 0.05
+  },
+  "limits": "Identical geometry/opacity/order, black background, positive diagonal gain, lower color clamp commutes; upper-clipped old RGB cannot in general reconstruct linear original. No claim for arbitrary affine/nonlinear or view-dependent ISP."
+}

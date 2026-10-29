@@ -24,20 +24,23 @@
 |源码问题及修改意见|[coding建议](CODING_NOTES.md)|
 |E1结构感知分裂的诊断与等数量对照|[结构迁移](STRUCTURE_TRANSFER_20261030.md)|
 |E2真实轨迹与选图前置条件|[选图可行性](VIEW_SELECTION_FEASIBILITY_20261030.md)|
+|E2-T：无points3D坐标文件也可用的真实ID共视|[新共视候选](TRACK_ONLY_SELECTION_20261030.md)|
 |E11零分难例的接口/覆盖/欠拟合分层诊断|[难例归因](ZERO_SCORE_DIAGNOSIS_20261030.md)|
 |E4/E7与已有FastGS机制的差别|[机制审查](FASTGS_MECHANISM_AUDIT_20261030.md)|
 |E6局部单步约束、二阶路线成本|[优化器文献筛选](OPTIMIZER_OPTIONS_20261030.md)|
 |E8可见性/降频/fused更新|[优化器实验](SPARSE_OPTIMIZER_20261030.md)|
 |E5-G按视角跳过冗余backward|[反传门控](BACKWARD_GATING_20261030.md)|
 |E9固定几何后的颜色/SH求解|[外观求解](APPEARANCE_SOLVER_20261030.md)|
+|ISP/神经外观的PLY边界，E9-P静态gain诊断|[外观兼容性](APPEARANCE_COMPATIBILITY_20261030.md)|
 |E0缓存首次构建与计时边界|[缓存审查](CACHE_TIME_BOUNDARY_20261030.md)|
 |raw/sharp变换与低opacity分布|[不透明度审计](OPACITY_AUDIT_20261030.md)|
+|导出球形距离far与原生camera-Z裁剪的区别|[可见性审查](EXPORT_CULLING_AUDIT_20261030.md)|
 |历史控制与评分缺口|[初始状态](CURRENT_STATE.md)|
 |飞书连接结果|[飞书](FEISHU.md)|
 
 ## 证据与同步
 
-最新：[同步07](SYNC_20261030_07.md)。历史：[01](SYNC_20261030_01.md)、[02](SYNC_20261030_02.md)、[03](SYNC_20261030_03.md)、[04](SYNC_20261030_04.md)、[05](SYNC_20261030_05.md)、[06](SYNC_20261030_06.md)。不可变原始JSON位于 [evidence](evidence/)；文件名为采集批次，精确时间以内容的captured字段和同步说明为准。
+最新：[同步09](SYNC_20261030_09.md)。历史：[01](SYNC_20261030_01.md)、[02](SYNC_20261030_02.md)、[03](SYNC_20261030_03.md)、[04](SYNC_20261030_04.md)、[05](SYNC_20261030_05.md)、[06](SYNC_20261030_06.md)、[07](SYNC_20261030_07.md)、[08](SYNC_20261030_08.md)。不可变原始JSON位于 [evidence](evidence/)；文件名为采集批次，精确时间以内容的captured字段和同步说明为准。
 
 完成实验后请另写结果回执到 `results/<日期>-<方案ID>.md`，链接原始记录并给出具体裁决；没有运行就明确写未运行。不要覆盖旧证据，或仅把方案正文改成已验证。
 

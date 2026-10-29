@@ -1,0 +1,68 @@
+{
+  "source": "20261030-watch-fourcase-quality.json",
+  "scope": "four observed cases only; quality diagnostic, no time validity or 13-case claim",
+  "arms": {
+    "baseline": {
+      "mean_metrics": {
+        "psnr": 26.951999999999998,
+        "ssim": 0.8415,
+        "lpips": 0.208275
+      },
+      "quality_from_mean_metrics": 29.22660000000001,
+      "mean_of_case_clipped_quality": 32.4866
+    },
+    "delivery": {
+      "mean_metrics": {
+        "psnr": 27.33025,
+        "ssim": 0.8483499999999999,
+        "lpips": 0.1843
+      },
+      "quality_from_mean_metrics": 34.8722,
+      "mean_of_case_clipped_quality": 36.9942
+    }
+  },
+  "case_marginal_changes_with_mean_first_formula": [
+    {
+      "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+      "raw_metric_delta": {
+        "psnr": 1.6550000000000011,
+        "ssim": 0.016900000000000026,
+        "lpips": -0.0445
+      },
+      "case_clipped_quality_delta": 10.223999999999997,
+      "contribution_to_fourcase_mean_first_quality_delta": 2.894000000000001
+    },
+    {
+      "case": "hw/billboard",
+      "raw_metric_delta": {
+        "psnr": 0.07399999999999807,
+        "ssim": 0.006799999999999917,
+        "lpips": -0.017299999999999982
+      },
+      "case_clipped_quality_delta": 4.063199999999981,
+      "contribution_to_fourcase_mean_first_quality_delta": 1.0157999999999971
+    },
+    {
+      "case": "mipnerf360/bicycle",
+      "raw_metric_delta": {
+        "psnr": -0.07899999999999707,
+        "ssim": -0.0045999999999999375,
+        "lpips": -0.016000000000000014
+      },
+      "case_clipped_quality_delta": -0.4311999999999916,
+      "contribution_to_fourcase_mean_first_quality_delta": 0.6922000000000026
+    },
+    {
+      "case": "mipnerf360/counter",
+      "raw_metric_delta": {
+        "psnr": -0.13700000000000045,
+        "ssim": 0.008299999999999974,
+        "lpips": -0.018100000000000005
+      },
+      "case_clipped_quality_delta": 4.174399999999999,
+      "contribution_to_fourcase_mean_first_quality_delta": 1.0435999999999996
+    }
+  ],
+  "mean_first_quality_delta": 5.645599999999991,
+  "case_first_quality_mean_delta": 4.5075999999999965
+}

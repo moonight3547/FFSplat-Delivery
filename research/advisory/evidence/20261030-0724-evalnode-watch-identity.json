@@ -1,0 +1,5 @@
+{
+  "status": "observation_failed",
+  "error": "SSH connection closed on H1 at port 22304; exit255",
+  "note": "No remote state observed; not proof that watcher stopped. Retried separately."
+}

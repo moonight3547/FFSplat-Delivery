@@ -1,0 +1,32 @@
+{
+  "type": "source_images_bin_poses_vs_prepared_snapshot; no RGB",
+  "cases": [
+    {
+      "case": "mipnerf360/bicycle",
+      "views": 194,
+      "max_center_error": 8.090556002926519e-12,
+      "max_rotation_error": 1.3606893389805919e-12,
+      "max_normalized_fx_error": 2.0999091354667598e-11,
+      "max_normalized_fy_error": 6.207545588665653e-11,
+      "split_status": "frozen"
+    },
+    {
+      "case": "mipnerf360/counter",
+      "views": 240,
+      "max_center_error": 8.049561017742235e-12,
+      "max_rotation_error": 1.5255019469861963e-12,
+      "max_normalized_fx_error": 8.131495476959572e-12,
+      "max_normalized_fy_error": 4.666711461709383e-12,
+      "split_status": "frozen"
+    },
+    {
+      "case": "mipnerf360/bonsai",
+      "views": 292,
+      "max_center_error": 0.0,
+      "max_rotation_error": 0.0,
+      "max_normalized_fx_error": 0.0,
+      "max_normalized_fy_error": 0.0,
+      "split_status": "reconstructed"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "case": "mipnerf360/bicycle",
+    "policy": "uniform",
+    "nearest2_same_float32_float64": true
+  },
+  {
+    "case": "mipnerf360/bicycle",
+    "policy": "fps",
+    "nearest2_same_float32_float64": true
+  },
+  {
+    "case": "mipnerf360/bicycle",
+    "policy": "coverage",
+    "nearest2_same_float32_float64": true
+  },
+  {
+    "case": "mipnerf360/counter",
+    "policy": "uniform",
+    "nearest2_same_float32_float64": true
+  },
+  {
+    "case": "mipnerf360/bonsai",
+    "policy": "uniform",
+    "nearest2_same_float32_float64": true
+  }
+]

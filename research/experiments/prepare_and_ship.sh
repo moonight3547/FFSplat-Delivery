@@ -49,10 +49,13 @@ for case in "${CASES[@]}"; do
   [ -f "$d/resplat/resplat_world.ply" ] || $PY run --no-capture-output -n "$RESPLAT" python -m research.resplat_variant \
     --work "$work" --out "$d/resplat" --checkpoint "$CKPT" --num_refine 2 --device cuda:0 >>"$log" 2>&1
   [ -f "$d/resplat/resplat_world.ply" ] || { echo "resplat failed $case" >>"$log"; continue; }
-  # ship work + PLY to the evaluation node
-  tar cf - -C "$d" work resplat/resplat_world.ply 2>/dev/null | \
-    ssh -i ~/.ssh/ton1 -o StrictHostKeyChecking=no -p "$NODE_PORT" "$NODE" \
-    "mkdir -p /root/projects/FFSplat-Hackathon/$d && tar xf - -C /root/projects/FFSplat-Hackathon/$d" 2>/dev/null
+  # Ship work + PLY only when a node is requested. Copying ~600 MB per scene over
+  # the internet dominated the runtime, so the default is to evaluate on this host.
+  if [ "${NODE:-}" != "none" ] && [ -n "${NODE:-}" ]; then
+    tar cf - -C "$d" work resplat/resplat_world.ply 2>/dev/null | \
+      ssh -i ~/.ssh/ton1 -o StrictHostKeyChecking=no -p "$NODE_PORT" "$NODE" \
+      "mkdir -p /root/projects/FFSplat-Hackathon/$d && tar xf - -C /root/projects/FFSplat-Hackathon/$d" 2>/dev/null
+  fi
   python3 - "$d" "$case" "$budget" >>"$log" <<'PY'
 import json, pathlib, sys
 d, case, budget = pathlib.Path(sys.argv[1]), sys.argv[2], float(sys.argv[3])

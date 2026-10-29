@@ -1,0 +1,170 @@
+{
+  "type": "scalar_geometry_counterexample_no_GPU_no_numpy",
+  "point_world": [
+    150.0,
+    0.0,
+    180.0
+  ],
+  "camera_R_c2w": "identity, +Z forward",
+  "image_wh": [
+    960,
+    576
+  ],
+  "intrinsics": {
+    "fx": 480,
+    "fy": 480,
+    "cx": 480,
+    "cy": 288
+  },
+  "far": 200.0,
+  "opacity": 0.1,
+  "rows": [
+    {
+      "camera_x": -1.0,
+      "camera_z": 180.0,
+      "radial_distance": 234.94893062110327,
+      "u": 882.6666666666667,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": -0.8666666666666667,
+      "camera_z": 180.0,
+      "radial_distance": 234.86326045405892,
+      "u": 882.3111111111111,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": -0.7333333333333334,
+      "camera_z": 180.0,
+      "radial_distance": 234.7776347478136,
+      "u": 881.9555555555555,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": -0.6,
+      "camera_z": 180.0,
+      "radial_distance": 234.692053551031,
+      "u": 881.6,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": -0.4666666666666667,
+      "camera_z": 180.0,
+      "radial_distance": 234.60651691242037,
+      "u": 881.2444444444445,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": -0.33333333333333337,
+      "camera_z": 180.0,
+      "radial_distance": 234.5210248807367,
+      "u": 880.8888888888889,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": -0.19999999999999996,
+      "camera_z": 180.0,
+      "radial_distance": 234.4355775047806,
+      "u": 880.5333333333333,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": -0.06666666666666665,
+      "camera_z": 180.0,
+      "radial_distance": 234.3501748333985,
+      "u": 880.1777777777778,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": 0.06666666666666665,
+      "camera_z": 180.0,
+      "radial_distance": 234.26481691548233,
+      "u": 879.8222222222222,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": 0.19999999999999996,
+      "camera_z": 180.0,
+      "radial_distance": 234.17950379996964,
+      "u": 879.4666666666667,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": 0.33333333333333326,
+      "camera_z": 180.0,
+      "radial_distance": 234.09423553584378,
+      "u": 879.1111111111111,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": 0.46666666666666656,
+      "camera_z": 180.0,
+      "radial_distance": 234.00901217213365,
+      "u": 878.7555555555555,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": 0.6000000000000001,
+      "camera_z": 180.0,
+      "radial_distance": 233.9238337579136,
+      "u": 878.4,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": 0.7333333333333334,
+      "camera_z": 180.0,
+      "radial_distance": 233.83870034230387,
+      "u": 878.0444444444445,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": 0.8666666666666667,
+      "camera_z": 180.0,
+      "radial_distance": 233.75361197447006,
+      "u": 877.6888888888889,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    },
+    {
+      "camera_x": 1.0,
+      "camera_z": 180.0,
+      "radial_distance": 233.66856870362346,
+      "u": 877.3333333333333,
+      "v": 288,
+      "center_in_image": true,
+      "camera_Z_pass": true
+    }
+  ],
+  "native_center_frustum_and_Z_valid_count": 16,
+  "export_radial_keep": false,
+  "note": "Center/frustum and far semantic example; not an actual CUDA pixel test or evidence this affects real project outputs."
+}

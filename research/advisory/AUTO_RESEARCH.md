@@ -106,3 +106,15 @@ SYNC06已核验节点4例×4臂原始质量：当前5K在三例优于旧基线�
 按用户追加授权，subagent完成 research/visualize_cameras.py、13张俯视PNG+总览、13个离线Plotly页面及单入口index。本机Chrome逐个加载13场景，无JS错误/外网请求；四策略切换、pivot、默认隐藏网络邻接和俯视按钮实测通过；7项CPU测试通过。已调用本地浏览器打开入口。静态图、网页、脚本说明均固定在本仓库；数据源、旋转约定、冻结/重建划分、指标历史来源全部注明。
 
 SYNC_07核验bicycle三组最终LPIPS .2982/.3143/.3112，uniform优于FPS/coverage；最小中心间距扩大19倍未转化质量。新增E11难例归因：native→PLY接口、context/非context训练缺口、高频欠拟合先分层诊断。最近2中心网络邻接无反向光轴边，不把文件名大转角当已证明匹配corner case。继续至17:43:57，未完成12小时目标。
+
+## 07:29 — 新watcher、评分边际与外观/导出语义
+
+SYNC08保存新watcher四例两臂完成证据，清单无重复case，队列两臂exit0；趋势延续：三默认例质量上升，bicycle逐case代理略退。重要修正：先均值指标后clip时，bicycle虽LPIPS仍0分，其连续改善对四例集合质量仍有+.6922边际贡献。逐case死区不等于集合死区，不能把单例代理下降升级为B对集合无益。TIME身份仍不完整。
+
+新增APPEARANCE_COMPATIBILITY：PPISP最新v2、Compact Neural Appearance完整方法依赖新渲染/ISP，暂不整体移植；E9-P仅在全局颜色偏差命中后做正通道gain静态SH对照，标量代数已校验，不承诺质量。新增EXPORT_CULLING_AUDIT：H1 gsplat1.5.3源码按camera-Z裁far，导出按最近中心欧氏距离，两者非等价；bicycle原生552960→导出约521k，但删除原因/真实贡献未分离。建议E11-D0记录集合变化并先做贡献诊断，不贸然去掉过滤。继续12小时研究，不标完成。
+
+## 07:34 — 原始images.bin解锁真实共视
+
+修正“没有points3D.bin则真实tracks不可用”的过强推断：images.bin本身保存共享point IDs。已只读解析本地三Mip原始观测，仅训练ID进入统计；bicycle/counter与冻结prepared的位姿/内参匹配，bonsai继续标重建split。bicycle51,672个双训练观测ID，uniform/FPS/coverage双覆盖7.76%/2.75%/3.08%；最近2中心候选边共享点中位数192.5/18/105，0共享点有向边1/5/4。三组低阈值共视图都连通，故仅加连通仍不够。
+
+新增TRACK_ONLY_SELECTION与SYNC09：先SH统一修正，再CPU验证保单覆盖、增双覆盖的唯一候选，命中后交coding agent做完整对照；不新跑SfM、不实现选择器、不启动GPU。这个观察性线索比中心分散更贴近匹配支撑，但不证明唯一病因或必然质量增益。继续研究至17:43:57。

@@ -2,11 +2,13 @@
 
 日期：2026-10-30。本轮读取赛方固定源码与最新公开作者资料；未实现新选图器。
 
+**07:34重要更新**：bicycle/counter/bonsai原始`images.bin`内已有共享point IDs，无须`points3D.bin`也能恢复训练共视。此前把缺点坐标文件推广为缺关联的判断过强，现已纠正；见 [E2-T真实数据与候选](TRACK_ONLY_SELECTION_20261030.md)。prepared pose-only文件仍没有观测，应使用原始source。
+
 ## 关键前提被收窄
 
 `competition/upstream/baseline/module_a/preprocess.py::write_work_dir` 导出的 `images.txt` 每张图片只有 pose 行，下一行为空，没有二维观测或 point3D IDs。它也不在这个 prepared work 中写出真实 `points3D` tracks。因此“现有 prepared work 是COLMAP格式”不等于“已有SfM共视图”。
 
-原数据可能保留完整 COLMAP（如 mipnerf360），hw 的既有 COLMAP 临时目录也可能包含 tracks；但 transforms.json 来源的 DL3DV 不天然有这些观测。本轮没有为了 E2 新跑 SfM/匹配，也没有验证这些原始轨迹文件完整存在。
+原数据可能保留完整 COLMAP（如 mipnerf360），hw 的既有 COLMAP 临时目录也可能包含 tracks；但 transforms.json 来源的 DL3DV 不天然有这些观测。初轮尚未验证可用性，后续06:54核验hw、07:34进一步核验本地三Mip的观测关联；没有为了E2新跑SfM/匹配。
 
 **对 E2 的修订**：先列原始 source/已有COLMAP临时目录的可用轨迹，不从 prepared pose 文件伪造观测。若只有部分场景可用，采用预注册的“有足够真实tracks则用graph，否则uniform”统一规则，并报告触发率；不按场景标签人工选策略。若必须额外重跑SfM，需先计算其A/E2E成本，这条路线立即降低优先级。
 
