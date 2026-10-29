@@ -8,7 +8,7 @@
 
 - **先核查SH导出**：[SH接口审查与F0–F2](SH_EXPORT_AUDIT_20261030.md)。一阶z基函数符号与官方FastGS不一致，CPU反例和H1源码/pivot已核验；尚无真实场景最终增益。
 - **E3先修梯度**：[深度接口审查](DEPTH_INTERFACE_AUDIT_20261030.md)。仅detach归一化分母会制造错误梯度；alpha也不等于预测可靠性。修正与零权重控制通过后才做可靠先验×待修复区域。
-- **当前实验状态**：[同步05](SYNC_20261030_05.md)。H1有9例候选，新节点round-new有bicycle及默认3例；仍缺完整baseline配对/GPU身份，不能混成完整13例成绩。
+- **当前实验状态**：[同步06](SYNC_20261030_06.md)。H1有9例候选，节点四例已有baseline/5K/10K/4.5K原始质量对照；13例与同GPU验收身份仍不完整。E2已在billboard找到真实tracks，部分解锁。
 - **优化器路线分开裁决**：[E8/E8-L/E8-F](SPARSE_OPTIMIZER_20261030.md)。降频有负结果叙述；可见性稀疏未完成，fused dense Adam接口已核验，性能待测。
 - **当前控制**：raw ReSplat + cache + FastGS5K、LR长度5K、无reset、DSSIM .6、scaling LR .01、结构截止1250。历史sharp/无cache结果单独保留；首次cache成本计入E2E。
 
@@ -25,6 +25,7 @@
 |E4/E7与已有FastGS机制的差别|[机制审查](FASTGS_MECHANISM_AUDIT_20261030.md)|
 |E6局部单步约束、二阶路线成本|[优化器文献筛选](OPTIMIZER_OPTIONS_20261030.md)|
 |E8可见性/降频/fused更新|[优化器实验](SPARSE_OPTIMIZER_20261030.md)|
+|E5-G按视角跳过冗余backward|[反传门控](BACKWARD_GATING_20261030.md)|
 |E9固定几何后的颜色/SH求解|[外观求解](APPEARANCE_SOLVER_20261030.md)|
 |E0缓存首次构建与计时边界|[缓存审查](CACHE_TIME_BOUNDARY_20261030.md)|
 |raw/sharp变换与低opacity分布|[不透明度审计](OPACITY_AUDIT_20261030.md)|
@@ -33,7 +34,7 @@
 
 ## 证据与同步
 
-最新：[同步05](SYNC_20261030_05.md)。历史：[01](SYNC_20261030_01.md)、[02](SYNC_20261030_02.md)、[03](SYNC_20261030_03.md)、[04](SYNC_20261030_04.md)。不可变原始JSON位于 [evidence](evidence/)；文件名为采集批次，精确时间以内容的captured字段和同步说明为准。
+最新：[同步06](SYNC_20261030_06.md)。历史：[01](SYNC_20261030_01.md)、[02](SYNC_20261030_02.md)、[03](SYNC_20261030_03.md)、[04](SYNC_20261030_04.md)、[05](SYNC_20261030_05.md)。不可变原始JSON位于 [evidence](evidence/)；文件名为采集批次，精确时间以内容的captured字段和同步说明为准。
 
 完成实验后请另写结果回执到 `results/<日期>-<方案ID>.md`，链接原始记录并给出具体裁决；没有运行就明确写未运行。不要覆盖旧证据，或仅把方案正文改成已验证。
 

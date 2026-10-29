@@ -1,0 +1,141 @@
+{
+  "cases": [
+    {
+      "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+      "cameras": 330,
+      "max_orthogonality_error": 1.7763568394002505e-15,
+      "det_min": 0.9999999999999989,
+      "lpips": 0.1108,
+      "split_status": "frozen"
+    },
+    {
+      "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+      "cameras": 381,
+      "max_orthogonality_error": 1.5543122344752192e-15,
+      "det_min": 0.9999999999999986,
+      "lpips": 0.2572,
+      "split_status": "reconstructed"
+    },
+    {
+      "case": "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e",
+      "cameras": 324,
+      "max_orthogonality_error": 1.5543122344752192e-15,
+      "det_min": 0.9999999999999983,
+      "lpips": null,
+      "split_status": "reconstructed"
+    },
+    {
+      "case": "dl3dv/2dad2d298927ff9b2ed7daa6128244e81d331e8cf1abf6c8598f35276ad38b84",
+      "cameras": 305,
+      "max_orthogonality_error": 9.992007221626409e-16,
+      "det_min": 0.999999999999999,
+      "lpips": null,
+      "split_status": "reconstructed"
+    },
+    {
+      "case": "dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3",
+      "cameras": 307,
+      "max_orthogonality_error": 1.5543122344752192e-15,
+      "det_min": 0.9999999999999987,
+      "lpips": 0.2404,
+      "split_status": "reconstructed"
+    },
+    {
+      "case": "dl3dv/9a451604b8d2583d47b14662635d8f74710c419cc061705ac15b8cfc31ece446",
+      "cameras": 348,
+      "max_orthogonality_error": 1.5543122344752192e-15,
+      "det_min": 0.9999999999999983,
+      "lpips": 0.2013,
+      "split_status": "reconstructed"
+    },
+    {
+      "case": "hw/basketball",
+      "cameras": 79,
+      "max_orthogonality_error": 1.1102230246251565e-15,
+      "det_min": 0.9999999999999997,
+      "lpips": 0.1211,
+      "split_status": "reconstructed"
+    },
+    {
+      "case": "hw/billboard",
+      "cameras": 64,
+      "max_orthogonality_error": 4.440892098500626e-16,
+      "det_min": 0.9999999999999998,
+      "lpips": 0.1432,
+      "split_status": "frozen"
+    },
+    {
+      "case": "hw/car",
+      "cameras": 70,
+      "max_orthogonality_error": 8.881784197001252e-16,
+      "det_min": 0.9999999999999998,
+      "lpips": 0.1792,
+      "split_status": "reconstructed"
+    },
+    {
+      "case": "hw/trashbin",
+      "cameras": 75,
+      "max_orthogonality_error": 1.1102230246251565e-15,
+      "det_min": 0.9999999999999996,
+      "lpips": 0.1374,
+      "split_status": "reconstructed"
+    },
+    {
+      "case": "mipnerf360/bicycle",
+      "cameras": 194,
+      "max_orthogonality_error": 1.7763568394002505e-15,
+      "det_min": 0.9999999999999994,
+      "lpips": 0.2993,
+      "split_status": "frozen"
+    },
+    {
+      "case": "mipnerf360/bonsai",
+      "cameras": 292,
+      "max_orthogonality_error": 1.3322676295501878e-15,
+      "det_min": 0.9999999999999994,
+      "lpips": null,
+      "split_status": "reconstructed"
+    },
+    {
+      "case": "mipnerf360/counter",
+      "cameras": 240,
+      "max_orthogonality_error": 1.5543122344752192e-15,
+      "det_min": 0.999999999999999,
+      "lpips": 0.1994,
+      "split_status": "frozen"
+    }
+  ],
+  "bicycle_comparison": [
+    {
+      "policy": "uniform",
+      "min_separation": 0.020550348345,
+      "mean_nearest_separation": 0.195614374952,
+      "consecutive_context_optical_axis_angle_median": 94.20151583723323,
+      "consecutive_context_optical_axis_angle_max": 166.3370707048162,
+      "lpips": 0.2982,
+      "quality_points": 9.604000000000005,
+      "pivot": "_DSC8782.png"
+    },
+    {
+      "policy": "fps",
+      "min_separation": 0.394836158439,
+      "mean_nearest_separation": 0.441745041663,
+      "consecutive_context_optical_axis_angle_median": 50.96924797823424,
+      "consecutive_context_optical_axis_angle_max": 134.94393278897542,
+      "lpips": 0.3143,
+      "quality_points": 7.993600000000005,
+      "pivot": "_DSC8767.png"
+    },
+    {
+      "policy": "coverage",
+      "min_separation": 0.0545702002,
+      "mean_nearest_separation": 0.274382671083,
+      "consecutive_context_optical_axis_angle_median": 57.2314575260218,
+      "consecutive_context_optical_axis_angle_max": 138.4608152772736,
+      "lpips": 0.3112,
+      "quality_points": 8.852800000000004,
+      "pivot": "_DSC8743.png"
+    }
+  ],
+  "total_cameras": 3009
+}

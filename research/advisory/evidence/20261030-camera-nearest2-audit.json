@@ -1,0 +1,207 @@
+{
+  "local_mv_match_config_default": 2,
+  "runtime_config_not_captured": true,
+  "definition": "two nearest distinct context camera centres; optical-axis angle is diagnostic, not surface overlap",
+  "cases": [
+    {
+      "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+      "policies": [
+        {
+          "policy": "default",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 10.415382789674243,
+          "max_neighbor_angle": 27.48193626179201,
+          "bad_edges": []
+        }
+      ]
+    },
+    {
+      "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+      "policies": [
+        {
+          "policy": "default",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 20.614133996673054,
+          "max_neighbor_angle": 42.47425530286086,
+          "bad_edges": []
+        }
+      ]
+    },
+    {
+      "case": "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e",
+      "policies": [
+        {
+          "policy": "default",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 16.67917812182929,
+          "max_neighbor_angle": 37.1395916689393,
+          "bad_edges": []
+        }
+      ]
+    },
+    {
+      "case": "dl3dv/2dad2d298927ff9b2ed7daa6128244e81d331e8cf1abf6c8598f35276ad38b84",
+      "policies": [
+        {
+          "policy": "default",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 17.57046709621225,
+          "max_neighbor_angle": 22.572696513466255,
+          "bad_edges": []
+        }
+      ]
+    },
+    {
+      "case": "dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3",
+      "policies": [
+        {
+          "policy": "default",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 13.528588387535134,
+          "max_neighbor_angle": 47.12552986691022,
+          "bad_edges": []
+        }
+      ]
+    },
+    {
+      "case": "dl3dv/9a451604b8d2583d47b14662635d8f74710c419cc061705ac15b8cfc31ece446",
+      "policies": [
+        {
+          "policy": "default",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 15.421460645726034,
+          "max_neighbor_angle": 45.808854834984295,
+          "bad_edges": []
+        }
+      ]
+    },
+    {
+      "case": "hw/basketball",
+      "policies": [
+        {
+          "policy": "default",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 21.21889211740925,
+          "max_neighbor_angle": 34.4225231147601,
+          "bad_edges": []
+        }
+      ]
+    },
+    {
+      "case": "hw/billboard",
+      "policies": [
+        {
+          "policy": "default",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 6.885984637985809,
+          "max_neighbor_angle": 13.811136888818783,
+          "bad_edges": []
+        }
+      ]
+    },
+    {
+      "case": "hw/car",
+      "policies": [
+        {
+          "policy": "default",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 9.919545534909755,
+          "max_neighbor_angle": 19.357168243829395,
+          "bad_edges": []
+        }
+      ]
+    },
+    {
+      "case": "hw/trashbin",
+      "policies": [
+        {
+          "policy": "default",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 20.79420490669216,
+          "max_neighbor_angle": 36.278949294177,
+          "bad_edges": []
+        }
+      ]
+    },
+    {
+      "case": "mipnerf360/bicycle",
+      "policies": [
+        {
+          "policy": "uniform",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 23.10162435839429,
+          "max_neighbor_angle": 64.5040386045168,
+          "bad_edges": []
+        },
+        {
+          "policy": "fps",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 44.226541268380515,
+          "max_neighbor_angle": 66.6949191919049,
+          "bad_edges": []
+        },
+        {
+          "policy": "coverage",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 32.15581159560591,
+          "max_neighbor_angle": 66.40767483830129,
+          "bad_edges": []
+        }
+      ]
+    },
+    {
+      "case": "mipnerf360/bonsai",
+      "policies": [
+        {
+          "policy": "default",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 24.177284195581684,
+          "max_neighbor_angle": 38.90083129061895,
+          "bad_edges": []
+        }
+      ]
+    },
+    {
+      "case": "mipnerf360/counter",
+      "policies": [
+        {
+          "policy": "default",
+          "directed_edges": 32,
+          "optical_angle_gt90_count": 0,
+          "views_both_neighbors_gt90": 0,
+          "median_neighbor_angle": 22.98597451648378,
+          "max_neighbor_angle": 40.01630518960744,
+          "bad_edges": []
+        }
+      ]
+    }
+  ]
+}
