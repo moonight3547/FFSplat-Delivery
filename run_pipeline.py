@@ -151,15 +151,11 @@ def main(argv=None):
         "--out", results / "resplat", "--checkpoint", args.checkpoint,
         "--num_refine", args.num_refine, "--device", args.device), logs)
 
-    # ---- module B init treatment -------------------------------------------
-    # Campaign H measured a stable ~+1 point from re-sharpening the predicted
-    # opacities toward 0/1 before optimization (it stops FastGS's pruning from
-    # being dominated by mushy Gaussians). This is module-B-side, so it counts.
-    sharpened = results / "resplat/resplat_world_sharp.ply"
-    runner.run("b_init", runner.conda(
-        "fastgs", "-m", "research.ply_ops", "--in", results / "resplat/resplat_world.ply",
-        "--out", sharpened, "--op", "sharpen", "--gain", "2.0"), logs)
-    b_init_ply = sharpened
+    # ---- module B init ------------------------------------------------------
+    # Matched 3-case A/B (research/experiments/init_ab3.sh): the raw ReSplat PLY
+    # beats the opacity-sharpened variant on the mean (61.1 vs 60.2), so no init
+    # transform is applied.
+    b_init_ply = results / "resplat/resplat_world.ply"
 
     # ---- module B -----------------------------------------------------------
     # Recipe measured on this class of GPU (see docs/RESEARCH-20261030.md): a short

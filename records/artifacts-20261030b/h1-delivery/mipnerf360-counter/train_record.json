@@ -1,0 +1,56 @@
+{
+  "init_ply": "outputs/experiments/delivery/ply_mipnerf360_counter.ply",
+  "init_mode": "ply:ply_mipnerf360_counter.ply",
+  "num_init_gaussians": 488831,
+  "num_final_gaussians": 424217,
+  "iterations": 5000,
+  "completed_iterations": 5000,
+  "stop_reason": "iterations",
+  "final_ply": "outputs/experiments/delivery/mipnerf360-counter/model/point_cloud/iteration_5000/point_cloud.ply",
+  "limit_seconds": null,
+  "snapshots": [
+    {
+      "iteration": 5000,
+      "train_seconds": 21.256729392101988,
+      "num_gaussians": 424217,
+      "ply": "outputs/experiments/delivery/mipnerf360-counter/snaps/iter05000.ply"
+    }
+  ],
+  "scene_load_seconds": 8.873,
+  "init_seconds": 0.422,
+  "train_seconds": 24.088,
+  "total_seconds": 36.203,
+  "iterations_per_second": 207.57,
+  "quick_test_psnr": 27.4151,
+  "num_train_views": 210,
+  "num_test_views": 30,
+  "res_scales": [
+    1.0
+  ],
+  "res_until": [],
+  "settings": {
+    "position_lr_max_steps": 5000,
+    "position_lr_init": 0.00016,
+    "position_lr_final": 1.6e-06,
+    "densify_from_iter": 500,
+    "densify_until_iter": 1250,
+    "densification_interval": 100,
+    "opacity_reset_interval": 5001,
+    "mult": 0.5,
+    "lambda_dssim": 0.6,
+    "scaling_lr": 0.01,
+    "opacity_lr": 0.025,
+    "position_lr_delay_mult": 0.01,
+    "no_densify": false,
+    "seed": 20261015,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "lpips_weight": 0.0,
+    "lpips_every": 1,
+    "lpips_scale": 0.5,
+    "densify_count_thresh": null,
+    "max_gaussians": null
+  }
+}

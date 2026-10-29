@@ -13,6 +13,7 @@
 | 数据和权重 | [ModelScope 下载与校验](docs/ASSETS.md) |
 | O0、A、B、AB 的运行入口 | `python -m ffsplat_eval.run` |
 | 当前实验、限制、下一步 | [docs/HANDOFF.md](docs/HANDOFF.md) |
+| 外部文献思路的 A/B 分派与可用性判定 | [docs/PREPOST-AB-20261030.md](docs/PREPOST-AB-20261030.md) |
 
 ## 当前状态
 

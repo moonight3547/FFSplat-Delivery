@@ -1,0 +1,56 @@
+{
+  "init_ply": "outputs/experiments/delivery/ply_dl3dv_001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f.ply",
+  "init_mode": "ply:ply_dl3dv_001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f.ply",
+  "num_init_gaussians": 455234,
+  "num_final_gaussians": 391877,
+  "iterations": 5000,
+  "completed_iterations": 5000,
+  "stop_reason": "iterations",
+  "final_ply": "outputs/experiments/delivery/dl3dv-001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f/model/point_cloud/iteration_5000/point_cloud.ply",
+  "limit_seconds": null,
+  "snapshots": [
+    {
+      "iteration": 5000,
+      "train_seconds": 22.369112828047946,
+      "num_gaussians": 391877,
+      "ply": "outputs/experiments/delivery/dl3dv-001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f/snaps/iter05000.ply"
+    }
+  ],
+  "scene_load_seconds": 11.009,
+  "init_seconds": 0.398,
+  "train_seconds": 24.979,
+  "total_seconds": 39.044,
+  "iterations_per_second": 200.17,
+  "quick_test_psnr": 34.1948,
+  "num_train_views": 288,
+  "num_test_views": 42,
+  "res_scales": [
+    1.0
+  ],
+  "res_until": [],
+  "settings": {
+    "position_lr_max_steps": 5000,
+    "position_lr_init": 0.00016,
+    "position_lr_final": 1.6e-06,
+    "densify_from_iter": 500,
+    "densify_until_iter": 1250,
+    "densification_interval": 100,
+    "opacity_reset_interval": 5001,
+    "mult": 0.5,
+    "lambda_dssim": 0.6,
+    "scaling_lr": 0.01,
+    "opacity_lr": 0.025,
+    "position_lr_delay_mult": 0.01,
+    "no_densify": false,
+    "seed": 20261015,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "lpips_weight": 0.0,
+    "lpips_every": 1,
+    "lpips_scale": 0.5,
+    "densify_count_thresh": null,
+    "max_gaussians": null
+  }
+}

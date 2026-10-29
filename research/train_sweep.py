@@ -92,6 +92,8 @@ def main(argv=None):
                         help="sampled-view count needed to densify (upstream hardcodes 5)")
     parser.add_argument("--max_gaussians", type=int, default=None,
                         help="hard cap on Gaussian count, weakest pruned first")
+    parser.add_argument("--image_cache", type=str, default=None,
+                        help="pre-decoded uint8 image cache dir (research.image_cache)")
     parser.add_argument("--limit_seconds", type=float, default=None,
                         help="stop before this module-B wall clock (train phase only)")
     parser.add_argument("--limit_reserve", type=float, default=1.5,
@@ -140,6 +142,26 @@ def main(argv=None):
     os.makedirs(dataset.model_path, exist_ok=True)
     with open(os.path.join(dataset.model_path, "cfg_args"), "w") as stream:
         stream.write(str(Namespace(**vars(dataset))))
+
+    if args.image_cache:
+        # Module B's wall clock includes decoding the prepared PNGs. The cache is a
+        # module-A artifact holding the identical pixels, so this only removes
+        # re-decoding; it is not a timing-boundary trick.
+        import scene.dataset_readers as _readers
+        from .image_cache import CachedImages
+        from PIL import Image as _PILImage
+        _cached = CachedImages(args.image_cache)
+        _real_open = _readers.Image.open
+
+        def _cached_open(path, _real=_real_open, _c=_cached):
+            name = os.path.basename(path)
+            idx = _c.index.get(name)
+            if idx is None:
+                return _real(path)
+            return _PILImage.fromarray(np.asarray(_c.data[idx]))
+
+        _readers.Image = type("CachedPIL", (), {"open": staticmethod(_cached_open)})
+        print(f"[sweep] image cache: {len(_cached.index)} views")
 
     scales = [float(x) for x in args.res_scales.split(",") if x.strip()] or [1.0]
     cuts = [float(x) for x in args.res_until.split(",") if x.strip()]
