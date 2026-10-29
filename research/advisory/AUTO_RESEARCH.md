@@ -54,3 +54,17 @@ SYNC_20261030_03归档并核验新增节点55份JSON：campaignU两个场景各�
 新增SPARSE_OPTIMIZER：ICLR2026 AdamW-GS适配判断及E8，保留前1250步dense结构，先测optimizer占比再试后期可见性更新，明确FastGS现有sparse flag不是可直接切换的完整路径。新增CACHE_TIME_BOUNDARY：当前cache在B前独立解码/写盘，须测首次构建E2E；不能只凭B节省宣称+0.9是整条流水线净收益。
 
 共享工作区新HEAD cf2a772，已读其62.01总结；当前质量固定时的65条件上界仍不能证明未来75不可达。继续执行12小时研究。
+
+## 06:21 — 第8例与外观求解方案
+
+SYNC_20261030_04归档H1第8例trashbin；仍缺候选/baseline配对，新增bicycle A失败未定位原因。新增节点读到campaignP16组旧锐化数据及billboard缓存一对；后者约65→63秒训练，与docs的25秒B记录不是同一run，不混拼归因。
+
+新增APPEARANCE_SOLVER（E9）：固定几何和opacity后用逐高斯SH小系统做外观更新，与等时appearance Adam比较；先检查混合/clamp/显存/统计成本。CPU两高斯反例说明逐高斯投影不是全局整图精确最小二乘，不能把解析求解当无条件质量收益。
+
+coding agent已新增campaignX五seed稳健性与E8 timebd入口，尚无完成证据。发现timebd的optimizer段包含结构操作，建议分离后再裁决E8；研究代码未改。下一次常规远端同步约06:40，期间继续论文/适配研究；目标仍进行中，结束时间17:43:57。
+
+## 06:25 — 新P0：SH导出符号与真实pivot
+
+新增SH_EXPORT_AUDIT：导出SH旋转的一阶z基函数与官方FastGS符号不同；1024方向CPU核查和独立不依赖numpy的标量反例均支持非平凡旋转不保持颜色。H1实际源码hash与所读固定源码相同，三个真实pivot的旋转算子差异均非零，counter较大。这里只证明接口问题，尚无真实场景最终质量增益。建议coding agent在wrapper进行F0–F2对照，受保护upstream原样保留；未修改运行代码。
+
+DEPTH_INTERFACE补充alpha/匹配峰值/先验可靠性的区别，以及16个context sidecar在hw/counter全部训练视角中命中率不同；E3先修梯度、记录支持量。E8-L步频日程单列，不能把其结果当可见性稀疏Adam的裁决。研究继续。

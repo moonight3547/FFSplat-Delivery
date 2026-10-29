@@ -14,6 +14,8 @@
 
 **关键限制**：逐高斯独立颜色拟合没有保留全部跨高斯交叉项，不能称为精确求解整幅图像的全局MSE；透明混合会让直接投影颜色互相污染，需要残差校正。现有L1+DSSIM(.6)也不等于最小二乘目标，PSNR上升不保证SSIM/LPIPS不退。
 
+本地 [CPU两高斯颜色混合反例](evidence/20261030-color-mixture-scalar-check.json)已归档：独立投影MSE为0.01，一次残差修正为0.006944，准确全局颜色的MSE为0。它验证上述数学边界，不是本项目GPU效果证据。
+
 ## 实现可行性审读，供coding agent参考
 
 已读作者 [colorize_instant.py](https://github.com/dlieber01/Instant-Colorization-of-Gaussian-Splats/blob/main/colorize_instant.py) 的collect_solver_statistics、solve和refine路径。

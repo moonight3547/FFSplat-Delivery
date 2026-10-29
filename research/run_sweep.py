@@ -97,6 +97,8 @@ def main(argv=None):
     parser.add_argument("--densify-count-thresh", type=int, default=None,
                         dest="densify_count_thresh")
     parser.add_argument("--max-gaussians", type=int, default=None, dest="max_gaussians")
+    parser.add_argument("--opt-step-schedule", default="", dest="opt_step_schedule",
+                        help="optimizer step-frequency schedule, e.g. '2500:2'")
     parser.add_argument("--image-cache", default=None, dest="image_cache",
                         help="pre-decoded uint8 image cache dir (module-A artifact)")
     parser.add_argument("--no-densify", action="store_true", dest="no_densify")
@@ -148,6 +150,7 @@ def main(argv=None):
         "--densify_count_thresh": args.densify_count_thresh,
         "--max_gaussians": args.max_gaussians,
         "--image_cache": args.image_cache,
+        "--opt_step_schedule": args.opt_step_schedule,
     }
     for flag, value in optional.items():
         if value is not None:

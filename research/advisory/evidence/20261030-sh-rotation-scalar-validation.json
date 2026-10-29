@@ -1,0 +1,22 @@
+{
+  "captured_utc": "2026-10-29T22:23:24.318025+00:00",
+  "type": "independent_scalar_validation",
+  "rotation": "y90",
+  "old_direction": [
+    0,
+    0,
+    1
+  ],
+  "new_direction": [
+    1,
+    0,
+    0
+  ],
+  "coefficient_index_2": 0.1,
+  "original_expected_radiance": 0.048860251190292,
+  "wrong_rotated_radiance": -0.048860251190292,
+  "absolute_error": 0.097720502380584,
+  "corrected_rotated_radiance": 0.048860251190292,
+  "note": "Original numpy audit emitted floating-point warnings around matmul/lstsq on this local build; all reported values are finite. This separate scalar derivation avoids those kernels and independently proves the basis sign/invariance counterexample. Error concerns SH radiance before adding common +0.5; coefficient magnitude keeps resulting RGB within [0,1].",
+  "all_original_numeric_outputs_finite": true
+}

@@ -1,0 +1,71 @@
+{
+  "captured_utc": "2026-10-29T22:23:06.470870+00:00",
+  "type": "CPU_math_and_frozen_source_audit_not_GPU_quality_experiment",
+  "seed": 20261030,
+  "num_probe_directions": 1024,
+  "source_sha256": {
+    "competition/upstream/baseline/run_resplat.py": "ecdcd3e3f5b2a1a4acd43e1d5a24b70e35868d9039c6af13fc1da3f085ad498a",
+    "competition/upstream/baseline/fastgs/utils/sh_utils.py": "7d1ff267546390635e6d1f68c4f88c4a8b052482d5c9be1d32f06bc69e9a96e7"
+  },
+  "axis_z_export_basis": [
+    0.28209479177387814,
+    -0.0,
+    -0.4886025119029199,
+    -0.0,
+    0.0,
+    -0.0,
+    0.6307831305050401,
+    -0.0,
+    0.0,
+    -0.0,
+    0.0,
+    -0.0,
+    0.7463526651802308,
+    -0.0,
+    0.0,
+    -0.0
+  ],
+  "axis_z_fastgs_basis": [
+    0.28209479177387814,
+    0.0,
+    0.4886025119029199,
+    0.0,
+    0.0,
+    0.0,
+    0.6307831305050401,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.7463526651802308,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "source_basis_relation": "Y_export = S Y_fastgs where S is identity except S[2,2]=-1",
+  "rows": [
+    {
+      "rotation": "identity",
+      "coefficient_l1_z": 0.1,
+      "original_max_abs_color_error": 6.245004513516506e-17,
+      "original_rmse": 3.573982400759021e-17,
+      "basis_conjugation_max_abs_color_error": 6.245004513516506e-17
+    },
+    {
+      "rotation": "z90",
+      "coefficient_l1_z": 0.1,
+      "original_max_abs_color_error": 6.245004513516506e-17,
+      "original_rmse": 3.5746632336299114e-17,
+      "basis_conjugation_max_abs_color_error": 6.245004513516506e-17
+    },
+    {
+      "rotation": "y90",
+      "coefficient_l1_z": 0.1,
+      "original_max_abs_color_error": 0.09771990705851721,
+      "original_rmse": 0.056755693949135995,
+      "basis_conjugation_max_abs_color_error": 6.245004513516506e-17
+    }
+  ],
+  "conclusion": "Export SH rotation uses an l=1 z basis sign inconsistent with the official FastGS evaluator. Identity/z rotations can hide it; y rotation violates color invariance. No upstream/runtime file was edited; no actual scene quality claim."
+}

@@ -12,6 +12,8 @@
 
 ## P0：把候选计时与参考边界对齐
 
+**06:24新增初始化P0**：[SH导出审查](SH_EXPORT_AUDIT_20261030.md)确认 `run_resplat.eval_sh_basis` 的一阶z符号与官方FastGS不同，绕y90°的CPU颜色不变性反例成立。优先核对远端实际hash并按F0–F2验证，在自己的wrapper处理导出，upstream保持原样；不要直接把最终某个SH系数统一取反。
+
 位置：`research/run_sweep.py:174`、`research/train_sweep.py:310`、`competition/upstream/baseline/module_b/train_from_ply_fastgs.py:181`。
 
 当前 summary 的 `b_seconds_estimate=scene_load+init+snapshot_train+0.5`，最后一项是固定估计，缺少真实最终导出与初始化整理时间。snapshot 时间戳在其自身 save 前，早期快照的保存开销又会污染后续累计时间。train_sweep 的 `total_seconds` 在 quick_test_psnr 后截取，而上游参考在 scene.save 后、quick test 前截取；两者不能直接比较。研究入口还可能同时保存 snapshot 和 final，交付不应无意为重复导出付费。

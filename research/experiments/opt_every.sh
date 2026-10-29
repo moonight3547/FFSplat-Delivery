@@ -18,7 +18,7 @@ one(){ local tag=$1 case=$2 budget=$3 sched=$4; local dir="$D/$tag"
     --init-ply "outputs/O0-20261030/results/$case/resplat/resplat_world.ply" --out "$dir" \
     --iterations 5000 --snapshots "" --budget "$budget" --opacity-reset-interval 0 \
     --lambda-dssim 0.6 --scaling-lr 0.01 --position-lr-max-steps 5000 --densify-until 1250 \
-    --image-cache "$cache" ${sched:+--opt_step_schedule "$sched"} >"$D/$tag.log" 2>&1
+    --image-cache "$cache" ${sched:+--opt-step-schedule "$sched"} >"$D/$tag.log" 2>&1
   echo "exit=$? $tag $(date -Is)" >>"$D/queue.log"; rm -rf "$dir/model" "$dir/eval" 2>/dev/null; }
 JOBS=("oe_hw_ctrl|$HW|$BHW|" "oe_hw_s2_2500|$HW|$BHW|2500:2" "oe_hw_s2_0|$HW|$BHW|0:2" \
       "oe_co_ctrl|$CO|$BCO|" "oe_co_s2_2500|$CO|$BCO|2500:2" "oe_co_s2_0|$CO|$BCO|0:2")
