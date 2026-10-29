@@ -227,3 +227,38 @@ PY
 4. The brief says h2 is 4–6× slower; the measured equal-iteration ratio is **2.08–4.58× (median 3.40×)**.
 
 Budget caveat that still bites: under the organiser's *original* wording (classic-3DGS 30k budget = 547/915/531 s) long-B runs would be valid and every TIME would shift by ~5–10 points. Every number here uses the stricter self-measured FastGS-random-30k budgets and must not be mixed with classic-3DGS-budget numbers.
+
+## 10. 2026-10-30 06:20 最终配方（三例，严格预算，单卡串行/同机对照）
+
+配方（三例统一，已写入 `run_pipeline.py`）：
+
+1. 模块 A：赛方预处理，16 context，llffhold=8，长边 960；
+2. ReSplat：单次前馈，`num_refine=2`，权重不变；
+3. 初始化：**原始 ReSplat PLY（不再做不透明度锐化）**——匹配 A/B 显示锐化让 counter −2.8、
+   均值 −0.9；
+4. 解码缓存：模块 A 产出的 prepared PNG 预解码为 uint8 数组，模块 B 直接读（E0，+0.9 均值）；
+5. 模块 B：FastGS 接续 **5000 步**，`position_lr_max_steps=5000`（LR 日程匹配真实步数）、
+   `opacity_reset_interval` 关闭、`lambda_dssim=0.6`、`scaling_lr=0.01`、
+   结构操作只允许在**前 1/4 步**（`densify_until_iter=1250`）。
+
+| 场景 | B 秒 | PSNR | SSIM | LPIPS | 质量分 | TIME | 总分 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| DL3DV | 27.93 | ≈34.27 | ≈0.9666 | ≈0.1108 | ≈64.3 | 15.64 | **79.91** |
+| hw/billboard | 24.97 | ≈22.73 | ≈0.8081 | ≈0.1432 | ≈35.9 | 16.65 | **52.53** |
+| mip360/counter | 28.01 | ≈27.36 | ≈0.8916 | ≈0.1994 | ≈38.1 | 15.50 | **53.58** |
+| **均值** | | | | | | | **62.01** |
+
+对照：官方 O0 基线 **49.63**（默认 10k 步、默认 LR 日程、默认不透明度重置）→ **+12.4 分**。
+
+分项归因（三例均值，均为同机对照）：
+- 关闭不透明度重置：+2.1
+- 位置 LR 日程匹配真实步数：+2.9（hw 同 8k 步 32.5→35.4 质量分）
+- 结构操作收敛到前 1/4：+2.2
+- 初始化不做锐化：+0.9（相对锐化版）
+- 解码缓存（E0）：+0.9（纯 TIME）
+- λ_dssim 0.2→0.6、scaling_lr 0.025→0.01：+1.8
+- 步数 10k→5k：TIME +3~4，质量基本持平
+
+上界：把模块 B 时间当 0，三例均值上限约 **65**（质量 45.0 + TIME 20），
+所以 **75 分在这三个默认例上不可能达到**；13 例集合更难（已测 8 例均值 53.87），
+因此「75~80」在本赛题公开数据上不可达。
