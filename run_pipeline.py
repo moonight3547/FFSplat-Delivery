@@ -94,7 +94,7 @@ def main(argv=None):
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--budget-seconds", type=float, default=None,
                         help="skip the 30K reference and use this budget (grading-machine value)")
-    parser.add_argument("--b-iterations", type=int, default=4000, dest="b_iterations",
+    parser.add_argument("--b-iterations", type=int, default=5000, dest="b_iterations",
                         help="module-B optimizer steps (matched-LR recipe; measured sweet spot)")
     parser.add_argument("--b-fraction", type=float, default=0.5,
                         help="hard safety cap: module-B wall clock as a fraction of the budget")
@@ -174,6 +174,9 @@ def main(argv=None):
         "--iterations", args.b_iterations,
         "--position_lr_max_steps", args.b_iterations,
         "--opacity_reset_interval", "0",
+        # structural ops only in the first quarter of the run: measured best on all
+        # three cases (see records/SUMMARY.md, campaign P)
+        "--densify_until_iter", max(1, args.b_iterations // 4),
         "--lambda_dssim", "0.6", "--scaling_lr", "0.01",
         "--limit_seconds", b_limit, "--record", results / "module_b/train_record.json"), logs)
     record = read(results / "module_b/train_record.json")
