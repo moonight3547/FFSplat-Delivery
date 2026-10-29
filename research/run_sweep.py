@@ -89,6 +89,9 @@ def main(argv=None):
     parser.add_argument("--opacity-lr", type=float, default=None, dest="opacity_lr")
     parser.add_argument("--res-scales", default=None, dest="res_scales")
     parser.add_argument("--res-until", default=None, dest="res_until")
+    parser.add_argument("--lpips-weight", type=float, default=None, dest="lpips_weight")
+    parser.add_argument("--lpips-every", type=int, default=None, dest="lpips_every")
+    parser.add_argument("--lpips-scale", type=float, default=None, dest="lpips_scale")
     parser.add_argument("--no-densify", action="store_true", dest="no_densify")
     args = parser.parse_args(argv)
 
@@ -128,6 +131,9 @@ def main(argv=None):
         "--opacity_lr": args.opacity_lr,
         "--res_scales": args.res_scales,
         "--res_until": args.res_until,
+        "--lpips_weight": args.lpips_weight,
+        "--lpips_every": args.lpips_every,
+        "--lpips_scale": args.lpips_scale,
     }
     for flag, value in optional.items():
         if value is not None:

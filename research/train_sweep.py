@@ -80,6 +80,12 @@ def main(argv=None):
     # every other knob (--iterations, --position_lr_*, --densify_*, --mult,
     # --lambda_dssim, ...) is already declared by FastGS's OptimizationParams.
     parser.add_argument("--sh_up_every", type=int, default=1000)
+    parser.add_argument("--lpips_weight", type=float, default=0.0,
+                        help="weight of VGG-LPIPS (the scored metric) in the training loss")
+    parser.add_argument("--lpips_every", type=int, default=1,
+                        help="apply the perceptual term every N iterations")
+    parser.add_argument("--lpips_scale", type=float, default=0.5,
+                        help="downscale factor for the perceptual term (1.0 = full res)")
     parser.add_argument("--res_scales", type=str, default="",
                         help="coarse-to-fine training resolutions, e.g. 0.5,0.75,1.0")
     parser.add_argument("--res_until", type=str, default="",
@@ -122,6 +128,15 @@ def main(argv=None):
     gaussians.training_setup(opt)
     gaussians.max_radii2D = torch.zeros((gaussians.get_xyz.shape[0]), device="cuda")
     init_s = time.perf_counter() - t0
+
+    perceptual = None
+    if args.lpips_weight > 0:
+        import lpips as lpips_pkg
+        perceptual = lpips_pkg.LPIPS(net="vgg", verbose=False).cuda().eval()
+        for parameter in perceptual.parameters():
+            parameter.requires_grad_(False)
+        print(f"[sweep] LPIPS loss weight={args.lpips_weight} every={args.lpips_every} "
+              f"scale={args.lpips_scale}")
 
     bg_color = [1, 1, 1] if dataset.white_background else [0, 0, 0]
     background = torch.tensor(bg_color, dtype=torch.float32, device="cuda")
@@ -179,6 +194,15 @@ def main(argv=None):
         else:
             ssim_value = 1.0
         loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim_value)
+        if perceptual is not None and iteration % args.lpips_every == 0:
+            render_p, gt_p = image.unsqueeze(0), gt_image.unsqueeze(0)
+            if args.lpips_scale != 1.0:
+                size = (max(32, int(round(render_p.shape[2] * args.lpips_scale))),
+                        max(32, int(round(render_p.shape[3] * args.lpips_scale))))
+                render_p = torch.nn.functional.interpolate(render_p, size=size, mode="area")
+                gt_p = torch.nn.functional.interpolate(gt_p, size=size, mode="area")
+            perceptual_loss = perceptual(render_p * 2.0 - 1.0, gt_p * 2.0 - 1.0).mean()
+            loss = loss + args.lpips_weight * perceptual_loss
         loss.backward()
 
         with torch.no_grad():
@@ -249,7 +273,9 @@ def main(argv=None):
                       scaling_lr=opt.scaling_lr, opacity_lr=opt.opacity_lr,
                       position_lr_delay_mult=opt.position_lr_delay_mult,
                       no_densify=args.no_densify, seed=args.seed,
-                      res_scales=scales, res_until=cuts),
+                      res_scales=scales, res_until=cuts,
+                      lpips_weight=args.lpips_weight, lpips_every=args.lpips_every,
+                      lpips_scale=args.lpips_scale),
     )
     if args.record:
         os.makedirs(os.path.dirname(args.record), exist_ok=True)
