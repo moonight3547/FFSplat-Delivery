@@ -83,3 +83,9 @@ uniform在这三份prepared输入上与冻结context完全相同；其他策略�
 目前同一H1路径下counter/bonsai原始sparse目录缺失；bicycle有images.bin但没有points3D.bin；hw prepared本身仍没有tracks。不能把billboard的可用性推广为全部场景。统一回退规则继续有效。
 
 另查 [POp-GS，CVPR2025](https://arxiv.org/html/2503.07819v1)：它利用已有GS模型及渲染导数估计信息，不是仅有pose即可得到的免费A侧分数。不能为A先做一次ReSplat再据此重选并做第二次；若借信息准则，必须从本来已有的训练侧SfM观测另行定义，并明确不是POp-GS复现。
+
+## 07:13：bicycle三策略已有负结果
+
+见 [同步07](SYNC_20261030_07.md)及[原始完成记录](evidence/20261030-0715-selection-hard.json)：uniform/FPS/coverage LPIPS为.2982/.3143/.3112，均为0分；FPS虽把最小中心间距提高约19倍，质量反而低1.61分，coverage低0.75分。不再扩大这两个代理的相似阈值网格，但也不由此宣布A或初始化已达到不可突破的上限。
+
+13例真实位姿已用于[离线相机网页](visualizations/cameras-20261030/index.html)，明确标注4份冻结/9份重建划分。默认选图是确定性uniform，不是随机取context。两个已知零分case的默认最近2中心匹配邻接都没有>90°光轴夹角；按文件名连线的大转角不能等同于网络实际邻接。真实共视仍须用训练观测或重投影检查，视向角不足以证明表面重叠。

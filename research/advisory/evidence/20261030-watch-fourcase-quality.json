@@ -1,0 +1,94 @@
+{
+  "source": "20261030-0722-evalnode-rounds.json",
+  "comparison": "different arms but shared prepared work path; run-time input hashes and GPU identity not in per-run records",
+  "cases": [
+    {
+      "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+      "arms": {
+        "baseline": {
+          "psnr": 32.791,
+          "ssim": 0.9505,
+          "lpips": 0.1512,
+          "b_seconds_estimate": 54.96,
+          "quality_points": 53.992799999999995,
+          "path": "outputs/rounds/baseline/dl3dv-001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f/summary.json"
+        },
+        "delivery": {
+          "psnr": 34.446,
+          "ssim": 0.9674,
+          "lpips": 0.1067,
+          "b_seconds_estimate": 36.07,
+          "quality_points": 64.21679999999999,
+          "path": "outputs/rounds/delivery/dl3dv-001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f/summary.json"
+        }
+      },
+      "quality_delta": 10.223999999999997
+    },
+    {
+      "case": "hw/billboard",
+      "arms": {
+        "baseline": {
+          "psnr": 22.606,
+          "ssim": 0.799,
+          "lpips": 0.1599,
+          "b_seconds_estimate": 48.75,
+          "quality_points": 32.02480000000001,
+          "path": "outputs/rounds/baseline/hw-billboard/summary.json"
+        },
+        "delivery": {
+          "psnr": 22.68,
+          "ssim": 0.8058,
+          "lpips": 0.1426,
+          "b_seconds_estimate": 28.43,
+          "quality_points": 36.087999999999994,
+          "path": "outputs/rounds/delivery/hw-billboard/summary.json"
+        }
+      },
+      "quality_delta": 4.063199999999981
+    },
+    {
+      "case": "mipnerf360/bicycle",
+      "arms": {
+        "baseline": {
+          "psnr": 24.656,
+          "ssim": 0.7283,
+          "lpips": 0.3154,
+          "b_seconds_estimate": 57.53,
+          "quality_points": 9.988799999999998,
+          "path": "outputs/rounds/baseline/mipnerf360-bicycle/summary.json"
+        },
+        "delivery": {
+          "psnr": 24.577,
+          "ssim": 0.7237,
+          "lpips": 0.2994,
+          "b_seconds_estimate": 32.17,
+          "quality_points": 9.557600000000006,
+          "path": "outputs/rounds/delivery/mipnerf360-bicycle/summary.json"
+        }
+      },
+      "quality_delta": -0.4311999999999916
+    },
+    {
+      "case": "mipnerf360/counter",
+      "arms": {
+        "baseline": {
+          "psnr": 27.755,
+          "ssim": 0.8882,
+          "lpips": 0.2066,
+          "b_seconds_estimate": 55.42,
+          "quality_points": 33.940000000000005,
+          "path": "outputs/rounds/baseline/mipnerf360-counter/summary.json"
+        },
+        "delivery": {
+          "psnr": 27.618,
+          "ssim": 0.8965,
+          "lpips": 0.1885,
+          "b_seconds_estimate": 35.67,
+          "quality_points": 38.1144,
+          "path": "outputs/rounds/delivery/mipnerf360-counter/summary.json"
+        }
+      },
+      "quality_delta": 4.174399999999999
+    }
+  ]
+}

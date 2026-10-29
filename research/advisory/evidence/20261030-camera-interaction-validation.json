@@ -1,0 +1,45 @@
+{
+  "policy_switches": [
+    {
+      "policy": "actual",
+      "visible_context_and_pivot": true,
+      "network_edges_hidden_by_default": true
+    },
+    {
+      "policy": "uniform",
+      "visible_context_and_pivot": true,
+      "network_edges_hidden_by_default": true
+    },
+    {
+      "policy": "fps",
+      "visible_context_and_pivot": true,
+      "network_edges_hidden_by_default": true
+    },
+    {
+      "policy": "coverage",
+      "visible_context_and_pivot": true,
+      "network_edges_hidden_by_default": true
+    }
+  ],
+  "top_view_camera": {
+    "up": {
+      "x": 0,
+      "y": 1,
+      "z": 0
+    },
+    "center": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "eye": {
+      "x": 0,
+      "y": 0,
+      "z": 2.5
+    },
+    "projection": {
+      "type": "perspective"
+    }
+  },
+  "page_errors": []
+}

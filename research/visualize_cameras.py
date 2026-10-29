@@ -184,6 +184,15 @@ def geometry_diagnostics(case, names):
             "note": "Pose-only descriptive diagnostics; center/axis proximity is not surface overlap or perceptual quality. Order is filename/split order, not verified capture time."}
 
 
+def nearest_context_edges(centers):
+    """Directed two-nearest-center graph used as a metadata-only network proxy."""
+    centers = np.asarray(centers)
+    distance = np.linalg.norm(centers[:, None] - centers[None, :], axis=-1)
+    np.fill_diagonal(distance, np.inf)
+    return [(i, int(j)) for i in range(len(centers))
+            for j in np.argsort(distance[i], kind="stable")[:min(2, len(centers) - 1)]]
+
+
 def prepare(case):
     validate_case(case)
     viewmap = {v["name"]: v for v in case["views"]}
@@ -264,7 +273,7 @@ def save_pngs(prepared_cases, out):
         draw_topdown(ax, prepared, compact=True)
     for ax in list(axs.flat)[len(prepared_cases):]:
         ax.axis("off")
-    fig.suptitle("Camera trajectories · 13-case pose audit\nRed = LPIPS score 0 (LPIPS ≥ 0.25); orange = context, blue = test, purple star = pivot",
+    fig.suptitle(f"Camera trajectories · {len(prepared_cases)}-case pose audit\nRed = LPIPS score 0 (LPIPS ≥ 0.25); orange = context, blue = test, purple star = pivot",
                  fontsize=16, color="#172c46")
     fig.text(.04, .015, "Estimated camera-up plane, not measured gravity. Path connects filename order, not verified capture time. Metrics are historical heterogeneous runs; missing values remain unknown.",
              fontsize=9, color="#53647a")
@@ -343,6 +352,13 @@ def scene_html(prepared, out):
                                    mode="markers", name=f"pivot context[{pivot}]", visible=vis,
                                    marker={"size": 10, "color": "#9339ab", "symbol": "diamond"},
                                    text=[labels[p]], hovertemplate="%{text}<extra></extra>"))
+        neighbor_points = []
+        for a, b in nearest_context_edges(centers[ix]):
+            neighbor_points.extend([centers[ix[a]], centers[ix[b]], [np.nan] * 3])
+        neighbor_trace = segments_trace(neighbor_points, "context 最近2中心邻接（网络候选边）", "#4a9d8d", 3,
+                                        "legendonly" if vis else False)
+        neighbor_trace.line.dash = "dash"
+        traces.append(neighbor_trace)
         groups[policy] = list(range(start, len(traces)))
     fig = go.Figure(traces)
     fig.update_layout(margin={"l": 0, "r": 0, "t": 10, "b": 0}, paper_bgcolor="white",
@@ -367,11 +383,11 @@ def scene_html(prepared, out):
 <div class="toolbar"><label>Context 策略 <select id="policy">{options}</select></label><button onclick="view('iso')">3D</button><button onclick="view('top')">俯视</button><button onclick="view('front')">侧视</button><a href="../topdown/{slug(case['case'])}.png" target="_blank">俯视 PNG</a><span class="muted">拖动旋转 · 滚轮缩放 · 点图例开关 · 双击复位</span></div><div id="plot" class="plot"></div>
 <div class="details"><p class="muted">相机坐标为 COLMAP/OpenCV：+Z 朝前、+Y 朝下。显示坐标由平均 camera-up 估计，弱一致性时用 PCA 平面；不等于重力真值。视锥长度仅用于显示。连线和编号是文件名 / split 顺序，不证明实际采集时间。</p>
 <table><thead><tr><th>策略</th><th>最大位置空缺 / 场景尺度 ↓</th><th>最小 context 间距 / 尺度</th><th>最大朝向空缺 ↓</th><th>相邻朝向最大转角</th><th>最大索引间隔</th><th>pivot</th></tr></thead><tbody>{''.join(rows)}</tbody></table>
-<p class="muted">位置空缺：每个 train 相机到最近 context 中心的距离取最大值；朝向空缺：每个 train 光轴与最近 context 光轴夹角取最大值（位置和朝向分别匹配）。尺度为 train 非零两两距离中位数。它们是几何描述，不等于可见表面覆盖或 LPIPS。coverage 策略是相机包围盒的视锥代理，未考虑遮挡。</p>
+<p class="muted">位置空缺：每个 train 相机到最近 context 中心的距离取最大值；朝向空缺：每个 train 光轴与最近 context 光轴夹角取最大值（位置和朝向分别匹配）。尺度为 train 非零两两距离中位数。它们是几何描述，不等于可见表面覆盖或 LPIPS。coverage 策略是相机包围盒的视锥代理，未考虑遮挡。可在图例打开绿色虚线：每个 context 到最近两个相机中心的候选邻接，而文件名连线不表示网络邻接。</p>
 <details><summary>来源、坐标估计与逐策略 context 名单</summary><pre>{html.escape(json.dumps(provenance, ensure_ascii=False, indent=2))}</pre></details></div>
 <script>const spec={fig.to_json()}, groups={json_text(groups)};
 Plotly.newPlot('plot', spec.data, spec.layout, {{responsive:true,displaylogo:false}});
-function pick(){{const policy=document.getElementById('policy').value;const all=Object.values(groups).flat();Plotly.restyle('plot',{{visible:all.map(i=>groups[policy].includes(i))}},all);document.querySelectorAll('tbody tr').forEach(r=>r.classList.toggle('selected',r.id==='row-'+policy));}}
+function pick(){{const policy=document.getElementById('policy').value;const all=Object.values(groups).flat();Plotly.restyle('plot',{{visible:all.map(i=>groups[policy].includes(i)?(i===groups[policy][4]?'legendonly':true):false)}},all);document.querySelectorAll('tbody tr').forEach(r=>r.classList.toggle('selected',r.id==='row-'+policy));}}
 document.getElementById('policy').addEventListener('change',pick);document.getElementById('row-actual').classList.add('selected');
 function view(which){{const eyes={{iso:{{x:1.5,y:1.5,z:1.1}},top:{{x:0,y:0,z:2.5}},front:{{x:0,y:-2.5,z:.01}}}};Plotly.relayout('plot',{{'scene.camera':{{eye:eyes[which],up:which==='top'?{{x:0,y:1,z:0}}:{{x:0,y:0,z:1}}}}}});}}
 </script></html>"""

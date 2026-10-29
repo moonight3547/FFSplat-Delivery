@@ -31,11 +31,21 @@ for case in "${CASES[@]}"; do
   [ -f "$work/split.json" ] || $PY run --no-capture-output -n "$RESPLAT" python competition/upstream/baseline/module_a/preprocess.py \
     --scene_dir "$src" --group "$group" --out "$work" --num_context 16 --llffhold 8 --max_resolution 960 >>"$log" 2>&1
   [ -f "$work/split.json" ] || { echo "A failed $case" >>"$log"; continue; }
-  [ -f "$d/ref/module_b.json" ] || $PY run --no-capture-output -n "$FASTGS" python competition/upstream/baseline/module_b/train_from_ply_fastgs.py \
-    -s "$work" --eval -r 1 --sh_degree 3 --quiet -m "$d/ref" --iterations 30000 \
-    --position_lr_max_steps 30000 --densify_until_iter 15000 --init_random >>"$log" 2>&1
-  budget=$(python3 -c "import json;print(json.load(open('$d/ref/module_b.json'))['total_seconds'])" 2>/dev/null || echo "")
-  [ -n "$budget" ] || { echo "ref failed $case" >>"$log"; continue; }
+  if [ "${SKIP_REF:-0}" = "1" ]; then
+    # Approximate budget for a first pass: the measured per-scene 30k references on
+    # this GPU class all fall in 92-100 s, so 95 s costs at most ~0.5 TIME points.
+    budget=${DEFAULT_BUDGET:-95}
+    case "$case" in
+      hw/billboard) budget=99.49 ;; mipnerf360/counter) budget=92.57 ;; dl3dv/*) budget=94.29 ;;
+    esac
+    echo "budget(approx) $case $budget" >>"$log"
+  else
+    [ -f "$d/ref/module_b.json" ] || $PY run --no-capture-output -n "$FASTGS" python competition/upstream/baseline/module_b/train_from_ply_fastgs.py \
+      -s "$work" --eval -r 1 --sh_degree 3 --quiet -m "$d/ref" --iterations 30000 \
+      --position_lr_max_steps 30000 --densify_until_iter 15000 --init_random >>"$log" 2>&1
+    budget=$(python3 -c "import json;print(json.load(open('$d/ref/module_b.json'))['total_seconds'])" 2>/dev/null || echo "")
+    [ -n "$budget" ] || { echo "ref failed $case" >>"$log"; continue; }
+  fi
   [ -f "$d/resplat/resplat_world.ply" ] || $PY run --no-capture-output -n "$RESPLAT" python -m research.resplat_variant \
     --work "$work" --out "$d/resplat" --checkpoint "$CKPT" --num_refine 2 --device cuda:0 >>"$log" 2>&1
   [ -f "$d/resplat/resplat_world.ply" ] || { echo "resplat failed $case" >>"$log"; continue; }

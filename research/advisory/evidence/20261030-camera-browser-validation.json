@@ -1,0 +1,216 @@
+{
+  "cards": 13,
+  "zero_score_cards": 2,
+  "page_errors": [],
+  "external_requests": [],
+  "scenes": [
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce"
+    },
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "mipnerf360/bicycle"
+    },
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f"
+    },
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e"
+    },
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "dl3dv/2dad2d298927ff9b2ed7daa6128244e81d331e8cf1abf6c8598f35276ad38b84"
+    },
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3"
+    },
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "dl3dv/9a451604b8d2583d47b14662635d8f74710c419cc061705ac15b8cfc31ece446"
+    },
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "hw/basketball"
+    },
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "hw/billboard"
+    },
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "hw/car"
+    },
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "hw/trashbin"
+    },
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "mipnerf360/bonsai"
+    },
+    {
+      "traces": 24,
+      "sceneReady": true,
+      "selects": [
+        {
+          "id": "policy",
+          "options": [
+            "actual",
+            "uniform",
+            "fps",
+            "coverage"
+          ]
+        }
+      ],
+      "case": "mipnerf360/counter"
+    }
+  ]
+}
