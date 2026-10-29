@@ -22,6 +22,9 @@ HW=hw/billboard;        BHW=99.49
 CO=mipnerf360/counter;  BCO=92.57
 DL=dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f; BDL=94.29
 OPTS="--opacity-reset-interval 0 --lambda-dssim 0.6 --scaling-lr 0.01"
+# PROFILE lets the same job list run on a different host (timing is only valid on a
+# dedicated card; the shared boxes are quality-only).
+PROFILE=${PROFILE:-}
 
 sharp_ply() {
   local tag src out
@@ -39,8 +42,9 @@ run_one() {  # tag case iters budget ply extra...
   [ -e "$dir/summary.json" ] && return
   if [ "$plymode" = sharp ]; then ply=$(sharp_ply "$case"); else ply="outputs/O0-20261030/results/$case/resplat/resplat_world.ply"; fi
   echo "start $tag lane$LANE $(date -Is)" >>"$D/queue.log"
+  prof=${PROFILE:-competition/profiles/gpufree-$LANE.json}
   $PY run --no-capture-output -n fastgs python -m research.run_sweep \
-    --profile "competition/profiles/gpufree-$LANE.json" --case "$case" \
+    --profile "$prof" --case "$case" \
     --work "outputs/O0-20261030/work/$case" --init-ply "$ply" \
     --out "$dir" --iterations "$iters" --snapshots "" --budget "$budget" \
     $OPTS --position-lr-max-steps "$iters" "$@" >"$D/$tag.log" 2>&1
