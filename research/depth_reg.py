@@ -14,7 +14,12 @@ literature-grounded, opt-in regularizers:
    steps, one world-space translation per training view is optimized jointly
    with the Gaussians, with the same photometric + depth loss, frozen rotation,
    and a per-camera shift clamp.  Off by default; the implementation lives in
-   ``research/pose_refine.py``.
+   ``research/pose_refine.py``.  The pinned rasterizer cannot backpropagate
+   through ``viewmatrix``/``campos`` (they live inside the settings tuple), so
+   the translation is applied as the mathematically exact world shift
+   ``xyz - delta`` for the sampled view: the rendered image, alpha and depth are
+   identical to moving the camera, and the rasterizer does differentiate
+   ``means3D``.
 
 Everything else (LR schedule, densification, opacity reset, SH ramp, coarse-to-
 fine schedules, LPIPS term, snapshots, wall-clock stop, seeds) is copied
@@ -47,6 +52,7 @@ GPU usage (from the repository root, fastgs conda env)::
         --record /tmp/depthreg/train_record.json
 
     # 4. optional camera refinement (wrapper enables --pose-lr; keep it explicit)
+    #    the same command works without --depth-npz (photometric-only refinement)
     python -m research.pose_refine \
         --source work/<case> --model_path /tmp/pose/model \
         --eval -r 1 --sh_degree 3 --quiet \
@@ -241,7 +247,7 @@ def compute_pose_window(args):
     return start, end
 
 
-def validate_args(parser, args):
+def validate_args(args):
     if int(args.iterations) < 1:
         raise ValueError("--iterations must be positive")
     if int(args.sh_up_every) < 1:
@@ -406,10 +412,15 @@ def encode_depth_dc(z, encode_max):
 
 
 def decode_depth_rgb(rgb, encode_max, alpha_eps=1e-6):
-    """Inverse of :func:`encode_depth_dc` for a rasterized RGB image [3,H,W]."""
+    """Inverse of :func:`encode_depth_dc` for a rasterized RGB image [3,H,W].
+
+    The denominator is detached: the depth *value* is still alpha-normalized,
+    but gradients do not push opacity up merely to shrink the normalization
+    (opacity gradients through the composited numerator remain).
+    """
     numerator = rgb[0]
     alpha = rgb[1]
-    depth = (numerator / alpha.clamp_min(alpha_eps)) * encode_max
+    depth = (numerator / alpha.clamp_min(alpha_eps).detach()) * encode_max
     return depth, alpha
 
 
@@ -557,11 +568,13 @@ def edge_aware_depth_loss(rendered_depth, predicted_depth, alpha=None, *,
     weight = valid_float * confidence
     data = (charbonnier * weight).sum() / weight.sum().clamp_min(1e-6)
 
-    gx_r, gy_r = sobel_gradients(rendered)
+    gx_r, gy_r = sobel_gradients(torch.where(valid, rendered, predicted_safe))
     gx_p, gy_p = sobel_gradients(predicted_safe)
-    gradient_magnitude = torch.sqrt(gx_p * gx_p + gy_p * gy_p) / scale
-    edge_weight = torch.exp(-float(edge_beta) * gradient_magnitude.clamp(max=20.0))
-    gradient_error = torch.sqrt((gx_r - gx_p) ** 2 + (gy_r - gy_p) ** 2) / scale
+    gradient_magnitude = torch.sqrt(
+        (gx_p * gx_p + gy_p * gy_p).clamp_min(0.0)) / scale
+    edge_weight = torch.exp(
+        -float(edge_beta) * gradient_magnitude.clamp(max=20.0)).detach()
+    gradient_error = torch.sqrt((gx_r - gx_p) ** 2 + (gy_r - gy_p) ** 2 + 1e-12) / scale
     grad_weights = edge_weight * weight
     grad = (gradient_error * grad_weights).sum() / grad_weights.sum().clamp_min(1e-6)
 
@@ -849,11 +862,14 @@ def run(args):
 
         pose_active = (refiner is not None and pose_start is not None
                        and pose_start <= iteration <= pose_end)
-        if pose_active:
-            for cam in cams_by_scale[scale]:
-                refiner.apply(cam)
+        # Translation refinement is applied in Gaussian space (see
+        # pose_refine.py): rendering the world shifted by -delta with the base
+        # camera is exactly the same image/depth as moving the camera by +delta,
+        # and the rasterizer backpropagates through means3D (not the view matrix).
+        render_gaussians = (refiner.wrap(viewpoint_cam, gaussians)
+                            if pose_active else gaussians)
 
-        render_pkg = render_fastgs(viewpoint_cam, gaussians, pipe, background,
+        render_pkg = render_fastgs(viewpoint_cam, render_gaussians, pipe, background,
                                    opt.mult, 1.0)
         image = render_pkg["render"]
         viewspace_point_tensor = render_pkg["viewspace_points"]
@@ -887,7 +903,7 @@ def run(args):
                 depth_missing += 1
             else:
                 rendered_depth, rendered_alpha, _ = render_encoded_depth(
-                    viewpoint_cam, gaussians, render_fastgs, pipe, opt.mult,
+                    viewpoint_cam, render_gaussians, render_fastgs, pipe, opt.mult,
                     encode_max, alpha_eps=1e-6)
                 if not depth_diagnostics_printed:
                     diagnostics = _depth_diagnostics(
@@ -944,8 +960,6 @@ def run(args):
 
         if pose_active:
             refiner.step()
-            if iteration >= pose_end:
-                refiner.freeze()
 
         if iteration in trigger:
             elapsed = time.perf_counter() - t_train0
@@ -961,7 +975,6 @@ def run(args):
         progress.close()
     train_s = time.perf_counter() - t_train0
     if refiner is not None:
-        refiner.freeze()
         if stop_reason == "wall_clock" and pose_start is not None and iteration < pose_start:
             print(f"[pose] WARNING: stopped at iteration {iteration} before the pose "
                   f"window starts at {pose_start}; lower --pose-start-frac or "
@@ -1124,7 +1137,7 @@ def self_check():
                 "--pose-lr", "1e-4", "--pose-start-frac", "1.0"])),
             "pose window starts at/after the end", checks)
         checks = _expect_value_error(
-            lambda: validate_args(parser.parse_args(base + ["--res-scales", "0.5"])),
+            lambda: validate_args(parser.parse_args(base + ["--res_scales", "0.5"])),
             "schedule must end at 1.0", checks)
 
         auto = validate_args(parser.parse_args(base + ["--depth-npz", "auto"]))
@@ -1133,7 +1146,7 @@ def self_check():
         np.savez_compressed(tmp / "resplat_depth.npz",
                             **{"0000": np.ones((4, 4), dtype=np.float32)})
         auto = validate_args(parser.parse_args(base + ["--depth-npz", "auto"]))
-        check(auto.depth_npz_path == tmp / "resplat_depth.npz",
+        check(auto.depth_npz_path == (tmp / "resplat_depth.npz").resolve(),
               "auto sidecar found next to init PLY")
 
         # ---- sidecar alias/resolution math ---------------------------------
@@ -1151,6 +1164,12 @@ def self_check():
                                "b/0001.jpg": np.ones((4, 4), dtype=np.float32)})
         checks = _expect_value_error(lambda: DepthSidecar(ambiguous),
                                      "ambiguous sidecar aliases", checks)
+        if torch is not None:
+            tensor = sidecar.tensor_for("0003.png", (6, 8), "cpu")
+            check(tuple(tensor.shape) == (6, 8) and tensor.dtype == torch.float32,
+                  "sidecar resized to the render resolution")
+            check(sidecar.tensor_for("9999", (6, 8), "cpu") is None,
+                  "unknown view has no depth")
 
     if torch is None:
         print(f"self-check OK: {checks} checks (arguments + sidecar; "
@@ -1188,28 +1207,32 @@ def self_check():
     check(float(loss_masked) < 1e-2,
           "masked corruption does not leak through the mask")
 
+    skipped_rendered = predicted.clone().requires_grad_(True)
     skipped_loss, skipped_stats = edge_aware_depth_loss(
-        predicted, predicted, torch.zeros_like(alpha), min_valid=0.0)
+        skipped_rendered, predicted, torch.zeros_like(alpha), min_valid=0.0)
     check(skipped_stats["skipped"] and float(skipped_loss) == 0.0,
           "zero alpha -> skipped zero loss")
     skipped_loss.backward()
-    checks += 1
+    check(skipped_rendered.grad is not None, "skipped loss keeps a gradient path")
 
-    # edge-aware gradient term: a missing discontinuity is not punished as
-    # hard as a wrong flat region of the same magnitude.
-    flat_pred = torch.ones((1, 1, 16, 16))
-    flat_pred[:, :, :, 8:] = 2.0
-    rendered_missing_edge = torch.ones_like(flat_pred) * 1.5
-    _, stats_missing_edge = edge_aware_depth_loss(
-        rendered_missing_edge, flat_pred, alpha, edge_beta=8.0, grad_weight=1.0)
-    flat_pred2 = torch.ones_like(flat_pred)
-    rendered_flat_error = flat_pred2 * 1.5
-    _, stats_flat_error = edge_aware_depth_loss(
-        rendered_flat_error, flat_pred2, alpha, edge_beta=8.0, grad_weight=1.0)
-    check(stats_missing_edge["edge_weight"] < 0.5,
-          "predicted edges reduce the edge weight")
-    check(stats_missing_edge["grad"] < stats_flat_error["grad"],
-          "edge-aware term downweights missing discontinuities")
+    # edge-aware gradient term: shifting a pixel inside a flat region should be
+    # punished harder than shifting the predicted discontinuity itself.
+    step_pred = torch.ones((1, 1, 16, 16))
+    step_pred[:, :, :, 8:] = 2.0
+    flat_perturb = step_pred.clone()
+    flat_perturb[:, :, :, 3] += 0.2
+    edge_perturb = step_pred.clone()
+    edge_perturb[:, :, :, 8] += 0.2
+    _, stats_flat = edge_aware_depth_loss(
+        flat_perturb, step_pred, alpha, edge_beta=8.0, grad_weight=1.0)
+    _, stats_edge = edge_aware_depth_loss(
+        edge_perturb, step_pred, alpha, edge_beta=8.0, grad_weight=1.0)
+    check(stats_edge["grad"] < stats_flat["grad"],
+          "edge-aware term downweights perturbations at predicted edges")
+    _, stats_flat_pred = edge_aware_depth_loss(
+        predicted, predicted, alpha, edge_beta=8.0, grad_weight=1.0)
+    check(close(stats_flat_pred["edge_weight"], 1.0),
+          "flat predicted depth has unit edge weight")
 
     # gradient flows into the rendered depth (and therefore Gaussians/cameras)
     rendered = (predicted + 0.1).clone().requires_grad_(True)
@@ -1231,9 +1254,9 @@ def self_check():
     rgb_red = SH_C0 * dc[:, 0, 0] + 0.5
     rgb_green = SH_C0 * dc[:, 0, 1] + 0.5
     rgb_blue = SH_C0 * dc[:, 0, 2] + 0.5
-    check(bool(torch.allclose(rgb_green, torch.ones_like(rgb_green))),
+    check(bool(torch.allclose(rgb_green, torch.ones_like(rgb_green), atol=1e-6)),
           "green channel encodes alpha = 1")
-    check(bool(torch.allclose(rgb_blue, torch.zeros_like(rgb_blue))),
+    check(bool(torch.allclose(rgb_blue, torch.zeros_like(rgb_blue), atol=1e-6)),
           "blue channel is background")
     depth_image = torch.stack([rgb_red, rgb_green, rgb_blue])[:, :, None]
     decoded, decoded_alpha = decode_depth_rgb(depth_image, encode_max)
@@ -1255,8 +1278,37 @@ def self_check():
     check(proxy.active_sh_degree == 0 and proxy.get_xyz is xyz,
           "depth proxy swaps color only")
 
+    # end-to-end encoded depth render with a fake rasterizer (no CUDA): the
+    # fake applies the standard SH DC affine and returns one composited pixel.
+    point = torch.tensor([[0.1, 0.2, 3.0]])
+    gaussians = type("FakeGaussians", (), {
+        "get_xyz": property(lambda self: point),
+    })()
+
+    def fake_render(cam, pc, pipe, bg, mult, scaling_modifier=1.0):
+        colors = SH_C0 * pc.get_features_dc[:, 0, :] + 0.5
+        return {"render": colors.mean(dim=0).view(3, 1, 1)}
+
+    class FakePipe:
+        convert_SHs_python = False
+
+    from research.pose_refine import _make_camera
+
+    cam = _make_camera([1.0, -2.0, 0.5], [0.2, 0.9, 0.3], "fake")
+    forward = torch.inverse(cam.world_view_transform)[2, :3]
+    expected_depth = forward @ (point[0] - cam.camera_center)
+    rendered_depth, rendered_alpha, pkg = render_encoded_depth(
+        cam, gaussians, fake_render, FakePipe(), 0.5, 100.0)
+    check(rendered_depth.shape == (1, 1, 1, 1) and
+          bool(torch.allclose(rendered_depth.flatten(), expected_depth[None],
+                              rtol=1e-5)),
+          "encoded depth render recovers camera Z on a rotated camera")
+    check(bool(torch.allclose(rendered_alpha.flatten(), torch.tensor([1.0]))),
+          "encoded depth render recovers alpha")
+
     print(f"self-check OK: {checks} checks "
-          "(arguments, sidecar, edge-aware depth loss, depth encoding, proxy)")
+          "(arguments, sidecar, edge-aware depth loss, depth encoding, proxy, "
+          "fake encoded-depth render)")
     return checks
 
 
@@ -1267,7 +1319,7 @@ def main(argv=None):
         self_check()
         return 0
     try:
-        args = validate_args(parser, args)
+        args = validate_args(args)
     except ValueError as error:
         parser.error(str(error))
     run(args)

@@ -102,14 +102,15 @@ run_resplat.main()
 """
 
 
-def gpu_depth_command(work, out, checkpoint=None):
+def gpu_depth_command(work, out, checkpoint=None, conda_env="resplat"):
     """Return the exact GPU-host command that dumps ReSplat predicted depth."""
     checkpoint_arg = ""
     if checkpoint:
         checkpoint_arg = f", \"--checkpoint\", {str(checkpoint)!r}"
     body = GPU_TEMPLATE.format(work=str(work), out=str(out),
                                checkpoint=checkpoint_arg)
-    return "conda run --no-capture-output -n resplat python - <<'PY'\n" + body + "PY"
+    return (f"conda run --no-capture-output -n {conda_env} python - <<'PY'\n"
+            + body + "PY")
 
 
 def _bilinear_resize(array, out_h, out_w):
@@ -223,9 +224,6 @@ def load_raw_depths(raw, names_from=None, names_key="context"):
     if not np.isfinite(stack).all():
         bad = int((~np.isfinite(stack)).sum())
         raise ValueError(f"{raw}: {bad} non-finite depth samples; refuse to export")
-    if (stack <= 0).any():
-        bad = int((stack <= 0).sum())
-        raise ValueError(f"{raw}: {bad} non-positive depth samples; refuse to export")
 
     names = None
     if names_from is not None:
@@ -263,6 +261,16 @@ def convert(raw, out, split=None, names_from=None, names_key="context",
     """Convert a raw depth dump into the depth sidecar.  Returns metadata."""
     raw_names, stack = load_raw_depths(raw, names_from=names_from, names_key=names_key)
     raw_names = _dedupe_names(raw_names)
+    invalid = int((stack <= 0).sum())
+    if invalid:
+        positive = float((stack > 0).mean())
+        if positive < 0.5:
+            raise ValueError(
+                f"{raw}: only {positive * 100:.1f}% of depth samples are positive; "
+                "refusing to export (wrong dtype/layout or a corrupt dump)")
+        print(f"[export] warning: {invalid} non-positive depth samples set to 0 "
+              "(masked by the trainer)")
+        stack = np.where(stack > 0, stack, 0.0)
 
     split_data = None
     if split is not None:
@@ -325,6 +333,7 @@ def convert(raw, out, split=None, names_from=None, names_key="context",
 
     meta = dict(raw=str(raw), split=str(split) if split else None,
                 out=str(out), count=len(arrays), key_style=key_style,
+                invalid_samples=invalid,
                 keep=keep, keys=sorted(arrays),
                 source_names=raw_names,
                 resolution=[int(x) for x in next(iter(heights))] if heights else None,
@@ -482,6 +491,8 @@ def build_parser():
                         help="ReSplat output dir for --print-gpu-command")
     parser.add_argument("--checkpoint", type=Path, default=None,
                         help="optional ReSplat checkpoint for --print-gpu-command")
+    parser.add_argument("--conda-env", default="resplat",
+                        help="conda env used by --print-gpu-command (profile: ffsplat-enhance)")
     parser.add_argument("--self-check", action="store_true",
                         help="CPU-only converter unit checks")
     return parser
@@ -496,7 +507,8 @@ def main(argv=None):
     if args.print_gpu_command:
         if args.work is None or args.resplat_out is None:
             parser.error("--print-gpu-command needs --work and --resplat-out")
-        print(gpu_depth_command(args.work, args.resplat_out, args.checkpoint))
+        print(gpu_depth_command(args.work, args.resplat_out, args.checkpoint,
+                                args.conda_env))
         return 0
     if args.raw is None or args.out is None:
         parser.error("--raw and --out are required (or use --self-check / "

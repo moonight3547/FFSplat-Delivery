@@ -1,10 +1,9 @@
 """Translation-only camera refinement for module B (optional, off by default).
 
-The refinement is intentionally small and is *not* a pose solver: it optimizes
-one 3-vector per training view (world-space camera translation) for the last M
-steps of the FastGS continuation, while rotation and intrinsics stay frozen.
-The full training entry point lives in ``research.depth_reg`` and enables this
-module only when ``--pose-lr > 0``:
+The refinement is intentionally small: one world-space translation per training
+view (3 params, no rotation, no intrinsics), optimized jointly with the
+Gaussians for the last M steps.  The entry point is ``research.depth_reg`` and
+the feature is enabled only when ``--pose-lr > 0``:
 
     python -m research.depth_reg ... --pose-lr 5e-5 --pose-start-frac 0.7
 
@@ -14,29 +13,35 @@ This file is also a thin wrapper that turns the feature on (unless
     python -m research.pose_refine ... --init_ply ... --iterations 12000 \
         --depth-npz .../resplat_depth.npz --pose-lr 1e-4
 
-Camera convention
------------------
-FastGS stores ``world_view_transform`` W (the row-vector view matrix) and the
-rasterizer computes ``x_cam = W^T [p, 1]``.  With ``W[:3, :3] = R_w2c`` and
-``W[3, :3] = T = -R_w2c C``, moving the camera centre ``C -> C + delta`` gives
+Why the Gaussians move instead of the camera
+--------------------------------------------
+The pinned FastGS/Diff-Gaussian rasterizer receives ``viewmatrix``,
+``projmatrix`` and ``campos`` inside ``GaussianRasterizationSettings``, which is
+not a tensor argument of the autograd Function, so gradients do not flow to
+camera tensors.  A pure camera translation is nevertheless exactly equivalent
+to translating the *world* by ``-delta`` and keeping the camera fixed:
 
-    T' = T - R_w2c delta
-    W'[3, :3] = T'
-    full_proj' = W' P
-    camera_center' = C + delta
+    camera-space point under (C + delta)   ==   (R (X - delta - C))
+    view direction from (C + delta) to X   ==   (X - delta) - C
+    covariance / scale / rotation are translation invariant
 
-Only ``world_view_transform``, ``full_proj_transform`` and ``camera_center``
-are consumed by ``render_fastgs``; ``R``/``T`` on the camera are left at their
-COLMAP values.  Poses are never written back to disk, so the held-out
-evaluation (which loads test cameras from the scene) is unaffected except
-through the Gaussians that were optimized.
+So ``wrap()`` returns a read-only Gaussian view with ``get_xyz = xyz - delta``.
+The rasterizer backpropagates through ``means3D``, hence through ``delta``, and
+the photometric + depth losses supervise the translation exactly as if the
+camera had moved.  Nothing on the camera object is mutated, so held-out cameras
+and later rendering are unaffected.
 
-``--self-check`` validates the transform math, the optimiser update and the
-argument plumbing with tiny CPU tensors when torch is available.
+Densification note: FastGS's multi-view densification helper renders sampled
+cameras with the *unshifted* model; the translation is clamped to a small
+fraction of the scene extent, so this second-order inconsistency is accepted
+(and documented in research/DEPTH.md).
+
+``--self-check`` validates the camera/translation equivalence, the wrapper, the
+optimizer update and the argument plumbing with tiny CPU tensors when torch is
+available.
 """
 from __future__ import annotations
 
-import argparse
 import sys
 
 import numpy as np
@@ -57,23 +62,74 @@ def _require_torch():
 def camera_forward(cam):
     """Unit camera forward (+Z) direction in world space.
 
-    ``world_view_transform[:3, :3]`` is the world->camera rotation, so its third
-    row is the camera-to-world forward axis.  Translation-only refinement never
-    changes it, but it is cheap to recompute.
+    FastGS stores ``world_view_transform`` in the row-vector layout
+    ``W = [[R_c2w, 0], [T^T, 1]]`` (the rasterizer computes ``W^T [p, 1]``), so
+    the third column of the rotation block is the camera +Z axis in world space.
+    The base camera is never mutated by this module, but the helper is shared
+    with ``depth_reg``.
     """
-    axis = cam.world_view_transform[2, :3]
+    axis = cam.world_view_transform[:3, 2]
     return axis / axis.norm().clamp_min(1e-8)
 
 
 def apply_translation(base_world_view, base_projection, base_center, delta):
-    """Return (W', full_proj', C') for a world-space translation ``delta``."""
-    w2c = base_world_view[:3, :3]
+    """Return (W', full_proj', C') for a world-space camera translation.
+
+    Kept for the equivalence test and documentation; training uses
+    :class:`PoseRefiner.wrap` instead because the rasterizer cannot differentiate
+    the view matrix.
+    """
+    # W[:3,:3] is camera-to-world; its transpose is world-to-camera.
+    w2c = base_world_view[:3, :3].transpose(0, 1)
     shift = w2c @ delta
     world_view = base_world_view.clone()
     world_view[3, :3] = base_world_view[3, :3] - shift
     full_proj = world_view @ base_projection
     center = base_center + delta
     return world_view, full_proj, center
+
+
+class TranslatedGaussians:
+    """Read-only Gaussian view translated by ``-delta`` (exact camera motion)."""
+
+    def __init__(self, gaussians, delta):
+        self._gaussians = gaussians
+        self._delta = delta
+        self._xyz = gaussians.get_xyz - delta
+
+    @property
+    def get_xyz(self):
+        return self._xyz
+
+    @property
+    def get_opacity(self):
+        return self._gaussians.get_opacity
+
+    @property
+    def get_scaling(self):
+        return self._gaussians.get_scaling
+
+    @property
+    def get_rotation(self):
+        return self._gaussians.get_rotation
+
+    @property
+    def get_features(self):
+        return self._gaussians.get_features
+
+    @property
+    def get_features_dc(self):
+        return self._gaussians.get_features_dc
+
+    @property
+    def get_features_rest(self):
+        return self._gaussians.get_features_rest
+
+    def get_covariance(self, scaling_modifier=1.0):
+        return self._gaussians.get_covariance(scaling_modifier)
+
+    def __getattr__(self, name):
+        return getattr(self._gaussians, name)
 
 
 class PoseRefiner:
@@ -92,84 +148,27 @@ class PoseRefiner:
         names = sorted({str(cam.image_name) for cam in cameras})
         self.names = names
         self._index = {name: i for i, name in enumerate(names)}
-        self._base = {}
-        self._cameras = {}
-        first = cameras[0]
-        device = device or first.world_view_transform.device
-        for cam in cameras:
-            cam_id = id(cam)
-            if cam_id in self._base:
-                continue
-            name = str(cam.image_name)
-            index = self._index[name]
-            base_world_view = cam.world_view_transform.detach().clone()
-            base_projection = cam.projection_matrix.detach().clone()
-            base_center = cam.camera_center.detach().clone()
-            self._base[cam_id] = dict(name=name, index=index,
-                                      world_view=base_world_view,
-                                      projection=base_projection,
-                                      center=base_center)
-            self._cameras[cam_id] = cam
-
         self.lr = float(lr)
         self.max_shift = None if max_shift is None else float(max_shift)
         self.weight_decay = float(weight_decay)
+        device = device or cameras[0].world_view_transform.device
         self.device = device
         self.delta = torch.nn.Parameter(
             torch.zeros((len(names), 3), dtype=torch.float32, device=device))
         self.optimizer = torch.optim.Adam(
             [self.delta], lr=self.lr, betas=(0.9, 0.999),
             weight_decay=self.weight_decay)
-        self._applied = False
-        self._frozen = False
 
     @property
     def num_views(self):
         return len(self.names)
 
-    def _entry(self, cam):
-        entry = self._base.get(id(cam))
-        if entry is None:
-            raise KeyError(
-                f"camera {getattr(cam, 'image_name', '?')!r} was not registered "
-                "with this PoseRefiner")
-        return entry
-
-    def apply(self, cam):
-        """Write differentiable translated pose tensors onto ``cam``."""
-        entry = self._entry(cam)
-        delta = self.delta[entry["index"]]
-        world_view, full_proj, center = apply_translation(
-            entry["world_view"], entry["projection"], entry["center"], delta)
-        cam.world_view_transform = world_view
-        cam.full_proj_transform = full_proj
-        cam.camera_center = center
-        self._applied = True
-        return cam
-
-    def restore(self, cam):
-        """Undo ``apply`` (original COLMAP pose); used by tests and fallbacks."""
-        entry = self._entry(cam)
-        world_view = entry["world_view"].clone()
-        cam.world_view_transform = world_view
-        cam.full_proj_transform = world_view @ entry["projection"]
-        cam.camera_center = entry["center"].clone()
-        return cam
-
-    def freeze(self):
-        """Keep the current refinement but detach it from the autograd graph."""
-        if not self._applied:
-            return
-        with torch.no_grad():
-            for cam_id, entry in self._base.items():
-                cam = self._cameras[cam_id]
-                delta = self.delta.detach()[entry["index"]]
-                world_view, full_proj, center = apply_translation(
-                    entry["world_view"], entry["projection"], entry["center"], delta)
-                cam.world_view_transform = world_view
-                cam.full_proj_transform = full_proj
-                cam.camera_center = center
-        self._frozen = True
+    def wrap(self, cam, gaussians):
+        """Return the translated Gaussian view for ``cam``'s current iteration."""
+        name = str(cam.image_name)
+        if name not in self._index:
+            raise KeyError(f"camera {name!r} is not registered with this PoseRefiner")
+        return TranslatedGaussians(gaussians, self.delta[self._index[name]])
 
     def step(self):
         if self.delta.grad is None:
@@ -192,8 +191,7 @@ class PoseRefiner:
         norms = self.delta_norms()
         return dict(n_views=self.num_views, lr=self.lr, max_shift=self.max_shift,
                     weight_decay=self.weight_decay,
-                    mean_shift=norms["mean"], max_observed_shift=norms["max"],
-                    frozen=self._frozen)
+                    mean_shift=norms["mean"], max_observed_shift=norms["max"])
 
 
 # ---------------------------------------------------------------------------
@@ -215,7 +213,8 @@ def _make_camera(center, forward, image_name="view0"):
     w2c = c2w.T
     translation = -w2c @ center
     world_view = np.eye(4, dtype=np.float32)
-    world_view[:3, :3] = w2c
+    # FastGS row-vector view matrix: top-left is camera-to-world, bottom row is T^T.
+    world_view[:3, :3] = c2w
     world_view[3, :3] = translation
     projection = np.eye(4, dtype=np.float32)
     projection[0, 0] = 1.2
@@ -230,6 +229,20 @@ def _make_camera(center, forward, image_name="view0"):
     cam.projection_matrix = torch.tensor(projection)
     cam.camera_center = torch.tensor(center.astype(np.float32))
     return cam
+
+
+def _homogeneous(point):
+    return np.concatenate([np.asarray(point, dtype=np.float64), [1.0]])
+
+
+def _cam_coords(world_view, point):
+    """Rows-vector convention used by diff-gaussian-rasterization."""
+    if hasattr(world_view, "detach"):
+        world_view = world_view.detach().cpu().numpy()
+    if hasattr(point, "detach"):
+        point = point.detach().cpu().numpy()
+    w = np.asarray(world_view, dtype=np.float64)
+    return (w.T @ _homogeneous(point))[:3]
 
 
 def _expect_error(call, label, checks):
@@ -266,76 +279,79 @@ def self_check():
     check("--pose-lr" in injected, "wrapper injects --pose-lr")
     injected_args = validate_args(parser.parse_args(injected))
     check(injected_args.pose_lr == DEFAULT_POSE_LR, "wrapper default lr")
-    check("--pose-lr" not in inject_pose_defaults(base_argv + ["--pose-lr", "0"]),
+    preserved = inject_pose_defaults(base_argv + ["--pose-lr", "0"])
+    check(preserved.count("--pose-lr") == 1
+          and preserved[preserved.index("--pose-lr") + 1] == "0",
           "explicit --pose-lr 0 is preserved")
-    bad_parser = build_parser()
-    try:
-        validate_args(bad_parser.parse_args(
-            base_argv + ["--pose-lr", "1e-4", "--pose-start-frac", "0.9",
-                         "--pose-steps", "10"]))
-        # start = 900, steps = 10 -> end 909 < iterations, valid
-        checks += 1
-    except ValueError:
-        raise AssertionError("self-check: valid pose window rejected")
 
     if torch is None:
         print(f"self-check OK: {checks} checks (argument plumbing only; "
               "torch unavailable, transform math skipped)")
         return checks
 
-    # ---- translation transform -------------------------------------------
+    # ---- camera translation == world translation --------------------------
     center = np.array([1.0, -2.0, 0.5])
     forward = np.array([0.2, 0.9, 0.3])
     cam = _make_camera(center, forward)
-    entry_w = cam.world_view_transform.clone()
-    entry_p = cam.projection_matrix.clone()
-    entry_c = cam.camera_center.clone()
+    base_w = cam.world_view_transform.clone()
+    base_p = cam.projection_matrix.clone()
+    base_c = cam.camera_center.clone()
     delta = torch.tensor([0.05, -0.02, 0.03])
+    point = np.array([2.0, -1.0, 3.0])
 
-    world_view, full_proj, new_center = apply_translation(entry_w, entry_p, entry_c, delta)
-    check(torch.allclose(world_view[:3, :3], entry_w[:3, :3]),
-          "translation leaves rotation block intact")
-    check(torch.allclose(world_view[3, 3], entry_w[3, 3]), "W[3,3] unchanged")
-    expected_shift = entry_w[:3, :3] @ delta
-    check(torch.allclose(world_view[3, :3], entry_w[3, :3] - expected_shift),
-          "W bottom row is T - R_w2c delta")
-    check(torch.allclose(full_proj, world_view @ entry_p), "full_proj = W' P")
-    check(torch.allclose(new_center, entry_c + delta), "centre moves by delta")
+    moved_w, moved_full, moved_c = apply_translation(base_w, base_p, base_c, delta)
+    check(torch.allclose(moved_w[:3, :3], base_w[:3, :3]),
+          "translation leaves the rotation block intact")
+    check(torch.allclose(moved_c, base_c + delta), "centre moves by delta")
+    check(torch.allclose(moved_full, moved_w @ base_p), "full_proj = W' P")
 
-    point = torch.tensor([2.0, -1.0, 3.0])
+    moved_coords = _cam_coords(moved_w, point)
+    shifted_coords = _cam_coords(base_w, point - delta.numpy())
+    check(np.allclose(moved_coords, shifted_coords, atol=1e-6),
+          "moved camera on X == fixed camera on X - delta")
+    check(abs(moved_coords[2] - shifted_coords[2]) < 1e-6,
+          "camera-space depth is preserved by the equivalence")
     forward_vec = camera_forward(cam)
-    base_z = forward_vec @ (point - entry_c)
-    new_z = forward_vec @ (point - new_center)
-    check(torch.allclose(new_z, base_z - forward_vec @ delta, atol=1e-6),
-          "camera-space z decreases by f dot delta")
+    expected_forward = torch.inverse(base_w)[2, :3]
+    check(torch.allclose(forward_vec, expected_forward, atol=1e-6),
+          "camera forward matches inverse(W)'s third row")
+    check(torch.allclose(forward_vec @ (base_c - moved_c),
+                         -(forward_vec @ delta), atol=1e-6),
+          "depth change equals -f dot delta")
 
-    # ---- PoseRefiner identity / apply / restore ---------------------------
+    # ---- wrapper exposes the translated model only ------------------------
+    xyz = torch.nn.Parameter(torch.tensor([[1.0, 2.0, 3.0],
+                                           [-1.0, 0.5, 2.0]]))
+    fake = type("FakeGaussians", (), {
+        "get_xyz": property(lambda self: xyz),
+        "get_opacity": property(lambda self: torch.ones(2, 1)),
+        "get_scaling": property(lambda self: torch.ones(2, 3)),
+        "get_rotation": property(lambda self: torch.ones(2, 4)),
+        "get_features_dc": property(lambda self: torch.zeros(2, 1, 3)),
+        "get_features_rest": property(lambda self: torch.zeros(2, 15, 3)),
+        "get_features": property(lambda self: torch.zeros(2, 16, 3)),
+        "active_sh_degree": 3,
+    })()
     refiner = PoseRefiner([cam], lr=1e-2, max_shift=0.5)
     check(refiner.num_views == 1, "one view registered")
-    refiner.apply(cam)
-    check(torch.allclose(cam.world_view_transform, entry_w, atol=1e-6),
-          "zero delta is identity")
-    check(torch.allclose(cam.full_proj_transform, entry_w @ entry_p, atol=1e-6),
-          "zero delta full_proj identity")
-    check(torch.allclose(cam.camera_center, entry_c, atol=1e-6),
-          "zero delta centre identity")
-
+    wrapped = refiner.wrap(cam, fake)
+    check(torch.allclose(wrapped.get_xyz, xyz), "zero delta is identity")
+    check(wrapped.active_sh_degree == 3, "non-xyz attributes are forwarded")
     with torch.no_grad():
         refiner.delta[0] = delta
-    refiner.apply(cam)
-    check(torch.allclose(cam.camera_center, entry_c + delta, atol=1e-6),
-          "apply writes translated centre")
-    refiner.restore(cam)
-    check(torch.allclose(cam.camera_center, entry_c, atol=1e-6),
-          "restore recovers the base pose")
+    wrapped = refiner.wrap(cam, fake)
+    check(torch.allclose(wrapped.get_xyz, xyz - delta), "wrap shifts xyz by -delta")
+    check(torch.allclose(cam.camera_center, base_c), "camera object is not mutated")
+    check(torch.allclose(cam.world_view_transform, base_w),
+          "view matrix is not mutated")
 
     # ---- gradient descent on a depth-like loss ---------------------------
     target = 0.0
     initial = None
     seen_grad = False
     for _ in range(40):
-        refiner.apply(cam)
-        z = camera_forward(cam) @ (point - cam.camera_center)
+        wrapped = refiner.wrap(cam, fake)
+        z = camera_forward(cam) @ (wrapped.get_xyz[0] - cam.camera_center)
         loss = (z - target) ** 2
         if initial is None:
             initial = float(loss.detach())
@@ -344,12 +360,13 @@ def self_check():
         if refiner.delta.grad is not None and float(refiner.delta.grad.norm()) > 0:
             seen_grad = True
         refiner.step()
-    refiner.apply(cam)
-    final = float(((camera_forward(cam) @ (point - cam.camera_center) - target) ** 2).detach())
+    wrapped = refiner.wrap(cam, fake)
+    final = float(((camera_forward(cam) @ (wrapped.get_xyz[0] - cam.camera_center)
+                    - target) ** 2).detach())
     check(seen_grad, "loss backpropagates into the translation table")
     check(final < initial, "Adam reduces the depth-like loss")
-    norms = refiner.delta_norms()
-    check(norms["max"] <= 0.5 + 1e-5, "delta is clamped to --pose-max-shift")
+    check(refiner.delta_norms()["max"] <= 0.5 + 1e-5,
+          "delta is clamped to --pose-max-shift")
 
     # clamp is enforced even for a huge step
     refiner2 = PoseRefiner([_make_camera(center, forward, "clamp")], lr=10.0,
@@ -360,24 +377,21 @@ def self_check():
 
     # ---- registration errors and sharing ---------------------------------
     stranger = _make_camera([0, 0, 0], [0, 0, 1], "stranger")
-    checks = _expect_error(lambda: refiner.apply(stranger), "unregistered camera", checks)
+    checks = _expect_error(lambda: refiner.wrap(stranger, fake),
+                           "unregistered camera", checks)
 
     cam_a = _make_camera(center, forward, "shared")
     cam_b = _make_camera(center + 0.1, forward, "shared")
-    base_a = cam_a.camera_center.clone()
-    base_b = cam_b.camera_center.clone()
     shared = PoseRefiner([cam_a, cam_b], lr=1e-3)
     check(shared.num_views == 1, "same image_name shares one translation")
     with torch.no_grad():
         shared.delta[0] = torch.tensor([0.01, 0.0, 0.0])
-    shared.apply(cam_a)
-    shared.apply(cam_b)
-    check(torch.allclose(cam_a.camera_center - base_a,
-                         cam_b.camera_center - base_b, atol=1e-6),
+    check(torch.allclose(shared.wrap(cam_a, fake).get_xyz, xyz - shared.delta[0]) and
+          torch.allclose(shared.wrap(cam_b, fake).get_xyz, xyz - shared.delta[0]),
           "shared translation applied to every resolution")
 
     print(f"self-check OK: {checks} checks "
-          "(pose args, W/P/C update, gradient step, clamp, sharing)")
+          "(pose args, camera/world equivalence, wrapper, gradient step, clamp, sharing)")
     return checks
 
 

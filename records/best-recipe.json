@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "protocol": "organizer-20261028 / proxy score (official total unconfirmed)",
+  "schema_version": 2,
+  "protocol": "organizer-20261028 proxy: quality (80) + TIME (20); totals re-derived against the contractual budget; the organiser official total is UNCONFIRMED",
   "cases": {
     "dl3dv": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
     "hw/billboard": "hw/billboard",
@@ -11,252 +11,792 @@
     "hw/billboard": 99.49,
     "mipnerf360/counter": 92.57
   },
-  "budget_source": "records/o0-baseline-20261030.json (budget_seconds per row); identical values repeated in every records/artifacts-20261030/**/summary.json header. Reference = FastGS, random init, 30,000 steps, same GPU.",
+  "budget_source": "records/o0-baseline-20261030.json; reference = FastGS random-init 30,000 steps on the same GPU (NOT classic-3DGS 30k = 547/915/531 s, NOT ReSplat-continued 30k)",
+  "scoring": {
+    "quality": "20*clamp((PSNR-15)/25) + 20*clamp((SSIM-0.70)/0.25) + 40*clamp((0.25-LPIPS)/0.20)",
+    "time": "20*clamp((1-r)/0.90), r = b_seconds/budget; full marks at r<=0.10, zero at r>=1.00",
+    "invalid": "b_seconds >= budget -> INVALID, excluded from every mean",
+    "cross_check": "re-deriving quality/time from stored PSNR/SSIM/LPIPS/B reproduces stored quality_points exactly (max |d|=0.0000) and time_points to 0.0012 over all 159 rows"
+  },
+  "row_counts": {
+    "summary_json_files": 130,
+    "b_sweep_rows": 159,
+    "tag_case_groups": 118,
+    "timing_valid_rows": 124,
+    "quality_only_rows": 35,
+    "invalid_rows": 14,
+    "degenerate_q0_rows": 10
+  },
+  "host_classes": {
+    "TIMING-VALID": {
+      "hosts": [
+        "records/artifacts-20261030/**",
+        "records/artifacts-20261030b/h3/**"
+      ],
+      "rows": 124,
+      "use": "B_seconds, TIME and budget validity are meaningful"
+    },
+    "QUALITY-ONLY": {
+      "hosts": [
+        "records/artifacts-20261030b/h2/**"
+      ],
+      "rows": 35,
+      "use": "only PSNR/SSIM/LPIPS are usable; B, TIME and validity are meaningless (throttled shared GPU)",
+      "excluded_from": [
+        "every mean",
+        "TIME",
+        "validity",
+        "best_uniform",
+        "best_per_case"
+      ]
+    },
+    "check": {
+      "method": "12 campaignK tags exist on both hosts; settings dicts byte-identical and iteration equal for all 12",
+      "b_seconds_ratio_h2_over_h3": {
+        "min": 2.08,
+        "median": 3.4,
+        "max": 4.58
+      },
+      "examples": [
+        "k_hw_early_4k @4k: 97.18 s (h2) vs 21.24 s (h3) = 4.58x",
+        "k_dl_nodens_4k_sharp @4k: 95.89 s vs 46.04 s = 2.08x"
+      ],
+      "quality_delta_at_equal_iteration": {
+        "max_abs_dPSNR": 0.422,
+        "max_abs_dSSIM": 0.0009,
+        "max_abs_dLPIPS": 0.0032
+      },
+      "conclusion": "h2 wall-clock inflated 2.08-4.58x (median 3.40x) with statistically identical quality -> classify by host, never by the stored score",
+      "stored_budget_trap": "all 23 h2 files of campaignB/campaignC store budget_seconds=95.0 for every case (wrong for dl3dv 94.29 and counter 92.57) and h2 campaignK rows store a non-zero TIME; their stored totals are never used"
+    }
+  },
   "baseline": {
-    "label": "official O0 baseline (default-30kLR, 10,000 iters)",
+    "label": "official O0 baseline (FastGS default schedule: reset 3000, 30k LR, densify 500-15000/100, lambda_dssim 0.2), 10,000 iters",
     "source": "records/o0-baseline-20261030.json",
-    "iterations": 10000,
+    "host_class": "TIMING-VALID",
     "cases": {
       "dl3dv": {
         "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+        "iterations": 10000,
+        "b_seconds": 56.09,
+        "budget_seconds": 94.29,
         "psnr": 32.782,
         "ssim": 0.9498,
         "lpips": 0.1514,
         "quality_points": 53.9296,
         "time_points": 9.002957778013457,
         "total_points": 62.93255777801346,
-        "b_seconds": 56.09,
-        "budget_seconds": 94.29,
-        "iterations": 10000
+        "valid": true
       },
       "hw/billboard": {
         "case": "hw/billboard",
+        "iterations": 10000,
+        "b_seconds": 49.31,
+        "budget_seconds": 99.49,
         "psnr": 22.648,
         "ssim": 0.7987,
         "lpips": 0.1598,
         "quality_points": 32.0544,
         "time_points": 11.208273304966438,
         "total_points": 43.26267330496644,
-        "b_seconds": 49.31,
-        "budget_seconds": 99.49,
-        "iterations": 10000
+        "valid": true
       },
       "mipnerf360/counter": {
         "case": "mipnerf360/counter",
+        "iterations": 10000,
+        "b_seconds": 55.5,
+        "budget_seconds": 92.57,
         "psnr": 27.726,
         "ssim": 0.8879,
         "lpips": 0.2071,
         "quality_points": 33.7928,
         "time_points": 8.898971349009155,
         "total_points": 42.69177134900916,
-        "b_seconds": 55.5,
-        "budget_seconds": 92.57,
-        "iterations": 10000
+        "valid": true
       }
     },
-    "mean_total": 49.62900081066302,
+    "mean_total": 49.629,
     "mean_quality_points": 39.9256,
-    "mean_time_points": 9.703400810663016
+    "mean_time_points": 9.7034
   },
   "best_uniform": {
-    "label": "noreset-30kLR, 8,000 iterations, one setting for all three cases",
+    "label": "campaignG g_5k_d06: noreset + matched LR + lambda_dssim 0.6 + scaling_lr 0.01, one setting for all three cases",
     "settings": [
-      "opacity_reset_interval=12001 (hw/billboard, dl3dv) and 8001 (mipnerf360/counter) -> reset never fires inside the run",
-      "lambda_dssim=0.2",
-      "scaling_lr=0.005",
-      "position_lr_max_steps=30000 (official long schedule; NOT matched to the run length)",
+      "iterations=5000 (identical on all three cases)",
+      "opacity_reset_interval=5001 (= iters+1, reset never fires)",
+      "position_lr_max_steps=5000 (= iterations, matched schedule; default 30000)",
       "position_lr_init=0.00016, position_lr_final=1.6e-06, position_lr_delay_mult=0.01",
-      "densification_interval=100, densify_from_iter=500, densify_until_iter=15000",
-      "opacity_lr=0.025, mult=0.5, lpips_weight=0.0, res_scales=[1.0], densify_count_thresh=null, max_gaussians=null, no_densify=false, seed=20261015",
-      "iterations=8000 (uniform across all three cases)"
+      "lambda_dssim=0.6",
+      "scaling_lr=0.01",
+      "opacity_lr=0.025, mult=0.5",
+      "densify_from_iter=500, densify_until_iter=15000, densification_interval=100",
+      "lpips_weight=0.0, res_scales=[1.0], res_until=[], densify_count_thresh=null, max_gaussians=null, no_densify=false",
+      "seed=20261015"
     ],
-    "iterations": 8000,
+    "iterations": 5000,
     "cases": {
+      "dl3dv": {
+        "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+        "case_short": "dl3dv",
+        "tag": "g_dl_5k_d06",
+        "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignG/g_dl_5k_d06/summary.json",
+        "host": "h3",
+        "timing_class": "TIMING-VALID",
+        "iterations": 5000,
+        "num_gaussians": 378851,
+        "b_seconds": 35.41,
+        "budget_seconds": 94.29,
+        "budget_ratio": 0.3755,
+        "psnr": 34.199,
+        "ssim": 0.9664,
+        "lpips": 0.1117,
+        "quality_points": 63.0192,
+        "time_points": 13.8768,
+        "total_points": 76.896,
+        "valid": true,
+        "settings": {
+          "position_lr_max_steps": 5000,
+          "opacity_reset_interval": 5001,
+          "lambda_dssim": 0.6,
+          "scaling_lr": 0.01,
+          "mult": 0.5,
+          "opacity_lr": 0.025,
+          "no_densify": false,
+          "densify_from_iter": 500,
+          "densify_until_iter": 15000,
+          "densification_interval": 100,
+          "lpips_weight": 0.0,
+          "res_scales": [
+            1.0
+          ]
+        }
+      },
       "hw/billboard": {
         "case": "hw/billboard",
         "case_short": "hw/billboard",
-        "config": "noreset-30kLR",
-        "tag": "hw-noreset",
-        "iterations": 8000,
-        "num_gaussians": 368607,
-        "b_seconds": 45.43,
+        "tag": "g_hw_5k_d06",
+        "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignG/g_hw_5k_d06/summary.json",
+        "host": "h3",
+        "timing_class": "TIMING-VALID",
+        "iterations": 5000,
+        "num_gaussians": 516364,
+        "b_seconds": 32.74,
         "budget_seconds": 99.49,
-        "budget_ratio": 0.4566,
-        "psnr": 22.707,
-        "ssim": 0.7978,
-        "lpips": 0.1574,
-        "quality_points": 32.5096,
-        "time_points": 12.0744,
-        "total_points": 44.584,
+        "budget_ratio": 0.3291,
+        "psnr": 22.608,
+        "ssim": 0.8029,
+        "lpips": 0.1451,
+        "quality_points": 35.2984,
+        "time_points": 14.9094,
+        "total_points": 50.2078,
         "valid": true,
-        "source": "records/artifacts-20261030/experiments/round2/hw-noreset/summary.json"
+        "settings": {
+          "position_lr_max_steps": 5000,
+          "opacity_reset_interval": 5001,
+          "lambda_dssim": 0.6,
+          "scaling_lr": 0.01,
+          "mult": 0.5,
+          "opacity_lr": 0.025,
+          "no_densify": false,
+          "densify_from_iter": 500,
+          "densify_until_iter": 15000,
+          "densification_interval": 100,
+          "lpips_weight": 0.0,
+          "res_scales": [
+            1.0
+          ]
+        }
       },
       "mipnerf360/counter": {
         "case": "mipnerf360/counter",
         "case_short": "mipnerf360/counter",
-        "config": "noreset-30kLR",
-        "tag": "counter-noreset",
-        "iterations": 8000,
-        "num_gaussians": 314830,
-        "b_seconds": 53.95,
+        "tag": "g_co_5k_d06",
+        "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignG/g_co_5k_d06/summary.json",
+        "host": "h3",
+        "timing_class": "TIMING-VALID",
+        "iterations": 5000,
+        "num_gaussians": 476703,
+        "b_seconds": 39.35,
         "budget_seconds": 92.57,
-        "budget_ratio": 0.5828,
-        "psnr": 27.552,
-        "ssim": 0.8833,
-        "lpips": 0.2079,
-        "quality_points": 33.1256,
-        "time_points": 9.2699,
-        "total_points": 42.3955,
+        "budget_ratio": 0.4251,
+        "psnr": 27.466,
+        "ssim": 0.8962,
+        "lpips": 0.1898,
+        "quality_points": 37.7088,
+        "time_points": 12.7759,
+        "total_points": 50.4847,
         "valid": true,
-        "source": "records/artifacts-20261030/experiments/round3/counter-noreset/summary.json"
-      },
-      "dl3dv": {
-        "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
-        "case_short": "dl3dv",
-        "config": "noreset-30kLR",
-        "tag": "dl3dv-noreset",
-        "iterations": 8000,
-        "num_gaussians": 295623,
-        "b_seconds": 51.71,
-        "budget_seconds": 94.29,
-        "budget_ratio": 0.5484,
-        "psnr": 33.336,
-        "ssim": 0.9511,
-        "lpips": 0.1324,
-        "quality_points": 58.1888,
-        "time_points": 10.036,
-        "total_points": 68.2248,
-        "valid": true,
-        "source": "records/artifacts-20261030/experiments/round3/dl3dv-noreset/summary.json"
+        "settings": {
+          "position_lr_max_steps": 5000,
+          "opacity_reset_interval": 5001,
+          "lambda_dssim": 0.6,
+          "scaling_lr": 0.01,
+          "mult": 0.5,
+          "opacity_lr": 0.025,
+          "no_densify": false,
+          "densify_from_iter": 500,
+          "densify_until_iter": 15000,
+          "densification_interval": 100,
+          "lpips_weight": 0.0,
+          "res_scales": [
+            1.0
+          ]
+        }
       }
     },
-    "mean_total": 51.7348,
-    "delta_vs_baseline": 2.1058,
-    "caveat": "The literal opacity_reset_interval differs per case (12001 vs 8001) only because each value had to exceed that case's total iteration count; semantically all three runs have opacity reset disabled. Rows are exact per-case settings from separate round2/round3 summary.json files; sweeps/*.json lack the lpips_weight/res_scales keys but match the remaining settings.",
-    "two_case_12000_note": "noreset-30kLR at 12,000 iters has no counter row (counter-noreset stops at 8,000), so its 2-case mean of 54.100 is NOT a valid uniform score."
+    "mean_total": 59.1962,
+    "mean_quality_points": 45.3421,
+    "mean_time_points": 13.854,
+    "delta_vs_baseline": 9.5672,
+    "uniform_ranking": [
+      {
+        "rank": 1,
+        "campaign": "campaignG",
+        "iterations": 5000,
+        "cases": {
+          "mipnerf360/counter": 50.4847,
+          "dl3dv": 76.896,
+          "hw/billboard": 50.2078
+        },
+        "mean_total": 59.1962
+      },
+      {
+        "rank": 2,
+        "campaign": "campaignG",
+        "iterations": 4000,
+        "cases": {
+          "mipnerf360/counter": 49.7564,
+          "dl3dv": 75.3322,
+          "hw/billboard": 50.9164
+        },
+        "mean_total": 58.6683
+      },
+      {
+        "rank": 3,
+        "campaign": "campaignE",
+        "iterations": 5000,
+        "cases": {
+          "mipnerf360/counter": 49.5026,
+          "dl3dv": 75.5819,
+          "hw/billboard": 50.1041
+        },
+        "mean_total": 58.3962
+      },
+      {
+        "rank": 4,
+        "campaign": "campaignD",
+        "iterations": 4000,
+        "cases": {
+          "mipnerf360/counter": 48.3653,
+          "dl3dv": 76.309,
+          "hw/billboard": 50.048
+        },
+        "mean_total": 58.2407
+      },
+      {
+        "rank": 5,
+        "campaign": "campaignF",
+        "iterations": 4000,
+        "cases": {
+          "mipnerf360/counter": 48.0586,
+          "dl3dv": 75.5936,
+          "hw/billboard": 50.5517
+        },
+        "mean_total": 58.068
+      },
+      {
+        "rank": 6,
+        "campaign": "campaignD",
+        "iterations": 6000,
+        "cases": {
+          "mipnerf360/counter": 49.6855,
+          "dl3dv": 75.4507,
+          "hw/billboard": 48.8483
+        },
+        "mean_total": 57.9948
+      },
+      {
+        "rank": 7,
+        "campaign": "campaignD",
+        "iterations": 8000,
+        "cases": {
+          "mipnerf360/counter": 48.7529,
+          "dl3dv": 73.8488,
+          "hw/billboard": 46.7791
+        },
+        "mean_total": 56.4602
+      },
+      {
+        "rank": 8,
+        "campaign": "campaignD",
+        "iterations": 10000,
+        "cases": {
+          "mipnerf360/counter": 47.9459,
+          "dl3dv": 69.8193,
+          "hw/billboard": 46.3005
+        },
+        "mean_total": 54.6886
+      }
+    ],
+    "not_uniform_but_best_mean": {
+      "label": "campaignH sharpen-* (opacity-sharpened ReSplat init + FastGS)",
+      "per_case_total": {
+        "dl3dv": 76.5821,
+        "hw/billboard": 53.099,
+        "mipnerf360/counter": 50.4179
+      },
+      "mean_total": 60.033,
+      "why_not_uniform": "counter ran 5000 iterations while dl3dv/hw ran 4000",
+      "caveat": "the opacity-sharpening flag is not persisted in train_record.settings (dict identical to fastgs-*); only the tag name and docs/RESEARCH-20261030.md section 10 attest it"
+    }
   },
   "best_per_case": {
     "dl3dv": {
       "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
       "case_short": "dl3dv",
-      "config": "noreset-30kLR",
-      "tag": "dl3dv-noreset",
-      "iterations": 8000,
-      "num_gaussians": 295623,
-      "b_seconds": 51.71,
+      "tag": "k_dl_early_4k",
+      "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignK/k_dl_early_4k/summary.json",
+      "host": "h3",
+      "timing_class": "TIMING-VALID",
+      "iterations": 4000,
+      "num_gaussians": 471872,
+      "b_seconds": 29.03,
       "budget_seconds": 94.29,
-      "budget_ratio": 0.5484,
-      "psnr": 33.336,
-      "ssim": 0.9511,
-      "lpips": 0.1324,
-      "quality_points": 58.1888,
-      "time_points": 10.036,
-      "total_points": 68.2248,
+      "budget_ratio": 0.3079,
+      "psnr": 34.371,
+      "ssim": 0.9662,
+      "lpips": 0.1095,
+      "quality_points": 63.5968,
+      "time_points": 15.3804,
+      "total_points": 78.9772,
       "valid": true,
-      "source": "records/artifacts-20261030/experiments/round3/dl3dv-noreset/summary.json"
+      "settings": {
+        "position_lr_max_steps": 4000,
+        "opacity_reset_interval": 4001,
+        "lambda_dssim": 0.6,
+        "scaling_lr": 0.01,
+        "mult": 0.5,
+        "opacity_lr": 0.025,
+        "no_densify": false,
+        "densify_from_iter": 500,
+        "densify_until_iter": 1000,
+        "densification_interval": 100,
+        "lpips_weight": 0.0,
+        "res_scales": [
+          1.0
+        ]
+      }
     },
     "hw/billboard": {
       "case": "hw/billboard",
       "case_short": "hw/billboard",
-      "config": "noreset-30kLR",
-      "tag": "hw-noreset",
+      "tag": "sharpen-hw-billboard",
+      "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignH/sharpen-hw-billboard/summary.json",
+      "host": "h3",
+      "timing_class": "TIMING-VALID",
       "iterations": 4000,
-      "num_gaussians": 390473,
-      "b_seconds": 22.64,
+      "num_gaussians": 480722,
+      "b_seconds": 22.45,
       "budget_seconds": 99.49,
-      "budget_ratio": 0.2276,
-      "psnr": 22.684,
-      "ssim": 0.7885,
-      "lpips": 0.1761,
-      "quality_points": 28.0072,
-      "time_points": 17.1659,
-      "total_points": 45.1731,
+      "budget_ratio": 0.2257,
+      "psnr": 22.814,
+      "ssim": 0.8075,
+      "lpips": 0.1448,
+      "quality_points": 35.8912,
+      "time_points": 17.2078,
+      "total_points": 53.099,
       "valid": true,
-      "source": "records/artifacts-20261030/experiments/round2/hw-noreset/summary.json"
+      "settings": {
+        "position_lr_max_steps": 4000,
+        "opacity_reset_interval": 4001,
+        "lambda_dssim": 0.6,
+        "scaling_lr": 0.01,
+        "mult": 0.5,
+        "opacity_lr": 0.025,
+        "no_densify": false,
+        "densify_from_iter": 500,
+        "densify_until_iter": 15000,
+        "densification_interval": 100,
+        "lpips_weight": 0.0,
+        "res_scales": [
+          1.0
+        ]
+      }
     },
     "mipnerf360/counter": {
       "case": "mipnerf360/counter",
       "case_short": "mipnerf360/counter",
-      "config": "noreset-30kLR",
-      "tag": "counter-noreset",
-      "iterations": 8000,
-      "num_gaussians": 314830,
-      "b_seconds": 53.95,
+      "tag": "k_co_early_5k",
+      "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignK/k_co_early_5k/summary.json",
+      "host": "h3",
+      "timing_class": "TIMING-VALID",
+      "iterations": 5000,
+      "num_gaussians": 537736,
+      "b_seconds": 33.74,
       "budget_seconds": 92.57,
-      "budget_ratio": 0.5828,
-      "psnr": 27.552,
-      "ssim": 0.8833,
-      "lpips": 0.2079,
-      "quality_points": 33.1256,
-      "time_points": 9.2699,
-      "total_points": 42.3955,
+      "budget_ratio": 0.3645,
+      "psnr": 27.708,
+      "ssim": 0.8961,
+      "lpips": 0.1885,
+      "quality_points": 38.1544,
+      "time_points": 14.1226,
+      "total_points": 52.277,
       "valid": true,
-      "source": "records/artifacts-20261030/experiments/round3/counter-noreset/summary.json"
+      "settings": {
+        "position_lr_max_steps": 5000,
+        "opacity_reset_interval": 5001,
+        "lambda_dssim": 0.6,
+        "scaling_lr": 0.01,
+        "mult": 0.5,
+        "opacity_lr": 0.025,
+        "no_densify": false,
+        "densify_from_iter": 500,
+        "densify_until_iter": 1250,
+        "densification_interval": 100,
+        "lpips_weight": 0.0,
+        "res_scales": [
+          1.0
+        ]
+      }
     }
   },
-  "best_per_case_mean_total": 51.9311,
+  "best_per_case_mean_total": 61.4511,
   "falsified": [
     {
-      "idea": "More ReSplat refine rounds (num_refine 2 -> 4 -> 6) keep improving the initialization",
-      "evidence": "hw quality 3.813 (r2) -> 3.874 (r4) -> 3.880 (r6): +0.067 for 4 extra rounds, and counter goes the other way 5.158 (r2) -> 4.985 (r4) -> 4.926 (r6). Recursion saturates after round 2; these are B=0 (initialization-only) rows with time_points=null.",
-      "source": "records/artifacts-20261030/probe/init-{dl3dv,hw,counter}/score_summary.json, records/artifacts-20261030/experiments/round1/*-score/score_summary.json"
+      "idea": "No ReSplat init (random frustum points) is competitive",
+      "evidence": "random-* 42.81/17.84/31.87 (mean 30.84) vs fastgs-* 75.55/51.08/50.42 (mean 59.02) at identical settings -> the init is worth 28.2 points",
+      "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignH/random-*/summary.json"
     },
     {
-      "idea": "Training the default schedule longer (more iterations) is better",
-      "evidence": "counter 20,000 iters has the best quality of its tag (35.538) but B=114.38 s > 92.57 s budget, so the row is INVALID (time_points 0); hw 20,000 iters totals 30.278 vs 39.931 at 1,000 iters.",
-      "source": "records/artifacts-20261030/sweeps/{counter,hw}-default/summary.json"
+      "idea": "Attribute-only module B (no_densify=true, all structural ops off) is a uniform win",
+      "evidence": "mean 58.37 vs 59.02 for fastgs: dl3dv +2.32 (77.87 vs 75.55), hw -1.37 (49.71 vs 51.08), counter -2.89 (47.53 vs 50.42) - scene-size trade, not a win",
+      "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignI/i_*/summary.json"
     },
     {
-      "idea": "Using the whole budget (late snapshots) is the goal",
-      "evidence": "hw total falls 41.583 (4k, 29.7 s) -> 30.278 (20k, 99.0 s = 99.5% of budget, TIME 0.118); TIME is linear in B/budget, so filling the budget is the single most expensive thing you can do.",
-      "source": "records/artifacts-20261030/sweeps/hw-default/summary.json"
+      "idea": "Pre-pruning floaters before FastGS helps",
+      "evidence": "prune-* 73.20/50.02/51.11 (mean 58.11, -0.91); counter +0.69 but dl3dv -2.35",
+      "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignH/prune-*/summary.json"
     },
     {
-      "idea": "Adding VGG-LPIPS (lambda_lpips=0.2) to the B loss buys the 40-point LPIPS term",
-      "evidence": "hw 4k: total 32.239 (Q 22.282) vs 41.583 (Q 26.000) for plain default and 45.173 for noreset on identical iterations; hw 8k at 108.14 s is already over budget.",
-      "source": "records/artifacts-20261030/experiments/round2/{hw,counter}-lpips/summary.json"
+      "idea": "Aggressive densification (densify_from_iter 100, densification_interval 50) recovers detail",
+      "evidence": "loses on all three: hw 48.26 vs 50.05, counter 48.12 vs 49.69, dl3dv 74.95 vs 76.31",
+      "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignE/*_dens/summary.json vs campaignD/d_*"
     },
     {
-      "idea": "A coarse-to-fine resolution ramp (0.5 -> 0.75 -> 1.0) buys more optimization steps per second",
-      "evidence": "hw 8k: 36.652 vs 41.574 (default) and 44.584 (noreset); counter 8k: 29.494 vs 42.396 noreset. It costs seconds without adding quality.",
+      "idea": "Coarse-to-fine resolution ramp (0.5 -> 0.75 -> 1.0) buys steps per second",
+      "evidence": "hw 8k 36.65 vs 41.57 (hw-default); counter 8k 29.49 vs 42.40 (counter-noreset); its 16k points are over budget and 24k renders an empty scene (Q=0.00). Every 20261030b run has res_scales [1.0]",
       "source": "records/artifacts-20261030/experiments/round2/{hw,counter}-resramp/summary.json"
     },
     {
-      "idea": "Looser densification (densify_count_thresh=2) + a 900K Gaussian cap recovers detail the default prunes",
-      "evidence": "hw 8k: +32,424 Gaussians (401,031 vs 368,607) but PSNR 22.729 vs 22.707, SSIM 0.7975 vs 0.7978, LPIPS 0.1573 vs 0.1574; total 43.914 vs 44.584.",
-      "source": "records/artifacts-20261030/experiments/round3/hw-dense-noreset/summary.json"
+      "idea": "Adding VGG-LPIPS to B's loss (lpips_weight 0.2) buys the 40-point LPIPS term",
+      "evidence": "hw 4k 32.24 (Q 22.28) vs 41.58 (Q 26.00) plain default; counter 4k 20.88 (Q 15.44) is the weakest non-degenerate scorable row; hw 8k = 108.14 s > 99.49 s budget",
+      "source": "records/artifacts-20261030/experiments/round2/{hw,counter}-lpips/summary.json"
     },
     {
-      "idea": "Snapshots taken at/near an opacity reset are usable quality points",
-      "evidence": "reset points collapse the render: counter 3k PSNR 10.767/SSIM 0.3580 and hw 12k PSNR 5.116/SSIM 0.1090 both score Q=0.000; 6 of 40 archived rows are such degenerate snapshots.",
-      "source": "records/artifacts-20261030/sweeps/{counter,hw}-default/summary.json"
+      "idea": "More ReSplat refine passes keep improving the initialization",
+      "evidence": "hw init quality 3.813 (r2) -> 3.874 (r4) -> 3.880 (r6); counter 5.158 -> 4.985 -> 4.926 (worse). Saturated after r2; B=0 rows so time_points is null",
+      "source": "records/artifacts-20261030/**/score_summary.json (init-only, not one of the 159)"
     },
     {
-      "idea": "Turning off opacity reset is a uniform win across cases",
-      "evidence": "counter 8k noreset 42.396 is 0.296 BELOW the 10k baseline (42.692); the reset change only pays on dl3dv (+5.292) and hw (+1.910).",
-      "source": "records/artifacts-20261030/experiments/round2/hw-noreset + round3/*-noreset vs records/o0-baseline-20261030.json"
+      "idea": "Long horizons (10k / 20k / 40k) pay",
+      "evidence": "l_hw_10k 44.13 < 50.05 at 4k; l_hw_20k 157.38 s (x1.58) and l_hw_40k 299.64 s (x3.01) INVALID; l_co_10k 112.47 s, l_co_20k 183.81 s, l_dl_20k 103.94 s INVALID; valid d_*_10k rows 69.82/46.30/47.95 are below their own 4k-6k peaks",
+      "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignL/*/summary.json + campaignD/*_10k"
+    },
+    {
+      "idea": "Classic 3DGS as module B",
+      "evidence": "6 archived rows, B = 91.6-398.0 s vs budgets 92.57-99.49 s: 5 of 6 over budget (x1.09-4.30); the only one that fits (hw 5k, 91.62 s) totals 37.00 vs 50.05 for d_hw_4k",
+      "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignJ/j_classic_*/{module_b,metrics}.json - no summary.json, outside the 159"
+    },
+    {
+      "idea": "The sh500 knob changes anything",
+      "evidence": "e_hw_4k_sh500 48.51 vs 50.05; e_co_6k_sh500 49.21 vs 49.69 - and its settings dict is byte-identical to the base run, so the flag itself is unarchived/unverified",
+      "source": "records/artifacts-20261030b/h3/outputs/experiments/campaignE/*_sh500/summary.json"
+    },
+    {
+      "idea": "Snapshots near an opacity reset are usable quality points",
+      "evidence": "10 of 159 rows have Q=0.00 at PSNR 5.1-12.0 dB (hw-default 3k/6k/12k, counter-default 3k/6k/12k, hw-resramp 24k, counter-resramp 24k, hw-lpips 12k, counter-lpips 12k)",
+      "source": "records/artifacts-20261030/sweeps/*/summary.json + records/artifacts-20261030/experiments/round2/*/summary.json"
     }
   ],
-  "unverified_doc_claims": [
+  "marginal_return": {
+    "time_penalty_points_per_second": {
+      "dl3dv": 0.2357,
+      "hw/billboard": 0.2234,
+      "mipnerf360/counter": 0.2401
+    },
+    "per_family_case": [
+      {
+        "family": "A \u03bbdssim 0.4, scaling_lr 0.005, matched LR, noreset",
+        "case": "dl3dv",
+        "steps": [
+          {
+            "from": 3000,
+            "to": 4000,
+            "dQ_per_s": 0.2357,
+            "dTotal_per_s": 0.0
+          },
+          {
+            "from": 4000,
+            "to": 5000,
+            "dQ_per_s": 0.1099,
+            "dTotal_per_s": -0.1258
+          },
+          {
+            "from": 5000,
+            "to": 6000,
+            "dQ_per_s": 0.1912,
+            "dTotal_per_s": -0.0445
+          },
+          {
+            "from": 6000,
+            "to": 8000,
+            "dQ_per_s": 0.0712,
+            "dTotal_per_s": -0.1645
+          },
+          {
+            "from": 8000,
+            "to": 10000,
+            "dQ_per_s": 0.0327,
+            "dTotal_per_s": -0.203
+          },
+          {
+            "from": 10000,
+            "to": 12000,
+            "dQ_per_s": -0.0114,
+            "dTotal_per_s": -0.2471
+          }
+        ]
+      },
+      {
+        "family": "A \u03bbdssim 0.4, scaling_lr 0.005, matched LR, noreset",
+        "case": "hw/billboard",
+        "steps": [
+          {
+            "from": 3000,
+            "to": 4000,
+            "dQ_per_s": 0.266,
+            "dTotal_per_s": 0.0427
+          },
+          {
+            "from": 4000,
+            "to": 5000,
+            "dQ_per_s": 0.2717,
+            "dTotal_per_s": 0.0484
+          },
+          {
+            "from": 5000,
+            "to": 6000,
+            "dQ_per_s": 0.0838,
+            "dTotal_per_s": -0.1395
+          },
+          {
+            "from": 6000,
+            "to": 8000,
+            "dQ_per_s": 0.0199,
+            "dTotal_per_s": -0.2035
+          },
+          {
+            "from": 8000,
+            "to": 10000,
+            "dQ_per_s": 0.1173,
+            "dTotal_per_s": -0.1061
+          }
+        ]
+      },
+      {
+        "family": "A \u03bbdssim 0.4, scaling_lr 0.005, matched LR, noreset",
+        "case": "mipnerf360/counter",
+        "steps": [
+          {
+            "from": 3000,
+            "to": 4000,
+            "dQ_per_s": 0.6387,
+            "dTotal_per_s": 0.3987
+          },
+          {
+            "from": 4000,
+            "to": 5000,
+            "dQ_per_s": 0.528,
+            "dTotal_per_s": 0.2879
+          },
+          {
+            "from": 5000,
+            "to": 6000,
+            "dQ_per_s": 0.2748,
+            "dTotal_per_s": 0.0347
+          },
+          {
+            "from": 6000,
+            "to": 8000,
+            "dQ_per_s": 0.156,
+            "dTotal_per_s": -0.084
+          },
+          {
+            "from": 8000,
+            "to": 10000,
+            "dQ_per_s": 0.1543,
+            "dTotal_per_s": -0.0858
+          }
+        ]
+      },
+      {
+        "family": "B \u03bbdssim 0.6, scaling_lr 0.01, matched LR, noreset",
+        "case": "dl3dv",
+        "steps": [
+          {
+            "from": 4000,
+            "to": 5000,
+            "dQ_per_s": 0.195,
+            "dTotal_per_s": -0.0407
+          },
+          {
+            "from": 5000,
+            "to": 6000,
+            "dQ_per_s": 0.0145,
+            "dTotal_per_s": -0.2212
+          }
+        ]
+      },
+      {
+        "family": "B \u03bbdssim 0.6, scaling_lr 0.01, matched LR, noreset",
+        "case": "hw/billboard",
+        "steps": [
+          {
+            "from": 4000,
+            "to": 5000,
+            "dQ_per_s": 0.0623,
+            "dTotal_per_s": -0.1611
+          },
+          {
+            "from": 5000,
+            "to": 10000,
+            "dQ_per_s": 0.0344,
+            "dTotal_per_s": -0.189
+          }
+        ]
+      },
+      {
+        "family": "B \u03bbdssim 0.6, scaling_lr 0.01, matched LR, noreset",
+        "case": "mipnerf360/counter",
+        "steps": [
+          {
+            "from": 4000,
+            "to": 5000,
+            "dQ_per_s": 0.4487,
+            "dTotal_per_s": 0.2087
+          },
+          {
+            "from": 5000,
+            "to": 6000,
+            "dQ_per_s": 0.2315,
+            "dTotal_per_s": -0.0085
+          }
+        ]
+      },
+      {
+        "family": "C legacy default (reset 3000, 30k LR, \u03bbdssim 0.2)",
+        "case": "hw/billboard",
+        "steps": [
+          {
+            "from": 200,
+            "to": 400,
+            "dQ_per_s": 0.8682,
+            "dTotal_per_s": 0.8682
+          },
+          {
+            "from": 1000,
+            "to": 2000,
+            "dQ_per_s": 0.2505,
+            "dTotal_per_s": 0.0824
+          },
+          {
+            "from": 2000,
+            "to": 4000,
+            "dQ_per_s": 0.2966,
+            "dTotal_per_s": 0.0732
+          },
+          {
+            "from": 4000,
+            "to": 8000,
+            "dQ_per_s": 0.223,
+            "dTotal_per_s": -0.0004
+          },
+          {
+            "from": 8000,
+            "to": 20000,
+            "dQ_per_s": -0.0152,
+            "dTotal_per_s": -0.2386
+          }
+        ]
+      },
+      {
+        "family": "C legacy default (reset 3000, 30k LR, \u03bbdssim 0.2)",
+        "case": "mipnerf360/counter",
+        "steps": [
+          {
+            "from": 1000,
+            "to": 2000,
+            "dQ_per_s": 0.2556,
+            "dTotal_per_s": 0.0155
+          },
+          {
+            "from": 2000,
+            "to": 4000,
+            "dQ_per_s": 0.17,
+            "dTotal_per_s": -0.0701
+          },
+          {
+            "from": 4000,
+            "to": 8000,
+            "dQ_per_s": 0.4799,
+            "dTotal_per_s": 0.2399
+          }
+        ]
+      }
+    ],
+    "crossover": {
+      "recipe_B_lambda_dssim_0.6_scaling_0.01": {
+        "dl3dv": "4k->5k (dQ/dB 0.195 < 0.236 penalty)",
+        "hw/billboard": "4k->5k (dQ/dB 0.062 < 0.223 penalty)",
+        "mipnerf360/counter": "5k->6k (dQ/dB 0.232 < 0.240 penalty)"
+      },
+      "recipe_A_lambda_dssim_0.4_scaling_0.005": {
+        "dl3dv": "4k->5k (dQ/dB 0.110 < 0.236 penalty)",
+        "hw/billboard": "5k->6k (dQ/dB 0.084 < 0.223 penalty)",
+        "mipnerf360/counter": "6k->8k (dQ/dB 0.156 < 0.240 penalty)"
+      }
+    },
+    "score_optimal_horizon": {
+      "dl3dv": "3k-4k",
+      "hw/billboard": "4k-5k",
+      "mipnerf360/counter": "5k-6k"
+    }
+  },
+  "unverified": [
     {
-      "claim": "matched position-LR schedule (position_lr_max_steps = iterations) lifts hw 8k quality 32.51 -> 35.39",
+      "claim": "opacity sharpening of the init (p -> logit(2p)) is worth +1 point",
+      "source": "campaignH/sharpen-* tags, docs/RESEARCH-20261030.md section 10",
+      "status": "the 60.03 mean is archived, but the flag is NOT in train_record.settings (dict identical to fastgs-*), so it cannot be reproduced from JSON alone"
+    },
+    {
+      "claim": "classic-3DGS as B per docs section 11 (5k = 108-152 s)",
+      "source": "docs/RESEARCH-20261030.md section 11",
+      "status": "partially archived in campaignJ (dl 102.5 / hw 91.6 / co 131.3 s) but there is no summary.json, and hw 5k actually fits its budget"
+    },
+    {
+      "claim": "matched-LR lifts hw 8k quality 32.51 -> 35.39",
       "source": "docs/RESEARCH-20261030.md section 8",
-      "status": "no summary.json / score_summary.json exists for it; cannot be verified from this repository"
+      "status": "direction reproduced, magnitude not: archive has hw 8k matched-LR = 35.09 (d_hw_8k) and 35.30 at 5k (g_hw_5k_d06)"
     },
     {
-      "claim": "no reset + lambda_dssim 0.4 + matched LR + 4k steps gives 76.31 / 50.05 / 48.37 (mean 58.24)",
-      "source": "docs/RESEARCH-20261030.md section 9",
-      "status": "no JSON artifact; the 4-GPU machine runs were not archived under records/"
-    },
-    {
-      "claim": "lambda_dssim 0.6 + scaling_lr 0.01 + matched LR at 4k/5k gives mean 59.02 (FastGS) / 60.03 (opacity-sharpened init)",
-      "source": "docs/RESEARCH-20261030.md section 10",
-      "status": "no JSON artifact; this is the 'mean ~60' recipe hinted for best_uniform, and it is NOT reproducible from records/artifacts-20261030 (the archived best uniform is 51.735)"
+      "claim": "h2 is 4-6x slower than the full-speed host",
+      "source": "task brief",
+      "status": "measured 2.08-4.58x at equal iteration+settings (median 3.40x) on 12 twin pairs"
     }
   ],
   "notes": [
-    "9 of 40 archived module-B rows have b_seconds_estimate > case budget (counter-lpips 8k/12k, hw-lpips 8k/12k, counter-resramp 16k/24k, hw-resramp 16k/24k, counter-default 20k); their score.valid is false and time_points is 0.0 in every case.",
-    "Only 3 of the 11 experiment tags have rows for all three cases; a uniform configuration can only be ranked within those (default-30kLR, noreset-30kLR, and the O0 baseline). hw-lpips/lpips, res-ramp, dense-900k and sweep probes are single-case.",
-    "score_summary.json (initialization-only, B=0) rows carry time_points=null, so they cannot produce a total; they are used only for the num_refine falsification."
+    "campaignK tags appear on both hosts; every table and ranking uses the h3 (TIMING-VALID) copy.",
+    "10 of 159 rows are degenerate reset-point snapshots (Q=0.00) and are excluded from the marginal-return fits.",
+    "campaignJ (classic 3DGS) and the init-only score_summary.json rows are cited but are not part of the 159 summary.json rows."
   ]
 }
