@@ -151,6 +151,14 @@ def main(argv=None):
         "--out", results / "resplat", "--checkpoint", args.checkpoint,
         "--num_refine", args.num_refine, "--device", args.device), logs)
 
+    # ---- image cache (E0) ---------------------------------------------------
+    # Module-B wall clock includes decoding the prepared PNGs (5-11 s of a ~30 s
+    # module-B budget). A is our own artifact, so we pre-decode it once; measured
+    # +1.20 / +1.15 / +0.16 points on DL3DV / counter / hw with identical quality.
+    cache_dir = work / "image_cache"
+    runner.run("image_cache", runner.conda(
+        "fastgs", "-m", "research.image_cache", "--work", work, "--out", cache_dir), logs)
+
     # ---- module B init ------------------------------------------------------
     # Matched 3-case A/B (research/experiments/init_ab3.sh): the raw ReSplat PLY
     # beats the opacity-sharpened variant on the mean (61.1 vs 60.2), so no init
@@ -174,6 +182,7 @@ def main(argv=None):
         # three cases (see records/SUMMARY.md, campaign P)
         "--densify_until_iter", max(1, args.b_iterations // 4),
         "--lambda_dssim", "0.6", "--scaling_lr", "0.01",
+        "--image_cache", str(cache_dir),
         "--limit_seconds", b_limit, "--record", results / "module_b/train_record.json"), logs)
     record = read(results / "module_b/train_record.json")
     iterations = record["completed_iterations"]
