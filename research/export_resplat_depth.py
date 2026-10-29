@@ -197,6 +197,7 @@ def load_raw_depths(raw, names_from=None, names_key="context"):
             "`python -m research.export_resplat_depth --print-gpu-command "
             "--work <work> --resplat-out <resplat out>` first.")
     embedded_names = None
+    mapping = None
     if raw.suffix == ".npy":
         stack = _squeeze_stack(np.load(raw, allow_pickle=False))
     else:
@@ -240,6 +241,11 @@ def load_raw_depths(raw, names_from=None, names_key="context"):
 
     if len(names) != stack.shape[0]:
         raise ValueError(f"{len(names)} names for {stack.shape[0]} depth maps")
+    if mapping is not None and names_from is not None:
+        if {Path(n).stem for n in names} != {Path(k).stem for k in mapping}:
+            raise ValueError(
+                f"{names_from} names do not match the keys in {raw}; "
+                "omit --names-from for a flat archive")
     if any(not str(n) for n in names):
         raise ValueError("empty image name in depth dump")
     return [str(n) for n in names], stack

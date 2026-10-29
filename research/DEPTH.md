@@ -59,9 +59,9 @@ draws stay photometric-only.  This is a property of the pipeline, not a bug.
 The pinned `gaussian_renderer.render_fastgs` returns only
 `{"render", "viewspace_points", "visibility_filter", "radii",
 "accum_metric_counts"}`.  `research/depth_reg.py` first checks `render_pkg`
-for `"depth"`/`"alpha"` keys and would use them if a future build adds them.
-With the current build it accumulates alpha-weighted camera-Z with **one extra
-rasterization**:
+for a native `"depth"` (and optional `"alpha"`) and uses it if a future build
+adds one -- assumed alpha-weighted camera-Z in sidecar units.  With the current
+build it accumulates alpha-weighted camera-Z with **one extra rasterization**:
 
 * a read-only Gaussian proxy swaps only `get_features_dc`; geometry, opacity,
   scale and rotation are the real tensors;
@@ -241,6 +241,11 @@ Notes:
   small; it is a known approximation.
 * Test cameras are untouched; the PLY is the only artifact that carries the
   refinement, so held-out evaluation sees the original poses.
+* When depth is enabled, the predicted depth map is kept in the original camera
+  frame; the loss is pixelwise, so it is a **soft anchor** that resists pose
+  drift (and is only approximately correct once the shift has parallax).  It is
+  not a pose solver: the photometric loss drives the correction, the depth term
+  keeps it from wandering.  With the ≤2 % extent clamp the parallax is small.
 
 ### 3.2 Window and defaults
 
@@ -293,17 +298,24 @@ the final photometric polish:
 
 * **Depth term cost.** One extra rasterization forward+backward every
   `--depth-every` iterations, inside `--depth-start-frac 0.05` ..
-  `--depth-end-frac 0.8`.  At 12 k steps and `--depth-every 4` that is ~2.2 k
-  extra render/backward passes (≈19 % of the rasterizer work of the 9 k-step
-  window).  FastGS step time is not purely rasterization, so the wall-clock
-  overhead is smaller, but it is not free.  If the 100 s point budget leaves no
-  room, start with `--depth-every 8` (≈10 % extra) and compare.
-* **Expected gain.** Depth should reduce floaters and "wall" artifacts that
-  densification creates from the 16-view photometric signal, and should make
-  the first ~1 k steps less view-overfitted.  The edge-aware term avoids
-  fighting the true depth discontinuities, so PSNR on thin structures should
-  not regress as much as a plain L1 depth loss.  This is a hypothesis to be
-  measured against the `--depth-weight 0` control on the same 3 cases.
+  `--depth-end-frac 0.8`, **and only when the sampled view is one of the 16
+  context views**.  At 12 k steps, a 9 k-step window and `--depth-every 4`,
+  that is ~2.25 k eligible draws × 16/56 ≈ 640 extra render/backward passes
+  (~7 % of the window's step count; each such step costs roughly two
+  rasterizations, so ~7 % extra rasterizer work overall).  With
+  `--depth-every 1` every context-view draw is supervised (~29 % extra) —
+  this is the knob to trade quality signal for wall clock.  FastGS step time is
+  not purely rasterization, so the wall-clock overhead is smaller, but it is
+  not free.
+* **Expected gain.** The initial ReSplat Gaussians are unprojected *with* the
+  same predicted depths, so they already lie close to the depth surfaces; the
+  term mainly anchors newly densified Gaussians, penalizes floaters that
+  photometric loss tolerates from the 16-view signal, and resists depth drift
+  after the first few thousand steps.  The edge-aware gradient term avoids
+  fighting true depth discontinuities, so thin structures should regress less
+  than with a plain L1 depth loss.  Do not expect a large gain at iteration 0;
+  the hypothesis is about the quality-vs-time curve under densification, and it
+  must be measured against the `--depth-weight 0` control on the same 3 cases.
 * **Pose cost.** Negligible: 3 parameters per view, no extra render.
 * **Pose risk.** A translation-only fit can absorb a real COLMAP bias (good) or
   overfit the training views (bad for test PSNR).  The 2 % extent clamp and
@@ -327,6 +339,10 @@ papers that supervise every view.
 * Whether the 1/4-resolution predicted depth is accurate enough on reflective or
   thin geometry; the edge-aware term only softens the penalty, it does not fix
   a wrong prediction.
+* Zero-valued "invalid" depth samples (if any) are exported as 0 and masked by
+  the trainer, but bilinear resizing can bleed them into neighbours.  Export at
+  the exact training resolution (the default when `--split` is given) to avoid
+  resizing in the common `-r 1` case.
 
 ## 6. A/B protocol
 

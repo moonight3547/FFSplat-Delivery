@@ -64,7 +64,9 @@ GPU usage (from the repository root, fastgs conda env)::
         --record /tmp/pose/train_record.json
 
 Depth renderer assumption: the pinned FastGS wrapper
-(``gaussian_renderer.render_fastgs``) returns no depth.  We therefore accumulate
+(``gaussian_renderer.render_fastgs``) returns no depth.  If a future build adds
+``render_pkg["depth"]`` it is used directly (assumed alpha-weighted camera-Z in
+sidecar units; ``["alpha"]`` is optional), otherwise we accumulate
 alpha-weighted camera-Z with one extra rasterization whose SH DC encodes
 ``(z / encode_max, 1, 0)`` in RGB through a read-only Gaussian proxy.  This
 assumes the rasterizer applies the standard ``SH_C0 * dc + 0.5`` colour
@@ -114,9 +116,10 @@ def build_parser(argv=None):
     ModelParams, OptimizationParams, PipelineParams = _fastgs_arguments()
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    lp = ModelParams(parser)
-    op = OptimizationParams(parser)
-    pp = PipelineParams(parser)
+    # side effect: register FastGS's ModelParams/OptimizationParams/PipelineParams
+    ModelParams(parser)
+    OptimizationParams(parser)
+    PipelineParams(parser)
     parser.add_argument("--init_ply", type=str, default=None)
     parser.add_argument("--init_random", action="store_true",
                         help="module-B ablation: no ReSplat init, random frustum points")
@@ -261,8 +264,14 @@ def validate_args(args):
         args.res_scales, args.res_until)
     if any(scale <= 0 or scale > 1.0 for scale in args.res_scales_list):
         raise ValueError("--res_scales values must be in (0, 1]")
+    if any(b <= a for a, b in zip(args.res_scales_list, args.res_scales_list[1:])):
+        raise ValueError("--res_scales must be strictly increasing")
     if args.res_scales_list[-1] != 1.0:
         raise ValueError("--res_scales must end at 1.0")
+    if any(not 0.0 < cut < 1.0 for cut in args.res_until_list):
+        raise ValueError("--res_until cuts must be in (0, 1)")
+    if any(b <= a for a, b in zip(args.res_until_list, args.res_until_list[1:])):
+        raise ValueError("--res_until cuts must be strictly increasing")
 
     if args.lpips_weight < 0:
         raise ValueError("--lpips_weight must be non-negative")
@@ -423,6 +432,27 @@ def decode_depth_rgb(rgb, encode_max, alpha_eps=1e-6):
     return depth, alpha
 
 
+def depth_from_render_pkg(render_pkg):
+    """Use a native ``depth``/``alpha`` output if the FastGS build provides one.
+
+    Returns ``(depth, alpha_or_None)`` as [1,1,H,W], or ``None`` when the pinned
+    wrapper only returns RGB (the current build).  A native depth is assumed to
+    be alpha-weighted camera-Z in the same units as the ReSplat sidecar.
+    """
+    if not isinstance(render_pkg, dict):
+        return None
+    depth = render_pkg.get("depth")
+    if depth is None:
+        return None
+    depth = _as_bchw(depth, "render_pkg['depth']").float()
+    alpha = render_pkg.get("alpha")
+    if alpha is not None:
+        alpha = _as_bchw(alpha, "render_pkg['alpha']").float()
+        if alpha.shape[-2:] != depth.shape[-2:]:
+            raise ValueError("render_pkg depth/alpha shapes differ")
+    return depth, alpha
+
+
 class _DepthColorProxy:
     """Read-only Gaussian proxy that swaps only the SH DC features."""
 
@@ -560,8 +590,11 @@ def edge_aware_depth_loss(rendered_depth, predicted_depth, alpha=None, *,
         stats["skipped"] = True
         return rendered.sum() * 0.0, stats
 
-    predicted_safe = torch.where(valid, predicted, torch.ones_like(predicted))
-    scale = predicted_safe.detach()[valid].median().clamp_min(1e-6)
+    # Fill invalid pixels with the valid median so the Sobel kernel and the
+    # relative-error denominator do not see an arbitrary 0/1 boundary.
+    fill = predicted.detach()[valid].median().clamp_min(1e-6)
+    predicted_safe = torch.where(valid, predicted, torch.ones_like(predicted) * fill)
+    scale = fill
     relative = (rendered - predicted_safe) / predicted_safe.clamp_min(1e-6)
     charbonnier = torch.sqrt(relative * relative + charbonnier_eps ** 2) - charbonnier_eps
     weight = valid_float * confidence
@@ -586,18 +619,23 @@ def edge_aware_depth_loss(rendered_depth, predicted_depth, alpha=None, *,
 
 def _depth_diagnostics(rendered_depth, predicted_depth, alpha, alpha_eps):
     with torch.no_grad():
-        alpha = _as_bchw(alpha, "alpha")
         rendered = _as_bchw(rendered_depth, "rendered_depth")
         predicted = _as_bchw(predicted_depth, "predicted_depth")
-        mask = (alpha > alpha_eps) & (predicted > 0) & torch.isfinite(rendered)
+        mask = (predicted > 0) & torch.isfinite(rendered)
+        if alpha is not None:
+            alpha = _as_bchw(alpha, "alpha")
+            mask = mask & (alpha > alpha_eps)
+        else:
+            alpha = None
         if mask.any():
             relative = ((rendered - predicted).abs() / predicted.clamp_min(1e-6))[mask]
             relative = float(relative.median())
         else:
             relative = None
         depth_values = rendered[torch.isfinite(rendered)]
-        return dict(alpha_mean=float(alpha.mean()),
-                    alpha_covered=float((alpha > alpha_eps).float().mean()),
+        return dict(alpha_mean=(float(alpha.mean()) if alpha is not None else None),
+                    alpha_covered=(float((alpha > alpha_eps).float().mean())
+                                   if alpha is not None else None),
                     depth_min=float(depth_values.min()) if depth_values.numel() else None,
                     depth_max=float(depth_values.max()) if depth_values.numel() else None,
                     depth_mean=float(depth_values.mean()) if depth_values.numel() else None,
@@ -901,15 +939,37 @@ def run(args):
             if depth_target is None:
                 depth_missing += 1
             else:
-                rendered_depth, rendered_alpha, _ = render_encoded_depth(
-                    viewpoint_cam, render_gaussians, render_fastgs, pipe, opt.mult,
-                    encode_max, alpha_eps=1e-6)
+                native_depth = depth_from_render_pkg(render_pkg)
+                if native_depth is not None:
+                    rendered_depth, rendered_alpha = native_depth
+                    if rendered_depth.shape[-2:] != image.shape[-2:]:
+                        rendered_depth = torch.nn.functional.interpolate(
+                            rendered_depth, size=image.shape[-2:], mode="bilinear",
+                            align_corners=False)
+                        if rendered_alpha is not None:
+                            rendered_alpha = torch.nn.functional.interpolate(
+                                rendered_alpha, size=image.shape[-2:],
+                                mode="bilinear", align_corners=False)
+                else:
+                    rendered_depth, rendered_alpha, _ = render_encoded_depth(
+                        viewpoint_cam, render_gaussians, render_fastgs, pipe,
+                        opt.mult, encode_max, alpha_eps=1e-6)
                 if not depth_diagnostics_printed:
                     diagnostics = _depth_diagnostics(
                         rendered_depth, depth_target[None, None], rendered_alpha,
                         args.depth_alpha_eps)
                     print(f"[depth] render sanity (first supervised view "
                           f"{viewpoint_cam.image_name}): {diagnostics}")
+                    relative_error = diagnostics["median_relative_error"]
+                    if relative_error is not None and relative_error > 0.5:
+                        print("[depth] WARNING: median relative depth error > 50% "
+                              "on the first supervised view; check the SH-DC "
+                              "encoding assumption / depth units before trusting "
+                              "this run")
+                    if (diagnostics["alpha_covered"] is not None
+                            and diagnostics["alpha_covered"] < 0.01):
+                        print("[depth] WARNING: rendered alpha covers < 1% of the "
+                              "view; the encoded depth render is probably wrong")
                     depth_diagnostics_printed = True
                 depth_loss, depth_stats = edge_aware_depth_loss(
                     rendered_depth, depth_target[None, None], rendered_alpha,
@@ -1305,9 +1365,20 @@ def self_check():
     check(bool(torch.allclose(rendered_alpha.flatten(), torch.tensor([1.0]))),
           "encoded depth render recovers alpha")
 
+    # a future FastGS build that returns depth/alpha is used directly (no extra
+    # encoded render); the current build only has "render" and takes the proxy path
+    native = depth_from_render_pkg({
+        "render": torch.zeros(3, 4, 4),
+        "depth": torch.ones(1, 1, 4, 4),
+        "alpha": torch.ones(1, 1, 4, 4)})
+    check(native is not None and tuple(native[0].shape) == (1, 1, 4, 4)
+          and native[1] is not None, "native render depth is detected")
+    check(depth_from_render_pkg({"render": torch.zeros(3, 4, 4)}) is None,
+          "RGB-only render falls back to encoded depth")
+
     print(f"self-check OK: {checks} checks "
           "(arguments, sidecar, edge-aware depth loss, depth encoding, proxy, "
-          "fake encoded-depth render)")
+          "native-depth detection, fake encoded-depth render)")
     return checks
 
 

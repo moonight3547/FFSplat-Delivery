@@ -240,3 +240,44 @@ single-GPU wall clock for the whole decision.
 * Open risk: TIME's numerator (B-only vs E2E) is still unconfirmed by the
   organizers. If it is E2E, A+ReSplat setup alone may consume the budget and every
   module-B experiment here becomes moot — settle that before E2.
+
+## 7. Implementation note — E8 depth anchor and a new E9 pose arm (2026-10-30)
+
+Added after the literature review above (which is unchanged).  Detailed design,
+commands and failure modes: `research/DEPTH.md`.  CPU checks only; no GPU run.
+
+**Files.** `research/depth_reg.py` (depth-regularized continuation, same knobs as
+`train_sweep.py`), `research/pose_refine.py` (translation-only refinement, off by
+default), `research/export_resplat_depth.py` (raw depth dump -> sidecar).
+
+**E8 as implemented — predicted depth, not rendered depth.**  The upstream
+`run_resplat.py` now returns `rendered_depth`, but ReSplat also exposes its
+internal depth prediction (`visualization_dump["depth_fullres"]`, predicted at
+1/4 resolution).  We use the *prediction*, which removes E8's circularity (the
+depth is not rendered from the same primitives being trained).  A one-off
+`save_depth=True` monkey-patch dumps it without editing upstream; the sidecar
+stores image-stem -> `float32 [H, W]` at the module-B training resolution.  Only
+the 16 `split["context"]` views have a prediction, so the term fires on ~29 % of
+training draws and the other 40 train views stay photometric (reported in
+`train_record.json`).  Loss: alpha-masked Charbonnier on relative depth plus an
+edge-aware Sobel gradient-matching term (predicted-discontinuity weight
+`exp(-beta |grad d_pred| / median d_pred)`), `weight 0.05`, every 4th iteration,
+iterations 5–80 % of the run.  A rendered-depth pass costs one extra
+rasterization and only runs when the sampled view has a sidecar (~7 % extra
+rasterizer work at the defaults), which sits inside E8's 5–10 % estimate and
+under §0 rule 2 needs ~0.8 pts at T≈50 s.  Keep E8's kill signal: **< +1.7 pts on
+the 3-case mean at equal seconds -> abandon**.
+
+**E9 — translation-only pose refinement.**  3 DoF per view, no rotation or
+intrinsics; last M steps; shift clamp 2 % of scene extent; `--pose-lr 0` by
+default.  The pinned rasterizer cannot backprop through `viewmatrix`, so the
+translation is applied as the exact world shift `xyz - delta` for the sampled
+view (same RGB/alpha/depth as moving the camera; `means3D` is differentiable).
+Pure-photometric and depth-anchored variants; run separately until both are
+measured.  Predicted effect is small (±0.5–1) and the main risk is test-PSNR
+regression from overfitting train poses, hence the default-off guard.
+
+**Status.** Argument parsing, sidecar I/O, loss math, depth encoding and the
+pose transform are covered by `--self-check` on CPU (`depth_reg` 41 checks,
+`pose_refine` 26, `export_resplat_depth` 22 with CPU torch).  Not verified: the
+encoded-depth rasterization, real step timing and any metric change.
