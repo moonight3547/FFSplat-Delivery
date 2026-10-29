@@ -39,17 +39,22 @@ PY
 }
 
 # a) do the periodic opacity resets help or hurt a short continuation?
-sweep hw-noreset hw/billboard 99.49 12000 4000,8000,12000 --opacity_reset_interval 0
+sweep hw-noreset hw/billboard 99.49 12000 4000,8000,12000 --opacity-reset-interval 0
 # b) coarse-to-fine resolution: same seconds, more optimizer steps
 sweep hw-resramp hw/billboard 99.49 24000 8000,16000,24000 \
-  --res_scales 0.5,0.75,1.0 --res_until 0.6,0.85
+  --res-scales 0.5,0.75,1.0 --res-until 0.6,0.85
 # c) optimize the scored perceptual metric directly (LPIPS is 40/100 of quality)
 sweep hw-lpips hw/billboard 99.49 12000 4000,8000,12000 \
-  --lpips_weight 0.2 --lpips_every 1 --lpips_scale 0.5
+  --lpips-weight 0.2 --lpips-every 1 --lpips-scale 0.5
 # d) same perceptual term on the scene with the worst LPIPS
 sweep counter-lpips mipnerf360/counter 92.57 12000 4000,8000,12000 \
-  --lpips_weight 0.2 --lpips_every 1 --lpips_scale 0.5
+  --lpips-weight 0.2 --lpips-every 1 --lpips-scale 0.5
 # e) coarse-to-fine on that scene
 sweep counter-resramp mipnerf360/counter 92.57 24000 8000,16000,24000 \
-  --res_scales 0.5,0.75,1.0 --res_until 0.6,0.85
+  --res-scales 0.5,0.75,1.0 --res-until 0.6,0.85
+# f) aggressive densification: keep detail instead of pruning it away
+sweep hw-dense hw/billboard 99.49 12000 4000,8000,12000 \
+  --densify-count-thresh 2 --max-gaussians 900000
+sweep counter-dense mipnerf360/counter 92.57 12000 4000,8000,12000 \
+  --densify-count-thresh 2 --max-gaussians 900000
 echo "done $(date -Is)" >>"$log"
