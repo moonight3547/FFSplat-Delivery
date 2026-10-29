@@ -12,6 +12,7 @@ Run in the fastgs conda env, from the repository root:
 import argparse
 import json
 import sys
+import tempfile
 from pathlib import Path
 
 import numpy as np
@@ -45,6 +46,8 @@ def main(argv=None):
 
     safe_state(args.quiet)
     dataset = lp.extract(args)
+    # Scene(model_path) writes cameras.json into model_path; never pollute the repo.
+    dataset.model_path = dataset.model_path or tempfile.mkdtemp(prefix="render-eval-")
     pipe = pp.extract(args)
 
     gaussians = GaussianModel(3, "default")
