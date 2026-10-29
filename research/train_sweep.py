@@ -86,7 +86,7 @@ def main(argv=None):
 
     opt = op.extract(args)
     iterations = opt.iterations
-    sh_up_every = sh_up_every
+    sh_up_every = args.sh_up_every
     if opt.opacity_reset_interval <= 0:
         # 0 means "never reset": push it past the run length.
         opt.opacity_reset_interval = iterations + 1
