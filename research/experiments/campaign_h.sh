@@ -52,14 +52,14 @@ run_one() {  # variant case iters budget
       --profile "competition/profiles/gpufree-$LANE.json" --case "$case" \
       --work "outputs/O0-20261030/work/$case" --init-random \
       --out "$dir" --iterations "$iters" --snapshots "" --budget "$budget" \
-      $OPTS --position_lr_max_steps "$iters" >"$D/$tag.log" 2>&1
+      $OPTS --position-lr-max-steps "$iters" >"$D/$tag.log" 2>&1
   else
     ply=$(prep "$variant" "$case")
     $PY run --no-capture-output -n fastgs python -m research.run_sweep \
       --profile "competition/profiles/gpufree-$LANE.json" --case "$case" \
       --work "outputs/O0-20261030/work/$case" --init-ply "$ply" \
       --out "$dir" --iterations "$iters" --snapshots "" --budget "$budget" \
-      $OPTS --position_lr_max_steps "$iters" >"$D/$tag.log" 2>&1
+      $OPTS --position-lr-max-steps "$iters" >"$D/$tag.log" 2>&1
   fi
   echo "exit=$? $tag $(date -Is)" >>"$D/queue.log"
 }
