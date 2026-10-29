@@ -14,6 +14,8 @@ E2前置条件更新：[选图可行性审查](VIEW_SELECTION_FEASIBILITY_202610
 
 **E3启动前先读**：[深度接口审查](DEPTH_INTERFACE_AUDIT_20261030.md)。已有实现仅detach归一化分母会产生非物理opacity梯度；CPU标量反例已归档，修正前不应据它的实验裁决深度路线。
 
+[实验同步03](SYNC_20261030_03.md)已核验两个场景18份三seed结构对照及8份MCMC原始结果。新增 [E8后期可见性稀疏更新](SPARSE_OPTIMIZER_20261030.md)；先诊断优化器占比，不直接换flag。[缓存计时补充](CACHE_TIME_BOUNDARY_20261030.md)说明独立cache-build成本须计入E2E，B提速不自动等于整条流水线提速。
+
 ## 阅读顺序
 
 1. [当前进展与证据边界](CURRENT_STATE.md)：先确认什么已做、什么只有脚本，以及评分记录的缺口。

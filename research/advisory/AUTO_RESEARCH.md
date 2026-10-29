@@ -46,3 +46,11 @@ SAD-GS 深读已完成第一轮：补充专用统计 buffer、计时边界、标
 发现 `depth_reg.decode_depth_rgb` 仅detach归一化分母的梯度问题，CPU单高斯反例已保存：真实dD/da=0，当前代理为7.5（a=.4,z=3）。新增DEPTH_INTERFACE_AUDIT，要求先澄清expected/accumulated深度和修正梯度，再进行E3。源代码未修改。
 
 后续工作：继续跟踪06:20左右的候选/baseline和raw/sharp原始证据；研究只拟外观/分阶段参数更新、预算内的几何可信度，避免新增loss堆叠；按现有约束持续至17:43:57。
+
+## 06:16 — 新节点原始证据及E8
+
+SYNC_20261030_03归档并核验新增节点55份JSON：campaignU两个场景各三组×三seed，前期结构对照稳定优于关闭/推迟；8组MCMC完整metrics/module_b支持暂不扩大同类网格。当前没有raw/sharp配对文件，缓存配对也尚缺；记录与docs自述的数值差异，不擅自归因为算分错。
+
+新增SPARSE_OPTIMIZER：ICLR2026 AdamW-GS适配判断及E8，保留前1250步dense结构，先测optimizer占比再试后期可见性更新，明确FastGS现有sparse flag不是可直接切换的完整路径。新增CACHE_TIME_BOUNDARY：当前cache在B前独立解码/写盘，须测首次构建E2E；不能只凭B节省宣称+0.9是整条流水线净收益。
+
+共享工作区新HEAD cf2a772，已读其62.01总结；当前质量固定时的65条件上界仍不能证明未来75不可达。继续执行12小时研究。
