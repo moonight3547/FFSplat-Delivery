@@ -94,8 +94,10 @@ def main(argv=None):
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--budget-seconds", type=float, default=None,
                         help="skip the 30K reference and use this budget (grading-machine value)")
+    parser.add_argument("--b-iterations", type=int, default=4000, dest="b_iterations",
+                        help="module-B optimizer steps (matched-LR recipe; measured sweet spot)")
     parser.add_argument("--b-fraction", type=float, default=0.5,
-                        help="module-B wall clock as a fraction of the measured budget")
+                        help="hard safety cap: module-B wall clock as a fraction of the budget")
     parser.add_argument("--num-refine", type=int, default=2)
     parser.add_argument("--context-policy", default="uniform", choices=["uniform"],
                         help="16-view policy; uniform is the organizer baseline")
@@ -118,7 +120,8 @@ def main(argv=None):
     work, results = out / "work", out / "results"
     logs = out / "logs"
     identity = dict(scene=str(args.scene.resolve()), group=group, checkpoint=args.checkpoint,
-                    num_refine=args.num_refine, b_fraction=args.b_fraction,
+                    num_refine=args.num_refine, b_iterations=args.b_iterations,
+                    b_fraction=args.b_fraction,
                     context_policy=args.context_policy,
                     git_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO,
                                                        text=True).strip())
@@ -149,12 +152,19 @@ def main(argv=None):
         "--num_refine", args.num_refine, "--device", args.device), logs)
 
     # ---- module B -----------------------------------------------------------
+    # Recipe measured on this class of GPU (see docs/RESEARCH-20261030.md): a short
+    # continuation with the position-LR schedule matched to the run length beats a
+    # long one because the default 30k schedule barely decays inside 4k steps.
+    # --limit_seconds is only a validity safety net, not the normal stop condition.
     b_limit = args.b_fraction * budget
     runner.run("module_b", runner.conda(
         "fastgs", "-m", "research.train_sweep", "--source", work, "--model_path", results / "module_b",
         "--eval", "-r", "1", "--sh_degree", "3", "--quiet",
         "--init_ply", results / "resplat/resplat_world.ply",
-        "--iterations", "60000", "--opacity_reset_interval", "0",
+        "--iterations", args.b_iterations,
+        "--position_lr_max_steps", args.b_iterations,
+        "--opacity_reset_interval", "0",
+        "--lambda_dssim", "0.6", "--scaling_lr", "0.01",
         "--limit_seconds", b_limit, "--record", results / "module_b/train_record.json"), logs)
     record = read(results / "module_b/train_record.json")
     iterations = record["completed_iterations"]
