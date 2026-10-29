@@ -29,16 +29,16 @@ var() {  # gpu, tag, extra args...
 lane() {
   case "$1" in
     0)
-      var 0 kw_dssim04 "--lambda_dssim 0.4"
+      var 0 kw_dssim04 "--lambda-dssim 0.4"
       var 0 kw_mult10 "--mult 1.0"
-      var 0 kw_dens_early "--densify_from_iter 100 --densification_interval 50"
-      var 0 kw_lr8k "--position_lr_max_steps 8000"
+      var 0 kw_dens_early "--densify-from 100 --densify-interval 50"
+      var 0 kw_lr8k "--position-lr-max-steps 8000"
       ;;
     1)
-      var 1 kw_lr_init2x "--position_lr_init 0.00032"
-      var 1 kw_scale_lr "--scaling_lr 0.01"
-      var 1 kw_dssim01 "--lambda_dssim 0.1"
-      var 1 kw_lr8k_init2x "--position_lr_max_steps 8000 --position_lr_init 0.00032"
+      var 1 kw_lr_init2x "--position-lr-init 0.00032"
+      var 1 kw_scale_lr "--scaling-lr 0.01"
+      var 1 kw_dssim01 "--lambda-dssim 0.1"
+      var 1 kw_lr8k_init2x "--position-lr-max-steps 8000 --position-lr-init 0.00032"
       ;;
   esac
 }
