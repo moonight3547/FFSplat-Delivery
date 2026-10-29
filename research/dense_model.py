@@ -15,6 +15,7 @@ Nothing upstream is modified; we only subclass it.
 import torch
 
 from scene.gaussian_model import GaussianModel  # FastGS package, read-only
+from utils.general_utils import inverse_sigmoid
 
 
 class AggressiveGaussianModel(GaussianModel):
@@ -78,7 +79,7 @@ class AggressiveGaussianModel(GaussianModel):
             threshold = torch.topk(quality, keep).values[-1]
             self.prune_points(quality < threshold)
 
-        opacities_new = self.inverse_sigmoid(
+        opacities_new = inverse_sigmoid(
             torch.min(self.get_opacity, torch.ones_like(self.get_opacity) * 0.8))
         optimizable_tensors = self.replace_tensor_to_optimizer(opacities_new, "opacity")
         self._opacity = optimizable_tensors["opacity"]
