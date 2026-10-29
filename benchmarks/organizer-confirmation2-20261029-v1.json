@@ -1,0 +1,85 @@
+{
+  "schema_version": 2,
+  "benchmark_id": "organizer-confirmation2-20261029-v1-fastgs30k",
+  "protocol": "organizer-20261028",
+  "status": "source_verified_new_hardware_calibration_required",
+  "upstream": {
+    "repository": "https://gitcode.com/gcw_yxxmv6uE/hackathon_competition.git",
+    "commit": "cb29814af7e260f03f7565e6edadb35bf42c5a93"
+  },
+  "context_views": 16,
+  "llffhold": 8,
+  "num_refine": 2,
+  "resolution": {
+    "policy": "organizer_preprocess",
+    "landscape_long_edge_max": 960,
+    "portrait_long_edge_max": 768,
+    "multiple": 64,
+    "final_metrics": "processed resolution used by organizer code; not legacy native-resolution"
+  },
+  "metrics": {
+    "implementation": "resplat/src/evaluation/metrics.py",
+    "lpips_backbone": "vgg",
+    "ssim": "skimage win_size=11 gaussian_weights=True channel_axis=0 data_range=1",
+    "aggregation": "equal scene mean for local summary; official cross-scene aggregate unspecified"
+  },
+  "timing": {
+    "scope": "A + ReSplat + B stage totals",
+    "reference": "same-machine FastGS random-init 30000 steps on identical prepared scene",
+    "strict": true,
+    "official_percent_formula": null,
+    "old_mixed10_budgets_compatible": false,
+    "reference_trainer": "fastgs",
+    "reference_iterations": 30000,
+    "reference_initialization": "random",
+    "revision": "fastgs-random30k-user-confirmed-20261029"
+  },
+  "pose_estimation_scope": "Organizer preprocess may run COLMAP on all source images before llffhold split; no held-out RGB in ReSplat or B optimization",
+  "data": {
+    "url": "https://drive.google.com/drive/folders/1CZWTj9jHh9wVdUru0za69-Mtaz5Fzn16",
+    "snapshot": {
+      "id": "organizer-download-20261029",
+      "archive_sha256": "7a1f68dfc6c9fd89a35537a04e161a3308873b079f00e61fc31eb2a99658147d",
+      "archive_bytes": 5619483272,
+      "archive_root": "datasets",
+      "archive_inventory": "references/dataset-archive.json"
+    },
+    "all_provided_scene_inventory": {
+      "scene_count": 13,
+      "groups": {
+        "DL3DV": 6,
+        "hw": 4,
+        "mipnerf360": 3
+      },
+      "catalog": "references/dataset-catalog.json"
+    }
+  },
+  "checkpoint": {
+    "name": "resplat-base-dl3dv-540x960-view16-a72dc6d0.pth",
+    "url": "https://drive.google.com/file/d/1HRZZWq-PyhhJ9zkDHhVL1IWdxnnIIjdY/view",
+    "sha256": "a72dc6d0d56f7ccc50d145c17c83d866d4aaa2c13adb1a22f7a84481001e1a4c",
+    "sha256_provenance": "observed user-supplied download; filename prefix matches; no organizer-published full SHA256"
+  },
+  "cases": [
+    {
+      "id": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+      "group": "dl3dv",
+      "source": "DL3DV",
+      "scene": "0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce"
+    },
+    {
+      "id": "hw/car",
+      "group": "hw",
+      "source": "hw",
+      "scene": "car"
+    }
+  ],
+  "purpose": "Preregistered confirmation after fixed default-three development; never replaces the official default",
+  "confirmation_rules": {
+    "registered_before_outcomes": true,
+    "selection": "First remaining DL3DV in lexical order and hw/car for a distinct capture; no metrics inspected",
+    "policy": "Same fixed candidate on both scenes; no per-scene held-out tuning",
+    "promotion": "Development consistency plus both confirmation cases; report every failure",
+    "reference": "New same-host full organizer classic30K per case; no reused default-three timing"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "repository": "https://gitcode.com/gcw_yxxmv6uE/hackathon_competition.git",
+  "commit": "cb29814af7e260f03f7565e6edadb35bf42c5a93",
+  "retrieved_date": "2026-10-29",
+  "checkpoint_name": "resplat-base-dl3dv-540x960-view16-a72dc6d0.pth",
+  "checkpoint_url": "https://drive.google.com/file/d/1HRZZWq-PyhhJ9zkDHhVL1IWdxnnIIjdY/view",
+  "checkpoint_sha256": null,
+  "data_url": "https://drive.google.com/drive/folders/1CZWTj9jHh9wVdUru0za69-Mtaz5Fzn16",
+  "asset_status": "Shared via ModelScope; verify on each execution host; see docs/ASSETS.md",
+  "network_policy": "Use the pinned organizer model unchanged, including its portrait patch and default num_refine=2",
+  "observed_checkpoint_sha256": "a72dc6d0d56f7ccc50d145c17c83d866d4aaa2c13adb1a22f7a84481001e1a4c",
+  "observed_dataset_archive_sha256": "7a1f68dfc6c9fd89a35537a04e161a3308873b079f00e61fc31eb2a99658147d"
+}

@@ -1,0 +1,7 @@
+{
+  "policy": "ranked16-v1",
+  "probe_count": 8,
+  "max_changes": 2,
+  "relative_gain": 0.02,
+  "seed": 20261015
+}

@@ -1,0 +1,95 @@
+{
+  "archive": {
+    "bytes": 5619483272,
+    "crc": "all extracted entries verified",
+    "name": "datasets.zip",
+    "sha256": "7a1f68dfc6c9fd89a35537a04e161a3308873b079f00e61fc31eb2a99658147d",
+    "sha256_provenance": "observed user-supplied download"
+  },
+  "cases": [
+    {
+      "source": "DL3DV/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+      "files": 331,
+      "images": 330,
+      "bytes": 210727966
+    },
+    {
+      "source": "DL3DV/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+      "files": 382,
+      "images": 381,
+      "bytes": 353587114
+    },
+    {
+      "source": "DL3DV/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e",
+      "files": 325,
+      "images": 324,
+      "bytes": 432949561
+    },
+    {
+      "source": "DL3DV/2dad2d298927ff9b2ed7daa6128244e81d331e8cf1abf6c8598f35276ad38b84",
+      "files": 306,
+      "images": 305,
+      "bytes": 360861486
+    },
+    {
+      "source": "DL3DV/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3",
+      "files": 308,
+      "images": 307,
+      "bytes": 325144361
+    },
+    {
+      "source": "DL3DV/9a451604b8d2583d47b14662635d8f74710c419cc061705ac15b8cfc31ece446",
+      "files": 349,
+      "images": 348,
+      "bytes": 280733009
+    },
+    {
+      "source": "hw/basketball",
+      "files": 81,
+      "images": 80,
+      "bytes": 25102545
+    },
+    {
+      "source": "hw/billboard",
+      "files": 66,
+      "images": 65,
+      "bytes": 30438175
+    },
+    {
+      "source": "hw/car",
+      "files": 72,
+      "images": 71,
+      "bytes": 29652251
+    },
+    {
+      "source": "hw/trashbin",
+      "files": 77,
+      "images": 76,
+      "bytes": 15518903
+    },
+    {
+      "source": "mipnerf360/bicycle",
+      "files": 197,
+      "images": 194,
+      "bytes": 1723723369
+    },
+    {
+      "source": "mipnerf360/bonsai",
+      "files": 295,
+      "images": 292,
+      "bytes": 1022621131
+    },
+    {
+      "source": "mipnerf360/counter",
+      "files": 243,
+      "images": 240,
+      "bytes": 882010135
+    }
+  ],
+  "official_default": [
+    "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "hw/billboard",
+    "mipnerf360/counter"
+  ],
+  "expanded_spec": "benchmarks/organizer-provided13-v1.json"
+}

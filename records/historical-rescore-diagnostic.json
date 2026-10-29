@@ -1,0 +1,287 @@
+{
+  "status": "cross-GPU diagnostic estimate, not a measured same-GPU score",
+  "official_score_100": null,
+  "validated_total": null,
+  "cells": {
+    "O0": {
+      "mean_metrics": {
+        "psnr": 27.638333333333332,
+        "ssim": 0.8788666666666667,
+        "lpips": 0.1728
+      },
+      "quality_scores": {
+        "psnr": 10.110666666666667,
+        "ssim": 14.309333333333338,
+        "lpips": 15.439999999999998
+      },
+      "scopes": {
+        "B-only": {
+          "rows": [
+            {
+              "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+              "measured_old_gpu_seconds": 58.27,
+              "measured_new_gpu_budget_seconds": 102.68,
+              "estimated_within_budget": true,
+              "time_score_estimate": 9.611305891009824
+            },
+            {
+              "id": "hw/billboard",
+              "measured_old_gpu_seconds": 49.2,
+              "measured_new_gpu_budget_seconds": 100.13,
+              "estimated_within_budget": true,
+              "time_score_estimate": 11.303083768878235
+            },
+            {
+              "id": "mipnerf360/counter",
+              "measured_old_gpu_seconds": 56.85,
+              "measured_new_gpu_budget_seconds": 93.72,
+              "estimated_within_budget": true,
+              "time_score_estimate": 8.742353108550292
+            }
+          ],
+          "mean_time_score_estimate": 9.885580922812784,
+          "proxy_total_estimate": 49.745580922812785,
+          "validated_total": null
+        },
+        "E2E": {
+          "rows": [
+            {
+              "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+              "measured_old_gpu_seconds": 141.75771643638612,
+              "measured_new_gpu_budget_seconds": 102.68,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            },
+            {
+              "id": "hw/billboard",
+              "measured_old_gpu_seconds": 260.39886457443237,
+              "measured_new_gpu_budget_seconds": 100.13,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            },
+            {
+              "id": "mipnerf360/counter",
+              "measured_old_gpu_seconds": 183.19842767715454,
+              "measured_new_gpu_budget_seconds": 93.72,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            }
+          ],
+          "mean_time_score_estimate": null,
+          "proxy_total_estimate": null,
+          "validated_total": null
+        }
+      }
+    },
+    "A": {
+      "mean_metrics": {
+        "psnr": 27.652,
+        "ssim": 0.879,
+        "lpips": 0.17273333333333335
+      },
+      "quality_scores": {
+        "psnr": 10.1216,
+        "ssim": 14.320000000000004,
+        "lpips": 15.45333333333333
+      },
+      "scopes": {
+        "B-only": {
+          "rows": [
+            {
+              "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+              "measured_old_gpu_seconds": 57.87,
+              "measured_new_gpu_budget_seconds": 102.68,
+              "estimated_within_budget": true,
+              "time_score_estimate": 9.697874734882918
+            },
+            {
+              "id": "hw/billboard",
+              "measured_old_gpu_seconds": 49.34,
+              "measured_new_gpu_budget_seconds": 100.13,
+              "estimated_within_budget": true,
+              "time_score_estimate": 11.272013049702052
+            },
+            {
+              "id": "mipnerf360/counter",
+              "measured_old_gpu_seconds": 55.01,
+              "measured_new_gpu_budget_seconds": 93.72,
+              "estimated_within_budget": true,
+              "time_score_estimate": 9.178640868781715
+            }
+          ],
+          "mean_time_score_estimate": 10.049509551122227,
+          "proxy_total_estimate": 49.94444288445556,
+          "validated_total": null
+        },
+        "E2E": {
+          "rows": [
+            {
+              "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+              "measured_old_gpu_seconds": 149.6837624923745,
+              "measured_new_gpu_budget_seconds": 102.68,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            },
+            {
+              "id": "hw/billboard",
+              "measured_old_gpu_seconds": 267.0850907445047,
+              "measured_new_gpu_budget_seconds": 100.13,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            },
+            {
+              "id": "mipnerf360/counter",
+              "measured_old_gpu_seconds": 190.17002871515228,
+              "measured_new_gpu_budget_seconds": 93.72,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            }
+          ],
+          "mean_time_score_estimate": null,
+          "proxy_total_estimate": null,
+          "validated_total": null
+        }
+      }
+    },
+    "B": {
+      "mean_metrics": {
+        "psnr": 29.497,
+        "ssim": 0.9023666666666667,
+        "lpips": 0.12390000000000001
+      },
+      "quality_scores": {
+        "psnr": 11.5976,
+        "ssim": 16.189333333333337,
+        "lpips": 25.22
+      },
+      "scopes": {
+        "B-only": {
+          "rows": [
+            {
+              "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+              "measured_old_gpu_seconds": 320.8889020610368,
+              "measured_new_gpu_budget_seconds": 102.68,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            },
+            {
+              "id": "hw/billboard",
+              "measured_old_gpu_seconds": 448.96419836301357,
+              "measured_new_gpu_budget_seconds": 100.13,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            },
+            {
+              "id": "mipnerf360/counter",
+              "measured_old_gpu_seconds": 275.9721135259606,
+              "measured_new_gpu_budget_seconds": 93.72,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            }
+          ],
+          "mean_time_score_estimate": null,
+          "proxy_total_estimate": null,
+          "validated_total": null
+        },
+        "E2E": {
+          "rows": [
+            {
+              "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+              "measured_old_gpu_seconds": 404.3766184974229,
+              "measured_new_gpu_budget_seconds": 102.68,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            },
+            {
+              "id": "hw/billboard",
+              "measured_old_gpu_seconds": 660.1630629374459,
+              "measured_new_gpu_budget_seconds": 100.13,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            },
+            {
+              "id": "mipnerf360/counter",
+              "measured_old_gpu_seconds": 402.3205412031151,
+              "measured_new_gpu_budget_seconds": 93.72,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            }
+          ],
+          "mean_time_score_estimate": null,
+          "proxy_total_estimate": null,
+          "validated_total": null
+        }
+      }
+    },
+    "AB": {
+      "mean_metrics": {
+        "psnr": 29.549666666666667,
+        "ssim": 0.9019,
+        "lpips": 0.1241
+      },
+      "quality_scores": {
+        "psnr": 11.639733333333334,
+        "ssim": 16.152000000000008,
+        "lpips": 25.180000000000003
+      },
+      "scopes": {
+        "B-only": {
+          "rows": [
+            {
+              "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+              "measured_old_gpu_seconds": 316.75924730405677,
+              "measured_new_gpu_budget_seconds": 102.68,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            },
+            {
+              "id": "hw/billboard",
+              "measured_old_gpu_seconds": 443.1153486709809,
+              "measured_new_gpu_budget_seconds": 100.13,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            },
+            {
+              "id": "mipnerf360/counter",
+              "measured_old_gpu_seconds": 254.25264609698206,
+              "measured_new_gpu_budget_seconds": 93.72,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            }
+          ],
+          "mean_time_score_estimate": null,
+          "proxy_total_estimate": null,
+          "validated_total": null
+        },
+        "E2E": {
+          "rows": [
+            {
+              "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+              "measured_old_gpu_seconds": 408.5730097964313,
+              "measured_new_gpu_budget_seconds": 102.68,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            },
+            {
+              "id": "hw/billboard",
+              "measured_old_gpu_seconds": 660.8604394154856,
+              "measured_new_gpu_budget_seconds": 100.13,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            },
+            {
+              "id": "mipnerf360/counter",
+              "measured_old_gpu_seconds": 389.41267481213436,
+              "measured_new_gpu_budget_seconds": 93.72,
+              "estimated_within_budget": false,
+              "time_score_estimate": null
+            }
+          ],
+          "mean_time_score_estimate": null,
+          "proxy_total_estimate": null,
+          "validated_total": null
+        }
+      }
+    }
+  }
+}

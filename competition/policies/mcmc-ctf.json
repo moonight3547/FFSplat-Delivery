@@ -1,0 +1,22 @@
+{
+  "policy": "experimental-organizer-mcmc-ctf-v2",
+  "seed": 20261015,
+  "e2e_fraction": 0.8,
+  "max_updates": 60000,
+  "cap_floor": 2057000,
+  "reserve_fraction": 0.1,
+  "reserve_seconds": 2.0,
+  "step_safety": 1.5,
+  "ctf": [{"until": 0.25, "scale": 0.5}, {"until": 0.5, "scale": 0.75}, {"until": 1.0, "scale": 1.0}],
+  "position_lr_initial": 0.00016,
+  "position_lr_final": 0.0000016,
+  "lr_end_fraction": 0.9,
+  "adam_lrs": {"scales": 0.005, "quats": 0.001, "dc": 0.0025, "rest": 0.000125, "opacities": 0.05},
+  "topology_stop_fraction": 0.8,
+  "refine_every": 100,
+  "min_opacity": 0.005,
+  "noise_lr": 500000.0,
+  "ssim_weight": 0.2,
+  "opacity_regularization": 0.01,
+  "scale_regularization": 0.01
+}

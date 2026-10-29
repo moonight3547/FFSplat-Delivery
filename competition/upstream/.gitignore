@@ -1,0 +1,16 @@
+# run artifacts
+baseline/work/
+baseline/results/
+resplat/pretrained/
+resplat/outputs/
+resplat/results/
+
+# python
+__pycache__/
+*.pyc
+*.egg-info/
+
+# compiled
+*.so
+build/
+dist/

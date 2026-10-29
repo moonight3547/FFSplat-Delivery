@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "profile": "organizer-linux-cuda",
+  "execution_os": "linux",
+  "device": "cuda:0",
+  "conda": "conda",
+  "environments": {
+    "resplat": "resplat",
+    "fastgs": "fastgs",
+    "mcmc": "ffsplat-enhance"
+  },
+  "controller_os": ["macos", "windows", "linux"],
+  "status": "Runtime dependencies must be built and verified on the execution host"
+}

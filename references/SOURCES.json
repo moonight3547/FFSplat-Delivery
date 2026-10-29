@@ -1,0 +1,19 @@
+{
+  "organizer": {
+    "repository": "https://gitcode.com/gcw_yxxmv6uE/hackathon_competition.git",
+    "commit": "cb29814af7e260f03f7565e6edadb35bf42c5a93",
+    "previous_commit": "a1139a7c2e8856f42859dc3552a209293229b3a5",
+    "change_since_previous": "baseline/README.md only; no executable source changes"
+  },
+  "enhance": {
+    "repository": "https://github.com/moonight3547/FFSplat-Enhance",
+    "commit": "9ec2099",
+    "selected_content": "active competition adapters, CPU tests, calibration runner"
+  },
+  "eval": {
+    "repository": "https://github.com/moonight3547/FFSplat-Eval",
+    "commit": "00c960f",
+    "selected_content": "organizer evaluator and corrected benchmark specifications"
+  },
+  "historical_results": "old GPU; classic3DGS budgets; NOT corrected-score evidence"
+}

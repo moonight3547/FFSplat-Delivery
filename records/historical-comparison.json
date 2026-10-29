@@ -1,0 +1,976 @@
+{
+  "complete": true,
+  "official_score_100": null,
+  "cells": {
+    "O0": {
+      "benchmark_id": "organizer-examples3-a1139a7-v1",
+      "protocol": "organizer-20261028",
+      "policy": "official-fastgs",
+      "a_policy": "uniform16",
+      "scope": "full benchmark",
+      "subprocess_timing_scope": "prepare + resplat (including ranked A selection, if enabled) + B",
+      "paired_control": null,
+      "complete": true,
+      "valid": true,
+      "official_score_100": null,
+      "score_status": "New codebase supplies metrics and E2E timing, no confirmed /100 formula",
+      "mean_metrics": {
+        "psnr": 27.638333333333332,
+        "ssim": 0.8788666666666667,
+        "lpips": 0.1728
+      },
+      "mean_end_to_end_seconds": 195.11833622932434,
+      "mean_stage_seconds": {
+        "A": 108.08833622932434,
+        "ReSplat": 32.25666666666667,
+        "B": 54.77333333333333
+      },
+      "rows": [
+        {
+          "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+          "group": "dl3dv",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 32.613,
+            "ssim": 0.9503,
+            "lpips": 0.1516
+          },
+          "stage_seconds": {
+            "A": 50.73771643638611,
+            "ReSplat": 32.75,
+            "B": 58.27
+          },
+          "a_selection_seconds": 0.0,
+          "b_iterations": 10000,
+          "b_allocation_met": null,
+          "end_to_end_seconds": 141.75771643638612,
+          "subprocess_wall_seconds": {
+            "A": 57.54363718093373,
+            "ReSplat": 40.68927212501876,
+            "B": 64.74840749695431
+          },
+          "subprocess_end_to_end_seconds": 162.9813168029068,
+          "reference_subprocess_seconds": 552.7452876130119,
+          "subprocess_valid": true,
+          "reference30k_seconds": 547.06,
+          "speedup": 3.859119727323581,
+          "official_score_100": null,
+          "input_identity_sha256": "223687f14f9ff07ae68851c61be060ef6241cc224e96279d9a5af1d81030a83f"
+        },
+        {
+          "id": "hw/billboard",
+          "group": "hw",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 22.588,
+            "ssim": 0.7987,
+            "lpips": 0.16
+          },
+          "stage_seconds": {
+            "A": 183.57886457443237,
+            "ReSplat": 27.62,
+            "B": 49.2
+          },
+          "a_selection_seconds": 0.0,
+          "b_iterations": 10000,
+          "b_allocation_met": null,
+          "end_to_end_seconds": 260.39886457443237,
+          "subprocess_wall_seconds": {
+            "A": 190.36874127294868,
+            "ReSplat": 35.20090674201492,
+            "B": 55.18550659297034
+          },
+          "subprocess_end_to_end_seconds": 280.75515460793395,
+          "reference_subprocess_seconds": 890.2463109029923,
+          "subprocess_valid": true,
+          "reference30k_seconds": 884.54,
+          "speedup": 3.396865809862866,
+          "official_score_100": null,
+          "input_identity_sha256": "b53d55d9a54fc50fc48a0460cf59a77ec768ba032dd47712b8dedda010f7e492"
+        },
+        {
+          "id": "mipnerf360/counter",
+          "group": "mipnerf360",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 27.714,
+            "ssim": 0.8876,
+            "lpips": 0.2068
+          },
+          "stage_seconds": {
+            "A": 89.94842767715454,
+            "ReSplat": 36.4,
+            "B": 56.85
+          },
+          "a_selection_seconds": 0.0,
+          "b_iterations": 10000,
+          "b_allocation_met": null,
+          "end_to_end_seconds": 183.19842767715454,
+          "subprocess_wall_seconds": {
+            "A": 96.78207357507199,
+            "ReSplat": 44.155013677082025,
+            "B": 62.930423971032724
+          },
+          "subprocess_end_to_end_seconds": 203.86751122318674,
+          "reference_subprocess_seconds": 524.5629409700632,
+          "subprocess_valid": true,
+          "reference30k_seconds": 519.06,
+          "speedup": 2.833321260347959,
+          "official_score_100": null,
+          "input_identity_sha256": "3c0bf9db2891b7704f1efaa36e7b4e7504b8916e5b93f965d5e5ec76acab5691"
+        }
+      ]
+    },
+    "A": {
+      "benchmark_id": "organizer-examples3-a1139a7-v1",
+      "protocol": "organizer-20261028",
+      "policy": "official-fastgs",
+      "a_policy": "ranked16",
+      "scope": "full benchmark",
+      "subprocess_timing_scope": "prepare + resplat (including ranked A selection, if enabled) + B",
+      "paired_control": {
+        "path": "/workspace/organizer-assets/suite-v2/O0",
+        "identity_sha256": "19b12cd73647a66abde18e6a0aac4b818088fe019e529fe58d6eea35cbd48352",
+        "reuse": "geometry",
+        "timing": "Measured reused stages plus newly measured stages; composed E2E"
+      },
+      "complete": true,
+      "valid": true,
+      "official_score_100": null,
+      "score_status": "New codebase supplies metrics and E2E timing, no confirmed /100 formula",
+      "mean_metrics": {
+        "psnr": 27.652,
+        "ssim": 0.879,
+        "lpips": 0.17273333333333335
+      },
+      "mean_end_to_end_seconds": 202.31296065067718,
+      "mean_stage_seconds": {
+        "A": 124.33629398401051,
+        "ReSplat": 23.903333333333332,
+        "B": 54.07333333333333
+      },
+      "rows": [
+        {
+          "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+          "group": "dl3dv",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 32.677,
+            "ssim": 0.9498,
+            "lpips": 0.1525
+          },
+          "stage_seconds": {
+            "A": 67.30376249237452,
+            "ReSplat": 24.51,
+            "B": 57.87
+          },
+          "a_selection_seconds": 16.56604605598841,
+          "b_iterations": 10000,
+          "b_allocation_met": null,
+          "end_to_end_seconds": 149.6837624923745,
+          "subprocess_wall_seconds": {
+            "A": 57.54363718093373,
+            "ReSplat": 49.41395311593078,
+            "B": 64.11134957103059
+          },
+          "subprocess_end_to_end_seconds": 171.0689398678951,
+          "reference_subprocess_seconds": 552.7452876130119,
+          "subprocess_valid": true,
+          "reference30k_seconds": 547.06,
+          "speedup": 3.654771839583264,
+          "official_score_100": null,
+          "input_identity_sha256": "6115274d21ce9d90157f7a40e02a2feda5c2e102136f5b72900b8c015ac5068b"
+        },
+        {
+          "id": "hw/billboard",
+          "group": "hw",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 22.539,
+            "ssim": 0.7989,
+            "lpips": 0.1589
+          },
+          "stage_seconds": {
+            "A": 198.0450907445047,
+            "ReSplat": 19.7,
+            "B": 49.34
+          },
+          "a_selection_seconds": 14.466226170072332,
+          "b_iterations": 10000,
+          "b_allocation_met": null,
+          "end_to_end_seconds": 267.0850907445047,
+          "subprocess_wall_seconds": {
+            "A": 190.36874127294868,
+            "ReSplat": 42.32260424993001,
+            "B": 55.36439933802467
+          },
+          "subprocess_end_to_end_seconds": 288.05574486090336,
+          "reference_subprocess_seconds": 890.2463109029923,
+          "subprocess_valid": true,
+          "reference30k_seconds": 884.54,
+          "speedup": 3.311828442143019,
+          "official_score_100": null,
+          "input_identity_sha256": "ee3be1e75fc5f04ce30a82efe7962ba7e9c8c6aae3ba6e68817ca3ca2472ab9a"
+        },
+        {
+          "id": "mipnerf360/counter",
+          "group": "mipnerf360",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 27.74,
+            "ssim": 0.8883,
+            "lpips": 0.2068
+          },
+          "stage_seconds": {
+            "A": 107.6600287151523,
+            "ReSplat": 27.5,
+            "B": 55.01
+          },
+          "a_selection_seconds": 17.711601037997752,
+          "b_iterations": 10000,
+          "b_allocation_met": null,
+          "end_to_end_seconds": 190.17002871515228,
+          "subprocess_wall_seconds": {
+            "A": 96.78207357507199,
+            "ReSplat": 53.636196930892766,
+            "B": 61.11825517297257
+          },
+          "subprocess_end_to_end_seconds": 211.53652567893732,
+          "reference_subprocess_seconds": 524.5629409700632,
+          "subprocess_valid": true,
+          "reference30k_seconds": 519.06,
+          "speedup": 2.7294521829066882,
+          "official_score_100": null,
+          "input_identity_sha256": "b9bc5927a2575c3e1ff279223215b1fade297c687dbba4405b5697f89685be8a"
+        }
+      ]
+    },
+    "B": {
+      "benchmark_id": "organizer-examples3-a1139a7-v1",
+      "protocol": "organizer-20261028",
+      "policy": "mcmc-ctf",
+      "a_policy": "uniform16",
+      "scope": "full benchmark",
+      "subprocess_timing_scope": "prepare + resplat (including ranked A selection, if enabled) + B",
+      "paired_control": {
+        "path": "/workspace/organizer-assets/suite-v2/O0",
+        "identity_sha256": "19b12cd73647a66abde18e6a0aac4b818088fe019e529fe58d6eea35cbd48352",
+        "reuse": "initial_gaussians",
+        "timing": "Measured reused stages plus newly measured stages; composed E2E"
+      },
+      "complete": true,
+      "valid": true,
+      "official_score_100": null,
+      "score_status": "New codebase supplies metrics and E2E timing, no confirmed /100 formula",
+      "mean_metrics": {
+        "psnr": 29.497,
+        "ssim": 0.9023666666666667,
+        "lpips": 0.12390000000000001
+      },
+      "mean_end_to_end_seconds": 488.95340754599465,
+      "mean_stage_seconds": {
+        "A": 108.08833622932434,
+        "ReSplat": 32.25666666666667,
+        "B": 348.60840465000365
+      },
+      "rows": [
+        {
+          "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+          "group": "dl3dv",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 36.583,
+            "ssim": 0.9773,
+            "lpips": 0.0911
+          },
+          "stage_seconds": {
+            "A": 50.73771643638611,
+            "ReSplat": 32.75,
+            "B": 320.8889020610368
+          },
+          "a_selection_seconds": 0.0,
+          "b_iterations": 10686,
+          "b_allocation_met": true,
+          "end_to_end_seconds": 404.3766184974229,
+          "subprocess_wall_seconds": {
+            "A": 57.54363718093373,
+            "ReSplat": 40.68927212501876,
+            "B": 327.462742337957
+          },
+          "subprocess_end_to_end_seconds": 425.6956516439095,
+          "reference_subprocess_seconds": 552.7452876130119,
+          "subprocess_valid": true,
+          "reference30k_seconds": 547.06,
+          "speedup": 1.3528477537419399,
+          "official_score_100": null,
+          "input_identity_sha256": "223687f14f9ff07ae68851c61be060ef6241cc224e96279d9a5af1d81030a83f"
+        },
+        {
+          "id": "hw/billboard",
+          "group": "hw",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 22.798,
+            "ssim": 0.8097,
+            "lpips": 0.1275
+          },
+          "stage_seconds": {
+            "A": 183.57886457443237,
+            "ReSplat": 27.62,
+            "B": 448.96419836301357
+          },
+          "a_selection_seconds": 0.0,
+          "b_iterations": 16745,
+          "b_allocation_met": true,
+          "end_to_end_seconds": 660.1630629374459,
+          "subprocess_wall_seconds": {
+            "A": 190.36874127294868,
+            "ReSplat": 35.20090674201492,
+            "B": 455.4180976320058
+          },
+          "subprocess_end_to_end_seconds": 680.9877456469694,
+          "reference_subprocess_seconds": 890.2463109029923,
+          "subprocess_valid": true,
+          "reference30k_seconds": 884.54,
+          "speedup": 1.3398810834162271,
+          "official_score_100": null,
+          "input_identity_sha256": "b53d55d9a54fc50fc48a0460cf59a77ec768ba032dd47712b8dedda010f7e492"
+        },
+        {
+          "id": "mipnerf360/counter",
+          "group": "mipnerf360",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 29.11,
+            "ssim": 0.9201,
+            "lpips": 0.1531
+          },
+          "stage_seconds": {
+            "A": 89.94842767715454,
+            "ReSplat": 36.4,
+            "B": 275.9721135259606
+          },
+          "a_selection_seconds": 0.0,
+          "b_iterations": 9084,
+          "b_allocation_met": true,
+          "end_to_end_seconds": 402.3205412031151,
+          "subprocess_wall_seconds": {
+            "A": 96.78207357507199,
+            "ReSplat": 44.155013677082025,
+            "B": 282.3875394209754
+          },
+          "subprocess_end_to_end_seconds": 423.3246266731294,
+          "reference_subprocess_seconds": 524.5629409700632,
+          "subprocess_valid": true,
+          "reference30k_seconds": 519.06,
+          "speedup": 1.2901652956813554,
+          "official_score_100": null,
+          "input_identity_sha256": "3c0bf9db2891b7704f1efaa36e7b4e7504b8916e5b93f965d5e5ec76acab5691"
+        }
+      ]
+    },
+    "AB": {
+      "benchmark_id": "organizer-examples3-a1139a7-v1",
+      "protocol": "organizer-20261028",
+      "policy": "mcmc-ctf",
+      "a_policy": "ranked16",
+      "scope": "full benchmark",
+      "subprocess_timing_scope": "prepare + resplat (including ranked A selection, if enabled) + B",
+      "paired_control": {
+        "path": "/workspace/organizer-assets/suite-v2/A",
+        "identity_sha256": "cea2683df3b61b27fae9056a532989c579d92c1b3be6833f2872fa054bf93312",
+        "reuse": "initial_gaussians",
+        "timing": "Measured reused stages plus newly measured stages; composed E2E"
+      },
+      "complete": true,
+      "valid": true,
+      "official_score_100": null,
+      "score_status": "New codebase supplies metrics and E2E timing, no confirmed /100 formula",
+      "mean_metrics": {
+        "psnr": 29.549666666666667,
+        "ssim": 0.9019,
+        "lpips": 0.1241
+      },
+      "mean_end_to_end_seconds": 486.2820413413504,
+      "mean_stage_seconds": {
+        "A": 124.33629398401051,
+        "ReSplat": 23.903333333333332,
+        "B": 338.0424140240066
+      },
+      "rows": [
+        {
+          "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+          "group": "dl3dv",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 36.694,
+            "ssim": 0.9775,
+            "lpips": 0.0906
+          },
+          "stage_seconds": {
+            "A": 67.30376249237452,
+            "ReSplat": 24.51,
+            "B": 316.75924730405677
+          },
+          "a_selection_seconds": 16.56604605598841,
+          "b_iterations": 10436,
+          "b_allocation_met": true,
+          "end_to_end_seconds": 408.5730097964313,
+          "subprocess_wall_seconds": {
+            "A": 57.54363718093373,
+            "ReSplat": 49.41395311593078,
+            "B": 323.1709276130423
+          },
+          "subprocess_end_to_end_seconds": 430.1285179099068,
+          "reference_subprocess_seconds": 552.7452876130119,
+          "subprocess_valid": true,
+          "reference30k_seconds": 547.06,
+          "speedup": 1.3389528600349025,
+          "official_score_100": null,
+          "input_identity_sha256": "6115274d21ce9d90157f7a40e02a2feda5c2e102136f5b72900b8c015ac5068b"
+        },
+        {
+          "id": "hw/billboard",
+          "group": "hw",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 22.853,
+            "ssim": 0.8091,
+            "lpips": 0.1279
+          },
+          "stage_seconds": {
+            "A": 198.0450907445047,
+            "ReSplat": 19.7,
+            "B": 443.1153486709809
+          },
+          "a_selection_seconds": 14.466226170072332,
+          "b_iterations": 16589,
+          "b_allocation_met": true,
+          "end_to_end_seconds": 660.8604394154856,
+          "subprocess_wall_seconds": {
+            "A": 190.36874127294868,
+            "ReSplat": 42.32260424993001,
+            "B": 449.6272989170393
+          },
+          "subprocess_end_to_end_seconds": 682.318644439918,
+          "reference_subprocess_seconds": 890.2463109029923,
+          "subprocess_valid": true,
+          "reference30k_seconds": 884.54,
+          "speedup": 1.3384671668080983,
+          "official_score_100": null,
+          "input_identity_sha256": "ee3be1e75fc5f04ce30a82efe7962ba7e9c8c6aae3ba6e68817ca3ca2472ab9a"
+        },
+        {
+          "id": "mipnerf360/counter",
+          "group": "mipnerf360",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 29.102,
+            "ssim": 0.9191,
+            "lpips": 0.1538
+          },
+          "stage_seconds": {
+            "A": 107.6600287151523,
+            "ReSplat": 27.5,
+            "B": 254.25264609698206
+          },
+          "a_selection_seconds": 17.711601037997752,
+          "b_iterations": 8727,
+          "b_allocation_met": true,
+          "end_to_end_seconds": 389.41267481213436,
+          "subprocess_wall_seconds": {
+            "A": 96.78207357507199,
+            "ReSplat": 53.636196930892766,
+            "B": 260.91725762200076
+          },
+          "subprocess_end_to_end_seconds": 411.3355281279655,
+          "reference_subprocess_seconds": 524.5629409700632,
+          "subprocess_valid": true,
+          "reference30k_seconds": 519.06,
+          "speedup": 1.3329304195103864,
+          "official_score_100": null,
+          "input_identity_sha256": "b9bc5927a2575c3e1ff279223215b1fade297c687dbba4405b5697f89685be8a"
+        }
+      ]
+    }
+  },
+  "comparison": [
+    {
+      "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+      "cells": {
+        "O0": {
+          "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+          "group": "dl3dv",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 32.613,
+            "ssim": 0.9503,
+            "lpips": 0.1516
+          },
+          "stage_seconds": {
+            "A": 50.73771643638611,
+            "ReSplat": 32.75,
+            "B": 58.27
+          },
+          "a_selection_seconds": 0.0,
+          "b_iterations": 10000,
+          "b_allocation_met": null,
+          "end_to_end_seconds": 141.75771643638612,
+          "subprocess_wall_seconds": {
+            "A": 57.54363718093373,
+            "ReSplat": 40.68927212501876,
+            "B": 64.74840749695431
+          },
+          "subprocess_end_to_end_seconds": 162.9813168029068,
+          "reference_subprocess_seconds": 552.7452876130119,
+          "subprocess_valid": true,
+          "reference30k_seconds": 547.06,
+          "speedup": 3.859119727323581,
+          "official_score_100": null,
+          "input_identity_sha256": "223687f14f9ff07ae68851c61be060ef6241cc224e96279d9a5af1d81030a83f"
+        },
+        "A": {
+          "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+          "group": "dl3dv",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 32.677,
+            "ssim": 0.9498,
+            "lpips": 0.1525
+          },
+          "stage_seconds": {
+            "A": 67.30376249237452,
+            "ReSplat": 24.51,
+            "B": 57.87
+          },
+          "a_selection_seconds": 16.56604605598841,
+          "b_iterations": 10000,
+          "b_allocation_met": null,
+          "end_to_end_seconds": 149.6837624923745,
+          "subprocess_wall_seconds": {
+            "A": 57.54363718093373,
+            "ReSplat": 49.41395311593078,
+            "B": 64.11134957103059
+          },
+          "subprocess_end_to_end_seconds": 171.0689398678951,
+          "reference_subprocess_seconds": 552.7452876130119,
+          "subprocess_valid": true,
+          "reference30k_seconds": 547.06,
+          "speedup": 3.654771839583264,
+          "official_score_100": null,
+          "input_identity_sha256": "6115274d21ce9d90157f7a40e02a2feda5c2e102136f5b72900b8c015ac5068b"
+        },
+        "B": {
+          "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+          "group": "dl3dv",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 36.583,
+            "ssim": 0.9773,
+            "lpips": 0.0911
+          },
+          "stage_seconds": {
+            "A": 50.73771643638611,
+            "ReSplat": 32.75,
+            "B": 320.8889020610368
+          },
+          "a_selection_seconds": 0.0,
+          "b_iterations": 10686,
+          "b_allocation_met": true,
+          "end_to_end_seconds": 404.3766184974229,
+          "subprocess_wall_seconds": {
+            "A": 57.54363718093373,
+            "ReSplat": 40.68927212501876,
+            "B": 327.462742337957
+          },
+          "subprocess_end_to_end_seconds": 425.6956516439095,
+          "reference_subprocess_seconds": 552.7452876130119,
+          "subprocess_valid": true,
+          "reference30k_seconds": 547.06,
+          "speedup": 1.3528477537419399,
+          "official_score_100": null,
+          "input_identity_sha256": "223687f14f9ff07ae68851c61be060ef6241cc224e96279d9a5af1d81030a83f"
+        },
+        "AB": {
+          "id": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+          "group": "dl3dv",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 36.694,
+            "ssim": 0.9775,
+            "lpips": 0.0906
+          },
+          "stage_seconds": {
+            "A": 67.30376249237452,
+            "ReSplat": 24.51,
+            "B": 316.75924730405677
+          },
+          "a_selection_seconds": 16.56604605598841,
+          "b_iterations": 10436,
+          "b_allocation_met": true,
+          "end_to_end_seconds": 408.5730097964313,
+          "subprocess_wall_seconds": {
+            "A": 57.54363718093373,
+            "ReSplat": 49.41395311593078,
+            "B": 323.1709276130423
+          },
+          "subprocess_end_to_end_seconds": 430.1285179099068,
+          "reference_subprocess_seconds": 552.7452876130119,
+          "subprocess_valid": true,
+          "reference30k_seconds": 547.06,
+          "speedup": 1.3389528600349025,
+          "official_score_100": null,
+          "input_identity_sha256": "6115274d21ce9d90157f7a40e02a2feda5c2e102136f5b72900b8c015ac5068b"
+        }
+      },
+      "deltas_vs_O0": {
+        "A": {
+          "psnr": 0.06400000000000006,
+          "ssim": -0.000500000000000056,
+          "lpips": 0.0008999999999999841,
+          "end_to_end_seconds": 7.926046055988394
+        },
+        "B": {
+          "psnr": 3.969999999999999,
+          "ssim": 0.026999999999999913,
+          "lpips": -0.06050000000000001,
+          "end_to_end_seconds": 262.6189020610368
+        },
+        "AB": {
+          "psnr": 4.081000000000003,
+          "ssim": 0.027200000000000002,
+          "lpips": -0.06100000000000001,
+          "end_to_end_seconds": 266.8152933600452
+        }
+      }
+    },
+    {
+      "id": "hw/billboard",
+      "cells": {
+        "O0": {
+          "id": "hw/billboard",
+          "group": "hw",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 22.588,
+            "ssim": 0.7987,
+            "lpips": 0.16
+          },
+          "stage_seconds": {
+            "A": 183.57886457443237,
+            "ReSplat": 27.62,
+            "B": 49.2
+          },
+          "a_selection_seconds": 0.0,
+          "b_iterations": 10000,
+          "b_allocation_met": null,
+          "end_to_end_seconds": 260.39886457443237,
+          "subprocess_wall_seconds": {
+            "A": 190.36874127294868,
+            "ReSplat": 35.20090674201492,
+            "B": 55.18550659297034
+          },
+          "subprocess_end_to_end_seconds": 280.75515460793395,
+          "reference_subprocess_seconds": 890.2463109029923,
+          "subprocess_valid": true,
+          "reference30k_seconds": 884.54,
+          "speedup": 3.396865809862866,
+          "official_score_100": null,
+          "input_identity_sha256": "b53d55d9a54fc50fc48a0460cf59a77ec768ba032dd47712b8dedda010f7e492"
+        },
+        "A": {
+          "id": "hw/billboard",
+          "group": "hw",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 22.539,
+            "ssim": 0.7989,
+            "lpips": 0.1589
+          },
+          "stage_seconds": {
+            "A": 198.0450907445047,
+            "ReSplat": 19.7,
+            "B": 49.34
+          },
+          "a_selection_seconds": 14.466226170072332,
+          "b_iterations": 10000,
+          "b_allocation_met": null,
+          "end_to_end_seconds": 267.0850907445047,
+          "subprocess_wall_seconds": {
+            "A": 190.36874127294868,
+            "ReSplat": 42.32260424993001,
+            "B": 55.36439933802467
+          },
+          "subprocess_end_to_end_seconds": 288.05574486090336,
+          "reference_subprocess_seconds": 890.2463109029923,
+          "subprocess_valid": true,
+          "reference30k_seconds": 884.54,
+          "speedup": 3.311828442143019,
+          "official_score_100": null,
+          "input_identity_sha256": "ee3be1e75fc5f04ce30a82efe7962ba7e9c8c6aae3ba6e68817ca3ca2472ab9a"
+        },
+        "B": {
+          "id": "hw/billboard",
+          "group": "hw",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 22.798,
+            "ssim": 0.8097,
+            "lpips": 0.1275
+          },
+          "stage_seconds": {
+            "A": 183.57886457443237,
+            "ReSplat": 27.62,
+            "B": 448.96419836301357
+          },
+          "a_selection_seconds": 0.0,
+          "b_iterations": 16745,
+          "b_allocation_met": true,
+          "end_to_end_seconds": 660.1630629374459,
+          "subprocess_wall_seconds": {
+            "A": 190.36874127294868,
+            "ReSplat": 35.20090674201492,
+            "B": 455.4180976320058
+          },
+          "subprocess_end_to_end_seconds": 680.9877456469694,
+          "reference_subprocess_seconds": 890.2463109029923,
+          "subprocess_valid": true,
+          "reference30k_seconds": 884.54,
+          "speedup": 1.3398810834162271,
+          "official_score_100": null,
+          "input_identity_sha256": "b53d55d9a54fc50fc48a0460cf59a77ec768ba032dd47712b8dedda010f7e492"
+        },
+        "AB": {
+          "id": "hw/billboard",
+          "group": "hw",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 22.853,
+            "ssim": 0.8091,
+            "lpips": 0.1279
+          },
+          "stage_seconds": {
+            "A": 198.0450907445047,
+            "ReSplat": 19.7,
+            "B": 443.1153486709809
+          },
+          "a_selection_seconds": 14.466226170072332,
+          "b_iterations": 16589,
+          "b_allocation_met": true,
+          "end_to_end_seconds": 660.8604394154856,
+          "subprocess_wall_seconds": {
+            "A": 190.36874127294868,
+            "ReSplat": 42.32260424993001,
+            "B": 449.6272989170393
+          },
+          "subprocess_end_to_end_seconds": 682.318644439918,
+          "reference_subprocess_seconds": 890.2463109029923,
+          "subprocess_valid": true,
+          "reference30k_seconds": 884.54,
+          "speedup": 1.3384671668080983,
+          "official_score_100": null,
+          "input_identity_sha256": "ee3be1e75fc5f04ce30a82efe7962ba7e9c8c6aae3ba6e68817ca3ca2472ab9a"
+        }
+      },
+      "deltas_vs_O0": {
+        "A": {
+          "psnr": -0.04899999999999949,
+          "ssim": 0.000200000000000089,
+          "lpips": -0.0010999999999999899,
+          "end_to_end_seconds": 6.686226170072359
+        },
+        "B": {
+          "psnr": 0.2099999999999973,
+          "ssim": 0.01100000000000001,
+          "lpips": -0.0325,
+          "end_to_end_seconds": 399.7641983630136
+        },
+        "AB": {
+          "psnr": 0.26500000000000057,
+          "ssim": 0.010400000000000076,
+          "lpips": -0.03209999999999999,
+          "end_to_end_seconds": 400.4615748410533
+        }
+      }
+    },
+    {
+      "id": "mipnerf360/counter",
+      "cells": {
+        "O0": {
+          "id": "mipnerf360/counter",
+          "group": "mipnerf360",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 27.714,
+            "ssim": 0.8876,
+            "lpips": 0.2068
+          },
+          "stage_seconds": {
+            "A": 89.94842767715454,
+            "ReSplat": 36.4,
+            "B": 56.85
+          },
+          "a_selection_seconds": 0.0,
+          "b_iterations": 10000,
+          "b_allocation_met": null,
+          "end_to_end_seconds": 183.19842767715454,
+          "subprocess_wall_seconds": {
+            "A": 96.78207357507199,
+            "ReSplat": 44.155013677082025,
+            "B": 62.930423971032724
+          },
+          "subprocess_end_to_end_seconds": 203.86751122318674,
+          "reference_subprocess_seconds": 524.5629409700632,
+          "subprocess_valid": true,
+          "reference30k_seconds": 519.06,
+          "speedup": 2.833321260347959,
+          "official_score_100": null,
+          "input_identity_sha256": "3c0bf9db2891b7704f1efaa36e7b4e7504b8916e5b93f965d5e5ec76acab5691"
+        },
+        "A": {
+          "id": "mipnerf360/counter",
+          "group": "mipnerf360",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 27.74,
+            "ssim": 0.8883,
+            "lpips": 0.2068
+          },
+          "stage_seconds": {
+            "A": 107.6600287151523,
+            "ReSplat": 27.5,
+            "B": 55.01
+          },
+          "a_selection_seconds": 17.711601037997752,
+          "b_iterations": 10000,
+          "b_allocation_met": null,
+          "end_to_end_seconds": 190.17002871515228,
+          "subprocess_wall_seconds": {
+            "A": 96.78207357507199,
+            "ReSplat": 53.636196930892766,
+            "B": 61.11825517297257
+          },
+          "subprocess_end_to_end_seconds": 211.53652567893732,
+          "reference_subprocess_seconds": 524.5629409700632,
+          "subprocess_valid": true,
+          "reference30k_seconds": 519.06,
+          "speedup": 2.7294521829066882,
+          "official_score_100": null,
+          "input_identity_sha256": "b9bc5927a2575c3e1ff279223215b1fade297c687dbba4405b5697f89685be8a"
+        },
+        "B": {
+          "id": "mipnerf360/counter",
+          "group": "mipnerf360",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 29.11,
+            "ssim": 0.9201,
+            "lpips": 0.1531
+          },
+          "stage_seconds": {
+            "A": 89.94842767715454,
+            "ReSplat": 36.4,
+            "B": 275.9721135259606
+          },
+          "a_selection_seconds": 0.0,
+          "b_iterations": 9084,
+          "b_allocation_met": true,
+          "end_to_end_seconds": 402.3205412031151,
+          "subprocess_wall_seconds": {
+            "A": 96.78207357507199,
+            "ReSplat": 44.155013677082025,
+            "B": 282.3875394209754
+          },
+          "subprocess_end_to_end_seconds": 423.3246266731294,
+          "reference_subprocess_seconds": 524.5629409700632,
+          "subprocess_valid": true,
+          "reference30k_seconds": 519.06,
+          "speedup": 1.2901652956813554,
+          "official_score_100": null,
+          "input_identity_sha256": "3c0bf9db2891b7704f1efaa36e7b4e7504b8916e5b93f965d5e5ec76acab5691"
+        },
+        "AB": {
+          "id": "mipnerf360/counter",
+          "group": "mipnerf360",
+          "complete": true,
+          "valid": true,
+          "metrics": {
+            "psnr": 29.102,
+            "ssim": 0.9191,
+            "lpips": 0.1538
+          },
+          "stage_seconds": {
+            "A": 107.6600287151523,
+            "ReSplat": 27.5,
+            "B": 254.25264609698206
+          },
+          "a_selection_seconds": 17.711601037997752,
+          "b_iterations": 8727,
+          "b_allocation_met": true,
+          "end_to_end_seconds": 389.41267481213436,
+          "subprocess_wall_seconds": {
+            "A": 96.78207357507199,
+            "ReSplat": 53.636196930892766,
+            "B": 260.91725762200076
+          },
+          "subprocess_end_to_end_seconds": 411.3355281279655,
+          "reference_subprocess_seconds": 524.5629409700632,
+          "subprocess_valid": true,
+          "reference30k_seconds": 519.06,
+          "speedup": 1.3329304195103864,
+          "official_score_100": null,
+          "input_identity_sha256": "b9bc5927a2575c3e1ff279223215b1fade297c687dbba4405b5697f89685be8a"
+        }
+      },
+      "deltas_vs_O0": {
+        "A": {
+          "psnr": 0.0259999999999998,
+          "ssim": 0.0007000000000000339,
+          "lpips": 0.0,
+          "end_to_end_seconds": 6.971601037997743
+        },
+        "B": {
+          "psnr": 1.3960000000000008,
+          "ssim": 0.032500000000000084,
+          "lpips": -0.0537,
+          "end_to_end_seconds": 219.12211352596057
+        },
+        "AB": {
+          "psnr": 1.3880000000000017,
+          "ssim": 0.031500000000000083,
+          "lpips": -0.05300000000000002,
+          "end_to_end_seconds": 206.21424713497981
+        }
+      }
+    }
+  ],
+  "interaction": {
+    "psnr": 0.038999999999997925,
+    "ssim": -0.0005999999999999339,
+    "lpips": 0.0002666666666666373
+  },
+  "interpretation": "Raw metric deltas; PSNR/SSIM higher is better, LPIPS and time lower is better. Eligibility remains per case."
+}

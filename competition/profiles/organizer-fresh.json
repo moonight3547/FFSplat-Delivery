@@ -1,0 +1,10 @@
+{
+  "conda": "conda",
+  "environments": {
+    "resplat": "organizer-resplat",
+    "fastgs": "organizer-fastgs",
+    "mcmc": "organizer-mcmc"
+  },
+  "device": "cuda:0",
+  "execution_os": "linux"
+}

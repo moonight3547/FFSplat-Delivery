@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "profile": "compshare-organizer-20261029",
+  "execution_os": "linux",
+  "device": "cuda:0",
+  "conda": "/usr/local/miniconda3/bin/conda",
+  "environments": {
+    "resplat": "ffsplat-enhance",
+    "fastgs": "organizer-fastgs",
+    "mcmc": "ffsplat-enhance"
+  },
+  "controller_os": ["windows", "macos", "linux"],
+  "environment": {
+    "CUDA_HOME": "/usr/local/miniconda3/envs/ffsplat-enhance",
+    "CPATH": "/usr/local/miniconda3/envs/ffsplat-enhance/targets/x86_64-linux/include",
+    "LIBRARY_PATH": "/usr/local/miniconda3/envs/ffsplat-enhance/targets/x86_64-linux/lib",
+    "TORCH_CUDA_ARCH_LIST": "8.9",
+    "MAX_JOBS": "4",
+    "QT_QPA_PLATFORM": "offscreen"
+  },
+  "status": "Reuses audited Torch2.7/cu128 gsplat1.5.3 environment; fresh Torch2.4/cu124 FastGS. See execution record."
+}
