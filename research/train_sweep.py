@@ -92,6 +92,8 @@ def main(argv=None):
                         help="sampled-view count needed to densify (upstream hardcodes 5)")
     parser.add_argument("--max_gaussians", type=int, default=None,
                         help="hard cap on Gaussian count, weakest pruned first")
+    parser.add_argument("--time_breakdown", action="store_true",
+                        help="accumulate per-section wall clock (render/backward/optimizer)")
     parser.add_argument("--image_cache", type=str, default=None,
                         help="pre-decoded uint8 image cache dir (research.image_cache)")
     parser.add_argument("--limit_seconds", type=float, default=None,
@@ -241,6 +243,8 @@ def main(argv=None):
     stop_reason = "iterations"
     progress = tqdm(range(1, iterations + 1), desc="FastGS", disable=args.quiet,
                     file=sys.stdout, mininterval=1.0)
+    timing = {"render": 0.0, "backward": 0.0, "optimizer": 0.0, "grad_to_step": 0.0}
+    _sync = torch.cuda.synchronize if torch.cuda.is_available() else (lambda *a, **k: None)
     for iteration in range(1, iterations + 1):
         if args.limit_seconds is not None:
             spent = time.perf_counter() - t_train0
@@ -263,12 +267,19 @@ def main(argv=None):
         viewpoint_cam = state["stack"].pop(rand_idx)
         state["indices"].pop(rand_idx)
 
+        if args.time_breakdown:
+            _sync()
+            _t = time.perf_counter()
         render_pkg = render_fastgs(viewpoint_cam, gaussians, pipe, background, opt.mult, 1.0)
         image = render_pkg["render"]
         viewspace_point_tensor = render_pkg["viewspace_points"]
         visibility_filter = render_pkg["visibility_filter"]
         radii = render_pkg["radii"]
 
+        if args.time_breakdown:
+            _sync()
+            timing["render"] += time.perf_counter() - _t
+            _t = time.perf_counter()
         gt_image = viewpoint_cam.original_image.cuda()
         Ll1 = l1_loss(image, gt_image)
         if FUSED_SSIM_AVAILABLE:
@@ -285,7 +296,15 @@ def main(argv=None):
                 gt_p = torch.nn.functional.interpolate(gt_p, size=size, mode="area")
             perceptual_loss = perceptual(render_p * 2.0 - 1.0, gt_p * 2.0 - 1.0).mean()
             loss = loss + args.lpips_weight * perceptual_loss
+        if args.time_breakdown:
+            _sync()
+            timing["grad_to_step"] += time.perf_counter() - _t
+            _t = time.perf_counter()
         loss.backward()
+        if args.time_breakdown:
+            _sync()
+            timing["backward"] += time.perf_counter() - _t
+            _t = time.perf_counter()
 
         with torch.no_grad():
             ema_loss = 0.4 * loss.item() + 0.6 * ema_loss
@@ -316,6 +335,9 @@ def main(argv=None):
 
             gaussians.optimizer_step(iteration)
 
+        if args.time_breakdown:
+            _sync()
+            timing["optimizer"] += time.perf_counter() - _t
         if iteration in trigger:
             elapsed = time.perf_counter() - t_train0
             n_now = int(gaussians.get_xyz.shape[0])
@@ -327,6 +349,10 @@ def main(argv=None):
             snaps.append(entry)
 
     train_s = time.perf_counter() - t_train0
+    if args.time_breakdown:
+        timing = {k: round(v, 3) for k, v in timing.items()}
+        timing["train_seconds"] = round(train_s, 3)
+        timing["iterations"] = iterations
     # standard 3DGS layout so the organizer's render_test.py can load this model
     final_ply = None
     if not args.no_save_final:
@@ -349,6 +375,7 @@ def main(argv=None):
         limit_seconds=args.limit_seconds, snapshots=snaps,
         scene_load_seconds=round(scene_load_s, 3), init_seconds=round(init_s, 3),
         train_seconds=round(train_s, 3), total_seconds=round(total_s, 3),
+        timing_breakdown=(timing if args.time_breakdown else None),
         iterations_per_second=round(iteration / train_s, 2) if train_s else None,
         quick_test_psnr=round(final_psnr, 4) if final_psnr is not None else None,
         num_train_views=len(cams_by_scale[scales[-1]]),
