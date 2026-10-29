@@ -87,6 +87,8 @@ def main(argv=None):
     parser.add_argument("--lambda-dssim", type=float, default=None, dest="lambda_dssim")
     parser.add_argument("--scaling-lr", type=float, default=None, dest="scaling_lr")
     parser.add_argument("--opacity-lr", type=float, default=None, dest="opacity_lr")
+    parser.add_argument("--res-scales", default=None, dest="res_scales")
+    parser.add_argument("--res-until", default=None, dest="res_until")
     parser.add_argument("--no-densify", action="store_true", dest="no_densify")
     args = parser.parse_args(argv)
 
@@ -124,6 +126,8 @@ def main(argv=None):
         "--lambda_dssim": args.lambda_dssim,
         "--scaling_lr": args.scaling_lr,
         "--opacity_lr": args.opacity_lr,
+        "--res_scales": args.res_scales,
+        "--res_until": args.res_until,
     }
     for flag, value in optional.items():
         if value is not None:

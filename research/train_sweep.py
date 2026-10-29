@@ -80,6 +80,10 @@ def main(argv=None):
     # every other knob (--iterations, --position_lr_*, --densify_*, --mult,
     # --lambda_dssim, ...) is already declared by FastGS's OptimizationParams.
     parser.add_argument("--sh_up_every", type=int, default=1000)
+    parser.add_argument("--res_scales", type=str, default="",
+                        help="coarse-to-fine training resolutions, e.g. 0.5,0.75,1.0")
+    parser.add_argument("--res_until", type=str, default="",
+                        help="fraction of the run spent at each lower scale, e.g. 0.5,0.8")
     parser.add_argument("--no_densify", action="store_true")
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args(argv)
@@ -103,15 +107,19 @@ def main(argv=None):
     with open(os.path.join(dataset.model_path, "cfg_args"), "w") as stream:
         stream.write(str(Namespace(**vars(dataset))))
 
+    scales = [float(x) for x in args.res_scales.split(",") if x.strip()] or [1.0]
+    cuts = [float(x) for x in args.res_until.split(",") if x.strip()]
+    if len(cuts) != len(scales) - 1:
+        raise SystemExit("--res_until needs one cut per resolution transition")
     t0 = time.perf_counter()
-    scene = Scene(dataset, gaussians)
+    scene = Scene(dataset, gaussians, resolution_scales=scales)
     scene_load_s = time.perf_counter() - t0
 
     t0 = time.perf_counter()
     gaussians.load_ply(args.init_ply)
     n_init = int(gaussians.get_xyz.shape[0])
     gaussians.spatial_lr_scale = scene.cameras_extent
-    gaussians.training_setup(op)
+    gaussians.training_setup(opt)
     gaussians.max_radii2D = torch.zeros((gaussians.get_xyz.shape[0]), device="cuda")
     init_s = time.perf_counter() - t0
 
@@ -124,9 +132,18 @@ def main(argv=None):
     snaps = []
     trigger = {s: ("t_snap", None) for s in snapshots}
 
-    train_cams = scene.getTrainCameras()
-    viewpoint_stack = train_cams.copy()
-    viewpoint_indices = list(range(len(viewpoint_stack)))
+    cams_by_scale = {s: scene.getTrainCameras(s) for s in scales}
+
+    def scale_for(iteration):
+        if len(scales) == 1:
+            return scales[0]
+        fraction = iteration / iterations
+        for cut, scale in zip(cuts, scales[:-1]):
+            if fraction < cut:
+                return scale
+        return scales[-1]
+
+    state = dict(scale=None, stack=[], indices=[])
     ema_loss = 0.0
 
     t_train0 = time.perf_counter()
@@ -137,12 +154,17 @@ def main(argv=None):
         if iteration % sh_up_every == 0:
             gaussians.oneupSHdegree()
 
-        if not viewpoint_stack:
-            viewpoint_stack = train_cams.copy()
-            viewpoint_indices = list(range(len(viewpoint_stack)))
-        rand_idx = random.randint(0, len(viewpoint_indices) - 1)
-        viewpoint_cam = viewpoint_stack.pop(rand_idx)
-        viewpoint_indices.pop(rand_idx)
+        scale = scale_for(iteration)
+        if scale != state["scale"]:
+            state["scale"] = scale
+            state["stack"] = cams_by_scale[scale].copy()
+            state["indices"] = list(range(len(state["stack"])))
+        if not state["stack"]:
+            state["stack"] = cams_by_scale[scale].copy()
+            state["indices"] = list(range(len(state["stack"])))
+        rand_idx = random.randint(0, len(state["indices"]) - 1)
+        viewpoint_cam = state["stack"].pop(rand_idx)
+        state["indices"].pop(rand_idx)
 
         render_pkg = render_fastgs(viewpoint_cam, gaussians, pipe, background, opt.mult, 1.0)
         image = render_pkg["render"]
@@ -173,7 +195,7 @@ def main(argv=None):
                 if (iteration > opt.densify_from_iter
                         and iteration % opt.densification_interval == 0):
                     size_threshold = 20 if iteration > opt.opacity_reset_interval else None
-                    camlist = sampling_cameras(train_cams.copy())
+                    camlist = sampling_cameras(cams_by_scale[scale].copy())
                     importance_score, pruning_score = compute_gaussian_score_fastgs(
                         camlist, gaussians, pipe, background, op, DENSIFY=True)
                     gaussians.densify_and_prune_fastgs(
@@ -214,7 +236,8 @@ def main(argv=None):
         train_seconds=round(train_s, 3), total_seconds=round(total_s, 3),
         iterations_per_second=round(iterations / train_s, 2) if train_s else None,
         quick_test_psnr=round(final_psnr, 4) if final_psnr is not None else None,
-        num_train_views=len(train_cams), num_test_views=len(scene.getTestCameras()),
+        num_train_views=len(cams_by_scale[scales[-1]]),
+        num_test_views=len(scene.getTestCameras()), res_scales=scales, res_until=cuts,
         settings=dict(position_lr_max_steps=opt.position_lr_max_steps,
                       position_lr_init=opt.position_lr_init,
                       position_lr_final=opt.position_lr_final,
@@ -225,7 +248,8 @@ def main(argv=None):
                       mult=opt.mult, lambda_dssim=opt.lambda_dssim,
                       scaling_lr=opt.scaling_lr, opacity_lr=opt.opacity_lr,
                       position_lr_delay_mult=opt.position_lr_delay_mult,
-                      no_densify=args.no_densify, seed=args.seed),
+                      no_densify=args.no_densify, seed=args.seed,
+                      res_scales=scales, res_until=cuts),
     )
     if args.record:
         os.makedirs(os.path.dirname(args.record), exist_ok=True)
