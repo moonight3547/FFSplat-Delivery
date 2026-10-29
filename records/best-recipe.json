@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "protocol": "organizer-20261028 / proxy score (official total unconfirmed)",
+  "cases": {
+    "dl3dv": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "hw/billboard": "hw/billboard",
+    "mipnerf360/counter": "mipnerf360/counter"
+  },
+  "budget_seconds": {
+    "dl3dv": 94.29,
+    "hw/billboard": 99.49,
+    "mipnerf360/counter": 92.57
+  },
+  "budget_source": "records/o0-baseline-20261030.json (budget_seconds per row); identical values repeated in every records/artifacts-20261030/**/summary.json header. Reference = FastGS, random init, 30,000 steps, same GPU.",
+  "baseline": {
+    "label": "official O0 baseline (default-30kLR, 10,000 iters)",
+    "source": "records/o0-baseline-20261030.json",
+    "iterations": 10000,
+    "cases": {
+      "dl3dv": {
+        "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+        "psnr": 32.782,
+        "ssim": 0.9498,
+        "lpips": 0.1514,
+        "quality_points": 53.9296,
+        "time_points": 9.002957778013457,
+        "total_points": 62.93255777801346,
+        "b_seconds": 56.09,
+        "budget_seconds": 94.29,
+        "iterations": 10000
+      },
+      "hw/billboard": {
+        "case": "hw/billboard",
+        "psnr": 22.648,
+        "ssim": 0.7987,
+        "lpips": 0.1598,
+        "quality_points": 32.0544,
+        "time_points": 11.208273304966438,
+        "total_points": 43.26267330496644,
+        "b_seconds": 49.31,
+        "budget_seconds": 99.49,
+        "iterations": 10000
+      },
+      "mipnerf360/counter": {
+        "case": "mipnerf360/counter",
+        "psnr": 27.726,
+        "ssim": 0.8879,
+        "lpips": 0.2071,
+        "quality_points": 33.7928,
+        "time_points": 8.898971349009155,
+        "total_points": 42.69177134900916,
+        "b_seconds": 55.5,
+        "budget_seconds": 92.57,
+        "iterations": 10000
+      }
+    },
+    "mean_total": 49.62900081066302,
+    "mean_quality_points": 39.9256,
+    "mean_time_points": 9.703400810663016
+  },
+  "best_uniform": {
+    "label": "noreset-30kLR, 8,000 iterations, one setting for all three cases",
+    "settings": [
+      "opacity_reset_interval=12001 (hw/billboard, dl3dv) and 8001 (mipnerf360/counter) -> reset never fires inside the run",
+      "lambda_dssim=0.2",
+      "scaling_lr=0.005",
+      "position_lr_max_steps=30000 (official long schedule; NOT matched to the run length)",
+      "position_lr_init=0.00016, position_lr_final=1.6e-06, position_lr_delay_mult=0.01",
+      "densification_interval=100, densify_from_iter=500, densify_until_iter=15000",
+      "opacity_lr=0.025, mult=0.5, lpips_weight=0.0, res_scales=[1.0], densify_count_thresh=null, max_gaussians=null, no_densify=false, seed=20261015",
+      "iterations=8000 (uniform across all three cases)"
+    ],
+    "iterations": 8000,
+    "cases": {
+      "hw/billboard": {
+        "case": "hw/billboard",
+        "case_short": "hw/billboard",
+        "config": "noreset-30kLR",
+        "tag": "hw-noreset",
+        "iterations": 8000,
+        "num_gaussians": 368607,
+        "b_seconds": 45.43,
+        "budget_seconds": 99.49,
+        "budget_ratio": 0.4566,
+        "psnr": 22.707,
+        "ssim": 0.7978,
+        "lpips": 0.1574,
+        "quality_points": 32.5096,
+        "time_points": 12.0744,
+        "total_points": 44.584,
+        "valid": true,
+        "source": "records/artifacts-20261030/experiments/round2/hw-noreset/summary.json"
+      },
+      "mipnerf360/counter": {
+        "case": "mipnerf360/counter",
+        "case_short": "mipnerf360/counter",
+        "config": "noreset-30kLR",
+        "tag": "counter-noreset",
+        "iterations": 8000,
+        "num_gaussians": 314830,
+        "b_seconds": 53.95,
+        "budget_seconds": 92.57,
+        "budget_ratio": 0.5828,
+        "psnr": 27.552,
+        "ssim": 0.8833,
+        "lpips": 0.2079,
+        "quality_points": 33.1256,
+        "time_points": 9.2699,
+        "total_points": 42.3955,
+        "valid": true,
+        "source": "records/artifacts-20261030/experiments/round3/counter-noreset/summary.json"
+      },
+      "dl3dv": {
+        "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+        "case_short": "dl3dv",
+        "config": "noreset-30kLR",
+        "tag": "dl3dv-noreset",
+        "iterations": 8000,
+        "num_gaussians": 295623,
+        "b_seconds": 51.71,
+        "budget_seconds": 94.29,
+        "budget_ratio": 0.5484,
+        "psnr": 33.336,
+        "ssim": 0.9511,
+        "lpips": 0.1324,
+        "quality_points": 58.1888,
+        "time_points": 10.036,
+        "total_points": 68.2248,
+        "valid": true,
+        "source": "records/artifacts-20261030/experiments/round3/dl3dv-noreset/summary.json"
+      }
+    },
+    "mean_total": 51.7348,
+    "delta_vs_baseline": 2.1058,
+    "caveat": "The literal opacity_reset_interval differs per case (12001 vs 8001) only because each value had to exceed that case's total iteration count; semantically all three runs have opacity reset disabled. Rows are exact per-case settings from separate round2/round3 summary.json files; sweeps/*.json lack the lpips_weight/res_scales keys but match the remaining settings.",
+    "two_case_12000_note": "noreset-30kLR at 12,000 iters has no counter row (counter-noreset stops at 8,000), so its 2-case mean of 54.100 is NOT a valid uniform score."
+  },
+  "best_per_case": {
+    "dl3dv": {
+      "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+      "case_short": "dl3dv",
+      "config": "noreset-30kLR",
+      "tag": "dl3dv-noreset",
+      "iterations": 8000,
+      "num_gaussians": 295623,
+      "b_seconds": 51.71,
+      "budget_seconds": 94.29,
+      "budget_ratio": 0.5484,
+      "psnr": 33.336,
+      "ssim": 0.9511,
+      "lpips": 0.1324,
+      "quality_points": 58.1888,
+      "time_points": 10.036,
+      "total_points": 68.2248,
+      "valid": true,
+      "source": "records/artifacts-20261030/experiments/round3/dl3dv-noreset/summary.json"
+    },
+    "hw/billboard": {
+      "case": "hw/billboard",
+      "case_short": "hw/billboard",
+      "config": "noreset-30kLR",
+      "tag": "hw-noreset",
+      "iterations": 4000,
+      "num_gaussians": 390473,
+      "b_seconds": 22.64,
+      "budget_seconds": 99.49,
+      "budget_ratio": 0.2276,
+      "psnr": 22.684,
+      "ssim": 0.7885,
+      "lpips": 0.1761,
+      "quality_points": 28.0072,
+      "time_points": 17.1659,
+      "total_points": 45.1731,
+      "valid": true,
+      "source": "records/artifacts-20261030/experiments/round2/hw-noreset/summary.json"
+    },
+    "mipnerf360/counter": {
+      "case": "mipnerf360/counter",
+      "case_short": "mipnerf360/counter",
+      "config": "noreset-30kLR",
+      "tag": "counter-noreset",
+      "iterations": 8000,
+      "num_gaussians": 314830,
+      "b_seconds": 53.95,
+      "budget_seconds": 92.57,
+      "budget_ratio": 0.5828,
+      "psnr": 27.552,
+      "ssim": 0.8833,
+      "lpips": 0.2079,
+      "quality_points": 33.1256,
+      "time_points": 9.2699,
+      "total_points": 42.3955,
+      "valid": true,
+      "source": "records/artifacts-20261030/experiments/round3/counter-noreset/summary.json"
+    }
+  },
+  "best_per_case_mean_total": 51.9311,
+  "falsified": [
+    {
+      "idea": "More ReSplat refine rounds (num_refine 2 -> 4 -> 6) keep improving the initialization",
+      "evidence": "hw quality 3.813 (r2) -> 3.874 (r4) -> 3.880 (r6): +0.067 for 4 extra rounds, and counter goes the other way 5.158 (r2) -> 4.985 (r4) -> 4.926 (r6). Recursion saturates after round 2; these are B=0 (initialization-only) rows with time_points=null.",
+      "source": "records/artifacts-20261030/probe/init-{dl3dv,hw,counter}/score_summary.json, records/artifacts-20261030/experiments/round1/*-score/score_summary.json"
+    },
+    {
+      "idea": "Training the default schedule longer (more iterations) is better",
+      "evidence": "counter 20,000 iters has the best quality of its tag (35.538) but B=114.38 s > 92.57 s budget, so the row is INVALID (time_points 0); hw 20,000 iters totals 30.278 vs 39.931 at 1,000 iters.",
+      "source": "records/artifacts-20261030/sweeps/{counter,hw}-default/summary.json"
+    },
+    {
+      "idea": "Using the whole budget (late snapshots) is the goal",
+      "evidence": "hw total falls 41.583 (4k, 29.7 s) -> 30.278 (20k, 99.0 s = 99.5% of budget, TIME 0.118); TIME is linear in B/budget, so filling the budget is the single most expensive thing you can do.",
+      "source": "records/artifacts-20261030/sweeps/hw-default/summary.json"
+    },
+    {
+      "idea": "Adding VGG-LPIPS (lambda_lpips=0.2) to the B loss buys the 40-point LPIPS term",
+      "evidence": "hw 4k: total 32.239 (Q 22.282) vs 41.583 (Q 26.000) for plain default and 45.173 for noreset on identical iterations; hw 8k at 108.14 s is already over budget.",
+      "source": "records/artifacts-20261030/experiments/round2/{hw,counter}-lpips/summary.json"
+    },
+    {
+      "idea": "A coarse-to-fine resolution ramp (0.5 -> 0.75 -> 1.0) buys more optimization steps per second",
+      "evidence": "hw 8k: 36.652 vs 41.574 (default) and 44.584 (noreset); counter 8k: 29.494 vs 42.396 noreset. It costs seconds without adding quality.",
+      "source": "records/artifacts-20261030/experiments/round2/{hw,counter}-resramp/summary.json"
+    },
+    {
+      "idea": "Looser densification (densify_count_thresh=2) + a 900K Gaussian cap recovers detail the default prunes",
+      "evidence": "hw 8k: +32,424 Gaussians (401,031 vs 368,607) but PSNR 22.729 vs 22.707, SSIM 0.7975 vs 0.7978, LPIPS 0.1573 vs 0.1574; total 43.914 vs 44.584.",
+      "source": "records/artifacts-20261030/experiments/round3/hw-dense-noreset/summary.json"
+    },
+    {
+      "idea": "Snapshots taken at/near an opacity reset are usable quality points",
+      "evidence": "reset points collapse the render: counter 3k PSNR 10.767/SSIM 0.3580 and hw 12k PSNR 5.116/SSIM 0.1090 both score Q=0.000; 6 of 40 archived rows are such degenerate snapshots.",
+      "source": "records/artifacts-20261030/sweeps/{counter,hw}-default/summary.json"
+    },
+    {
+      "idea": "Turning off opacity reset is a uniform win across cases",
+      "evidence": "counter 8k noreset 42.396 is 0.296 BELOW the 10k baseline (42.692); the reset change only pays on dl3dv (+5.292) and hw (+1.910).",
+      "source": "records/artifacts-20261030/experiments/round2/hw-noreset + round3/*-noreset vs records/o0-baseline-20261030.json"
+    }
+  ],
+  "unverified_doc_claims": [
+    {
+      "claim": "matched position-LR schedule (position_lr_max_steps = iterations) lifts hw 8k quality 32.51 -> 35.39",
+      "source": "docs/RESEARCH-20261030.md section 8",
+      "status": "no summary.json / score_summary.json exists for it; cannot be verified from this repository"
+    },
+    {
+      "claim": "no reset + lambda_dssim 0.4 + matched LR + 4k steps gives 76.31 / 50.05 / 48.37 (mean 58.24)",
+      "source": "docs/RESEARCH-20261030.md section 9",
+      "status": "no JSON artifact; the 4-GPU machine runs were not archived under records/"
+    },
+    {
+      "claim": "lambda_dssim 0.6 + scaling_lr 0.01 + matched LR at 4k/5k gives mean 59.02 (FastGS) / 60.03 (opacity-sharpened init)",
+      "source": "docs/RESEARCH-20261030.md section 10",
+      "status": "no JSON artifact; this is the 'mean ~60' recipe hinted for best_uniform, and it is NOT reproducible from records/artifacts-20261030 (the archived best uniform is 51.735)"
+    }
+  ],
+  "notes": [
+    "9 of 40 archived module-B rows have b_seconds_estimate > case budget (counter-lpips 8k/12k, hw-lpips 8k/12k, counter-resramp 16k/24k, hw-resramp 16k/24k, counter-default 20k); their score.valid is false and time_points is 0.0 in every case.",
+    "Only 3 of the 11 experiment tags have rows for all three cases; a uniform configuration can only be ranked within those (default-30kLR, noreset-30kLR, and the O0 baseline). hw-lpips/lpips, res-ramp, dense-900k and sweep probes are single-case.",
+    "score_summary.json (initialization-only, B=0) rows carry time_points=null, so they cannot produce a total; they are used only for the num_refine falsification."
+  ]
+}
