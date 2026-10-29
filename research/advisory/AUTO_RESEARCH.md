@@ -68,3 +68,15 @@ coding agent已新增campaignX五seed稳健性与E8 timebd入口，尚无完成�
 新增SH_EXPORT_AUDIT：导出SH旋转的一阶z基函数与官方FastGS符号不同；1024方向CPU核查和独立不依赖numpy的标量反例均支持非平凡旋转不保持颜色。H1实际源码hash与所读固定源码相同，三个真实pivot的旋转算子差异均非零，counter较大。这里只证明接口问题，尚无真实场景最终质量增益。建议coding agent在wrapper进行F0–F2对照，受保护upstream原样保留；未修改运行代码。
 
 DEPTH_INTERFACE补充alpha/匹配峰值/先验可靠性的区别，以及16个context sidecar在hw/counter全部训练视角中命中率不同；E3先修梯度、记录支持量。E8-L步频日程单列，不能把其结果当可见性稀疏Adam的裁决。研究继续。
+
+## 06:32 — 决策收敛与新seed叙述
+
+新增DECISION_BOARD统一维护执行顺序，优先F0–F2/计时，再消化E8-L与campaignX，避免把九类候选同时实现。14组seed完成是新提交9202456的叙述；06:29:48所读新增节点尚无campaignX/optEvery/timebd输出，不能独立确认其方差，继续追踪真实来源。固定B seed稳定也不自动推广为全管线/其他方法稳定。
+
+发现SUMMARY§10展示原指标与质量分的算术不一致，已保存CPU检查并给出“同JSON重建整行”的建议，不据此否定尚未找到的raw实际实验分数。SH/深度/外观方案及证据文件链接均已复核。当前所有研究新增仍在advisory目录，其他工作流的run_sweep未提交改动保持原样。
+
+## 06:35 — Faster-GS与AA-Splat适配筛选
+
+新读CVPR2026 Faster-GS：先抽出E8-F fused dense Adam，不替换整套CUDA后端，不改更新频率。只读元数据确认H1为Torch2.4.0+cu124且接口支持fused；未做性能测试。Morton重排与其per-Gaussian backward协同，不能独立套用；2–5倍不是对当前FastGS的保证。
+
+AA-Splat完整方法重训DepthSplat且逐像素alpha归一化，不能直接变成冻结ReSplat+官方标准PLY后处理；暂不排期。3dee717新增E8-L负结果叙述，赞同停止扩展同类降频网格，但不据此否定其他优化器机制。细化收益门槛：重型算法的+2参考不应用来否定低成本、稳定正收益的系统改进。

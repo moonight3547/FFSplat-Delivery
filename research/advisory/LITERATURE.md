@@ -48,6 +48,14 @@
 
 ## 本轮适配结论
 
+### 06:35新增：Faster-GS与AA-Splat
+
+[Faster-GS，CVPR2026](https://arxiv.org/html/2602.09999v1)，[作者代码](https://github.com/nerficg-project/faster-gaussian-splatting)整合高效backward、kernel融合和更新实现，是不同于当前FastGS的系统。先抽出fused dense Adam作为E8-F，不直接换整个训练器；Morton重排的收益依赖其per-Gaussian backward，不能作为当前FastGS的独立免费优化。完整倍数对比不是本项目实测。详细边界见 [优化器方案](SPARSE_OPTIMIZER_20261030.md)。
+
+[AA-Splat，2026-03预印本](https://arxiv.org/html/2603.29394v1)，[作者页](https://kaist-viclab.github.io/aasplat-site/)研究前馈高斯的带宽与opacity平衡。它重新训练DepthSplat，并用渲染时逐像素alpha归一化；并非对固定ReSplat做一个PLY后处理就可复现。作者页当前仍写代码将发布。论文大幅收益主要在改变采样率的设置，本项目固定处理分辨率且官方renderer不做其颜色归一化，暂不作为新训练路线。
+
+3D平滑后的scale/opacity可以表达在标准PLY中，但视角/像素相关的alpha颜色归一化一般不能静态烘焙成一套SH系数；只搬平滑而丢掉opacity处理也可能增加遮挡。后续若训练视角诊断证明有退化footprint，再设计保守输出过滤对照；不先重训网络或替换官方评测。
+
 |方向|论文成熟度|本项目下一步|
 |---|---|---|
 |结构/频率感知分裂|有论文、有作者代码|E1 优先，轻量机制对照|

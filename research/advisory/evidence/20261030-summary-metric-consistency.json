@@ -1,0 +1,43 @@
+{
+  "captured_utc": "2026-10-29T22:31:04.523412+00:00",
+  "source": "records/SUMMARY.md section10 introduced by cf2a772",
+  "type": "CPU_document_arithmetic_audit_not_experiment",
+  "rows": [
+    {
+      "case": "DL3DV",
+      "displayed_psnr": 34.27,
+      "displayed_ssim": 0.9666,
+      "displayed_lpips": 0.1108,
+      "displayed_quality": 64.3,
+      "quality_from_displayed_metrics": 63.256,
+      "quality_display_gap": 1.043999999999997,
+      "displayed_time": 15.64,
+      "displayed_total": 79.91,
+      "note": "Displayed metrics are approximate and may be stale. This checks internal presentation consistency, not actual raw-run quality."
+    },
+    {
+      "case": "hw/billboard",
+      "displayed_psnr": 22.73,
+      "displayed_ssim": 0.8081,
+      "displayed_lpips": 0.1432,
+      "displayed_quality": 35.9,
+      "quality_from_displayed_metrics": 36.19200000000001,
+      "quality_display_gap": -0.2920000000000087,
+      "displayed_time": 16.65,
+      "displayed_total": 52.53,
+      "note": "Displayed metrics are approximate and may be stale. This checks internal presentation consistency, not actual raw-run quality."
+    },
+    {
+      "case": "mip360/counter",
+      "displayed_psnr": 27.36,
+      "displayed_ssim": 0.8916,
+      "displayed_lpips": 0.1994,
+      "displayed_quality": 38.1,
+      "quality_from_displayed_metrics": 35.336,
+      "quality_display_gap": 2.764000000000003,
+      "displayed_time": 15.5,
+      "displayed_total": 53.58,
+      "note": "Displayed metrics are approximate and may be stale. This checks internal presentation consistency, not actual raw-run quality."
+    }
+  ]
+}

@@ -51,3 +51,19 @@ E8-L负结果只能否定该更新/累积/LR日程，不能证明可见性稀疏
 ## 与真正appearance-only的关系
 
 E8仍更新可见高斯的几何，不是只拟外观。真正appearance-only应显式冻结xyz、scale、rotation，说明opacity是否仍训练，且保留前期结构阶段；即便冻结参数，渲染器backward仍可能计算几何导数，不承诺速度收益。历史 `--no_densify` 没有冻结几何，不构成该实验的负证据。
+
+## 06:35：E8-F，优先评估不改日程的fused dense Adam
+
+[Faster-GS，CVPR2026](https://fhahlbohm.github.io/faster-gaussian-splatting/)，[论文§3.3](https://arxiv.org/html/2602.09999v1)，[代码](https://github.com/nerficg-project/faster-gaussian-splatting)与本项目的FastGS是不同工作。其完整系统结合多项CUDA优化，论文未对当前FastGS作同配方比较，不能套用2–5倍速度。较易抽出的机制是fused Adam：减少参数更新的kernel/内存开销，保留每步dense更新与不可见高斯动量。
+
+本项目原setup创建两个torch.optim.Adam，均未显式fused；[PyTorch2.4文档](https://docs.pytorch.org/docs/2.4/generated/torch.optim.Adam.html)说明CUDA默认通常走foreach而非fused。[H1实际环境元数据](evidence/20261030-0635-h1-torch-optimizer-metadata.json)已确认Torch2.4.0+cu124、Adam有fused参数且暴露fused kernel；这是接口可用性，不是性能测量。因此“已经使用Torch Adam”不等于已经启用该优化。不要为一个flag升级整套Torch/CUDA或额外安装apex。
+
+**实验**：C_raw当前控制 vs E8-F，唯一变化是两个Adam的执行后端；所有LR/eps/beta、geometry每步/SH每16步累积、split/prune、输入和导出保持一致。wrapper/子类适配，固定upstream不改。若选择从头启用fused，要检查结构操作替换参数时m/v与step设备/类型仍一致；若从1250后切换，要完整继承state，不能reset。不能同时加E8-L降频、稀疏mask或LR倍增。
+
+**最小检查与裁决**：先用同样的人工梯度序列核对两种后端的参数/m/v、零梯度与None梯度处理；允许解释明确的浮点差异，不能承诺bitwise一致。随后三例配对、实际墙钟比较；profiling只在少量窗口测真正step，最后关闭同步插桩验收。E8-F负结果表示这个环境/规模下融合没有净收益，不代表可见性稀疏无效。
+
+**后续更重的路线**：论文的backward+optimizer融合依赖新CUDA接口，Morton重排又与per-Gaussian backward协同；不能只重排当前FastGS数组就套用其收益。若E8-F已经足够，优先保留简单方案；仅在真实瓶颈证据支持时再评估完整后端，仍用官方渲染重载最终PLY。
+
+## 06:35：E8-L已出现负结果叙述
+
+`3dee717` 记录两例中降频没有稳定净收益，赞同停止继续扩大同类步频网格；原始JSON尚未在所读节点找到。其解释“同步计时高估optimizer占比”还混有前述结构段口径问题，没有单独profiling证据就不把CPU/GPU重叠当作已证明原因。该负结果不改变E8-F/可见性稀疏/E9彼此不同的机制边界。

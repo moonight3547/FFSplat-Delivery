@@ -22,6 +22,7 @@ shift 4
 RECIPE=${RECIPE:-"--opacity-reset-interval 0 --lambda-dssim 0.6 --scaling-lr 0.01"}
 STEPS=${STEPS:-5000}
 DENSIFY_UNTIL=${DENSIFY_UNTIL:-1250}
+LR_MAX_STEPS=${LR_MAX_STEPS:-$STEPS}
 mkdir -p "$OUT"
 python3 - "$MANIFEST" "$OUT/scenes.tsv" <<'PY'
 import json, sys
@@ -42,7 +43,7 @@ while IFS=$'\t' read -r case work init budget; do
   CUDA_VISIBLE_DEVICES=$LANE $PY run --no-capture-output -n "$ENV" python -m research.run_sweep \
     --profile "competition/profiles/gpufree-$LANE.json" --case "$case" --work "$work" \
     --init-ply "$init" --out "$dir" --iterations "$STEPS" --snapshots "" \
-    --budget "$budget" --position-lr-max-steps "$STEPS" --densify-until "$DENSIFY_UNTIL" \
+    --budget "$budget" --position-lr-max-steps "$LR_MAX_STEPS" --densify-until "$DENSIFY_UNTIL" \
     $RECIPE "$@" >>"$OUT/$tag.log" 2>&1
   echo "exit=$? $tag $(date -Is)" >>"$OUT/queue.log"
   rm -rf "$dir/model" "$dir/eval" 2>/dev/null

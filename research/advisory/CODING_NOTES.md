@@ -32,6 +32,8 @@
 
 ## P1：纠正不透明度操作的名字和公式
 
+**06:31新增展示核对**：`records/SUMMARY.md §10` 的62.01表里展示的原指标和质量分不自洽。例如counter列27.36/.8916/.1994按本文公式得到Q35.336，而表写约38.1；DL列34.27/.9666/.1108得到63.256，表写约64.3。可能沿用了旧sharp指标却填了新raw质量分，不能据此说实际raw实验分数错误。请从同一个原始JSON重建整行，禁止拼接不同run字段；CPU算术记录见 [表格核对](evidence/20261030-summary-metric-consistency.json)。
+
 位置：`research/ply_ops.py:70`；`docs/RESEARCH-20261030.md`、PREPOST 文档中的公式。
 
 实际是 `l_new = gain * logit(clip(sigmoid(l_old)))`，即 `p_new=sigmoid(gain*logit(p_old))`。gain=2、p=0.2 时输出约 0.0588；不是 `p→2p` 后取 logit（会得到 0.4）。其效果是将 p<0.5 压低、p>0.5 推高，不是统一增亮或提高 opacity。
