@@ -99,9 +99,9 @@ def op_densify(data, factor=2, shrink=0.7, jitter=0.15):
 
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--in", dest="input", required=True)
+    p.add_argument("--in", dest="inputs", action="append", required=True)
     p.add_argument("--out", required=True)
-    p.add_argument("--op", required=True, choices=["inspect", "prune", "sharpen", "densify"])
+    p.add_argument("--op", required=True, choices=["inspect", "prune", "sharpen", "densify", "merge"])
     p.add_argument("--factor", type=int, default=2)
     p.add_argument("--shrink", type=float, default=0.7)
     p.add_argument("--jitter", type=float, default=0.15)
@@ -110,10 +110,24 @@ def main(argv=None):
     p.add_argument("--max-scale", type=float, default=0.5, dest="max_scale")
     args = p.parse_args(argv)
 
-    data, names = load(args.input)
+    if args.op == "merge":
+        # concatenate several Gaussian sets (e.g. two ReSplat runs on disjoint
+        # 16-view subsets) into one init for module B
+        parts = []
+        for path in args.inputs:
+            d, names = load(path)
+            parts.append(d)
+        merged = {k: np.concatenate([p[k] for p in parts], axis=0) for k in parts[0]}
+        save(args.out, merged, names)
+        print(json.dumps(dict(op="merge", inputs=args.inputs, output=args.out,
+                              counts=[len(p["x"]) for p in parts],
+                              out_count=int(len(merged["x"])), after=stats(merged)), indent=2))
+        return
+
+    data, names = load(args.inputs[0])
     before = stats(data)
     if args.op == "inspect":
-        print(json.dumps(dict(path=args.input, **before), indent=2))
+        print(json.dumps(dict(path=args.inputs[0], **before), indent=2))
         return
     if args.op == "prune":
         out, info = op_prune(data, args.min_opacity, args.max_scale)
@@ -122,7 +136,7 @@ def main(argv=None):
     else:
         out, info = op_densify(data, args.factor, args.shrink, args.jitter)
     save(args.out, out, names)
-    print(json.dumps(dict(op=args.op, input=args.input, output=args.out, info=info,
+    print(json.dumps(dict(op=args.op, input=args.inputs[0], output=args.out, info=info,
                           before=before, after=stats(out)), indent=2))
 
 
