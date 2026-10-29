@@ -10,7 +10,8 @@ mkdir -p "$OUT"
 log="$OUT/run.log"
 echo "start $(date -Is)" | tee -a "$log"
 
-while pgrep -f "round[0-9]_|round5_mcmc" >/dev/null 2>&1; do sleep 15; done
+# wait for the FastGS/MCMC/selection rounds; do not match our own name
+while pgrep -f "round5_mcmc|round6_queue|round7_dense" >/dev/null 2>&1; do sleep 20; done
 
 DATA=/workspace/organizer-assets/datasets
 run() {  # tag, scene, group, extra...
