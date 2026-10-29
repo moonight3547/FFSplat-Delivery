@@ -80,6 +80,10 @@ def main(argv=None):
     # every other knob (--iterations, --position_lr_*, --densify_*, --mult,
     # --lambda_dssim, ...) is already declared by FastGS's OptimizationParams.
     parser.add_argument("--sh_up_every", type=int, default=1000)
+    parser.add_argument("--densify_count_thresh", type=int, default=None,
+                        help="sampled-view count needed to densify (upstream hardcodes 5)")
+    parser.add_argument("--max_gaussians", type=int, default=None,
+                        help="hard cap on Gaussian count, weakest pruned first")
     parser.add_argument("--lpips_weight", type=float, default=0.0,
                         help="weight of VGG-LPIPS (the scored metric) in the training loss")
     parser.add_argument("--lpips_every", type=int, default=1,
@@ -108,7 +112,17 @@ def main(argv=None):
     torch.cuda.empty_cache()
 
     t_total0 = time.perf_counter()
-    gaussians = GaussianModel(dataset.sh_degree, opt.optimizer_type)
+    if args.densify_count_thresh is not None or args.max_gaussians is not None:
+        from .dense_model import AggressiveGaussianModel as model_class
+        if args.densify_count_thresh is not None:
+            model_class.densify_count_thresh = args.densify_count_thresh
+        if args.max_gaussians is not None:
+            model_class.max_gaussians = args.max_gaussians
+        print(f"[sweep] densify gate > {model_class.densify_count_thresh} sampled views, "
+              f"cap {model_class.max_gaussians}")
+    else:
+        model_class = GaussianModel
+    gaussians = model_class(dataset.sh_degree, opt.optimizer_type)
     os.makedirs(dataset.model_path, exist_ok=True)
     with open(os.path.join(dataset.model_path, "cfg_args"), "w") as stream:
         stream.write(str(Namespace(**vars(dataset))))
@@ -275,7 +289,9 @@ def main(argv=None):
                       no_densify=args.no_densify, seed=args.seed,
                       res_scales=scales, res_until=cuts,
                       lpips_weight=args.lpips_weight, lpips_every=args.lpips_every,
-                      lpips_scale=args.lpips_scale),
+                      lpips_scale=args.lpips_scale,
+                      densify_count_thresh=args.densify_count_thresh,
+                      max_gaussians=args.max_gaussians),
     )
     if args.record:
         os.makedirs(os.path.dirname(args.record), exist_ok=True)
