@@ -151,6 +151,16 @@ def main(argv=None):
         "--out", results / "resplat", "--checkpoint", args.checkpoint,
         "--num_refine", args.num_refine, "--device", args.device), logs)
 
+    # ---- module B init treatment -------------------------------------------
+    # Campaign H measured a stable ~+1 point from re-sharpening the predicted
+    # opacities toward 0/1 before optimization (it stops FastGS's pruning from
+    # being dominated by mushy Gaussians). This is module-B-side, so it counts.
+    sharpened = results / "resplat/resplat_world_sharp.ply"
+    runner.run("b_init", runner.conda(
+        "fastgs", "-m", "research.ply_ops", "--in", results / "resplat/resplat_world.ply",
+        "--out", sharpened, "--op", "sharpen", "--gain", "2.0"), logs)
+    b_init_ply = sharpened
+
     # ---- module B -----------------------------------------------------------
     # Recipe measured on this class of GPU (see docs/RESEARCH-20261030.md): a short
     # continuation with the position-LR schedule matched to the run length beats a
@@ -160,7 +170,7 @@ def main(argv=None):
     runner.run("module_b", runner.conda(
         "fastgs", "-m", "research.train_sweep", "--source", work, "--model_path", results / "module_b",
         "--eval", "-r", "1", "--sh_degree", "3", "--quiet",
-        "--init_ply", results / "resplat/resplat_world.ply",
+        "--init_ply", b_init_ply,
         "--iterations", args.b_iterations,
         "--position_lr_max_steps", args.b_iterations,
         "--opacity_reset_interval", "0",
