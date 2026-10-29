@@ -67,6 +67,10 @@ PY
   # keep only the manifest line and the measured budget: the preparation host has a
   # small disk and the artifacts already live on the evaluation node
   python3 -c "import json,sys; print(json.dumps(dict(case=sys.argv[2], work=sys.argv[1]+'/work', init=sys.argv[1]+'/resplat/resplat_world.ply', budget_seconds=float(sys.argv[3]))))" "$d" "$case" "$budget" >>"$OUT/manifest.jsonl"
-  rm -rf "$d/ref/point_cloud" "$d/ref/test_renders" "$d/ref/test_gt" "$d/work/images" "$d/resplat" 2>/dev/null
+  # only trim local artifacts when they were shipped elsewhere; with NODE=none this
+  # host runs the evaluation itself and needs the work dir plus the world PLY
+  if [ "${NODE:-}" != "none" ] && [ -n "${NODE:-}" ]; then
+    rm -rf "$d/ref/point_cloud" "$d/ref/test_renders" "$d/ref/test_gt" "$d/work/images" "$d/resplat" 2>/dev/null
+  fi
 done
 echo "PREP_DONE $(date -Is)" >>"$log"
