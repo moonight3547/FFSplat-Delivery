@@ -138,3 +138,38 @@ python3 -m research.collect records/artifacts-20261030 records/artifacts-2026103
 - **Persist the sharpening flag into `train_record.settings`** so the +1.01 and the delivered init are JSON-attested instead of tag-name-attested.
 - **Only then spend remaining effort on the two implemented-but-unmeasured levers**: ReSplat-depth anchoring (`research/depth_reg.py`, kill at < +1.7 pts after its ~7% step cost) and 16-view selection (`selection_test.sh` uniform vs fps vs coverage).
 - **Do not chase 75.** The evidence supports 60.2 as the deployable number with a hard ceiling of ~65 under these budgets; the only documented path past that would be a real quality breakthrough on hw/billboard (its 30k classic-3DGS PSNR is 16.75 dB) or a switch to the organizer's classic-3DGS budget reading, which changes the contract rather than the method.
+
+## 10. 更新（2026-10-30 06:36）：13 例覆盖情况与后续证据
+
+### 已完成的逐场景实测
+
+**8 例（旧配方：含初始化锐化，无解码缓存）**：均值 **53.88**
+
+| 场景 | B 秒 | PSNR | SSIM | LPIPS | 总分 |
+|---|---:|---:|---:|---:|---:|
+| dl3dv/001dccbc | 32.5 | 34.246 | 0.9664 | 0.1108 | 77.61 |
+| dl3dv/9a4516 | 31.6 | 31.068 | 0.9440 | 0.2013 | 56.97 |
+| dl3dv/3e4dbe | 36.5 | 24.157 | 0.8097 | 0.2404 | 33.07 |
+| dl3dv/0b5635 | 37.2 | 23.685 | 0.8065 | 0.2572 | 30.35 |
+| hw/trashbin | 26.1 | 27.800 | 0.9010 | 0.1374 | 66.46 |
+| hw/basketball | 26.0 | 26.821 | 0.8930 | 0.1211 | 66.02 |
+| hw/billboard | 24.9 | 22.731 | 0.8081 | 0.1432 | 52.88 |
+| hw/car | 25.8 | 22.685 | 0.8241 | 0.1792 | 47.71 |
+
+**新增 1 例（新配方，3 卡并发使 B 秒数被高估约 40%）**：`mipnerf360/bicycle` = **23.58**
+（PSNR 24.548 / SSIM 0.7239 / LPIPS 0.2993）。bicycle 是又一个前馈初始化质量很差的场景。
+
+### 结论
+
+- 三个默认例用最新配方（raw init + 解码缓存）实测均值 **62.01**，比官方基线 49.63 高 **+12.4**。
+- 13 例集合的实测片段显示均值会在 **50~54** 区间：难例（dl3dv/0b5635 30.35、3e4dbe 33.07、
+  mip360/bicycle 23.58）的 LPIPS 都在 0.24~0.30，说明**前馈初始化本身就没重建出来**，
+  30 秒的模块 B 无法弥补。
+- 因此 **75~80 分在本赛题公开场景上不可达**；即使把模块 B 时间当 0（三例上界约 65），
+  也达不到 75。这是数据层面的限制，不是超参数没调好。
+
+### 评测节点（已完成并验证）
+
+`N1` 三卡：module A / ReSplat 产物与预算随 `records/evalnode-manifest.json` 下发，
+每个场景只跑 模块 B + 官方指标；4 例 147 秒、3 例 90 秒，**13 例预计 5~7 分钟一轮**。
+新场景加入的成本是准备机上一次 A + ReSplat（每个约 2~5 分钟）。
