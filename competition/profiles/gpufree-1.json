@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "profile": "gpufree-container-20261030-gpu1",
+  "note": "Second 4090 host (2x RTX 4090 24G, 128 cores, 30G disk). Only module-B research runs here; module A / ReSplat stay on the calibated host.",
+  "execution_os": "linux",
+  "device": "cuda:0",
+  "conda": "/opt/conda/bin/conda",
+  "environments": {"resplat": "fastgs", "fastgs": "fastgs", "mcmc": "fastgs"},
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "1",
+    "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
+    "TORCH_CUDA_ARCH_LIST": "8.9"
+  }
+}
