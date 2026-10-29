@@ -1,0 +1,11 @@
+{
+  "created_utc": "2026-10-29T22:05:42.988276+00:00",
+  "kind": "analytic scalar depth-normalization counterexample, not a GPU test",
+  "alpha": 0.4,
+  "z": 3.0,
+  "target_depth": 2.0,
+  "expected_depth": 3.0000000000000004,
+  "finite_difference_d_depth_d_alpha": 0.0,
+  "detached_denominator_surrogate_d_depth_d_alpha": 7.5,
+  "statement": "For a single ray with a single Gaussian, N=alpha*z, A=alpha, so N/A=z has zero alpha derivative; detaching A creates nonzero surrogate derivative z/alpha."
+}

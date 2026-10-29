@@ -52,6 +52,8 @@
 
 ## P1：深度接口尚需真实集成检查
 
+**06:07新增P0前置项**：`decode_depth_rgb` 仅detach归一化分母会制造opacity梯度；单高斯 `D=az/a=z` 对a本应无梯度，当前代理梯度为z/a。详见 [深度接口审查](DEPTH_INTERFACE_AUDIT_20261030.md)和其中CPU标量反例。先明确expected/accumulated depth定义、修正梯度，再启动E3，避免用错误loss判死深度路线。
+
 位置：`research/export_resplat_depth.py::GPU_TEMPLATE`、`research/depth_reg.py`。
 
 导出模板假设 `run_inference` 的第 4 个返回值含 `depth_fullres`，还依赖 context 顺序和深度坐标约定；CPU self-check 不能证明实际模型版本满足它。请验证真实输出字段、形状、camera-Z/射线距离、尺度、context 图像对应关系，旁路捕获同一次推理。若使用编码 RGB 的深度渲染，请和小型已知几何比较：alpha、深度、遮挡、背景均要合理，且常数项/颜色 clamp 不破坏数值。
@@ -67,6 +69,8 @@
 - test PSNR 可以作独立离线报告，不能参与候选预算分配/选择。正式比较不从 test 曲线挑各场景最佳 checkpoint。
 
 ## 文献描述修订建议
+
+**06:00新增单位修订**：FastGS的 `importance_score>5` 是采样视角间平均高误差像素统计阈值，不是“五视角投票”；`dense_model.py`说明与打印文案不应继续按视角数解释。详见 [机制审查](FASTGS_MECHANISM_AUDIT_20261030.md)。
 
 旧 LIT 将 Taming-3DGS 归入 MCMC 不准确；旧 PREPOST 把固定拓扑叫 attribute-only、把 concat 当 merge、把估算分当完整实验结论，也需在正常文档维护时更正。不要再宣称“2025–2026 没有预算相关研究”：已有多类 primitive/计算预算工作，尚未检索到完全相同的冻结 ReSplat + 约100秒后优化设置，只能陈述本轮检索范围。
 

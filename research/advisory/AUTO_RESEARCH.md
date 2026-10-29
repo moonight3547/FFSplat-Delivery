@@ -30,3 +30,11 @@
 coding agent 提交 `e773c9a` 改回 raw 初始化（自述61.1 vs60.2，配对 JSON 待核验）。本轮额外 CPU 静态审计发现归档锐化输入低于0.005的比例为 DL3DV31.83%、hw19.86%、counter41.59%，说明变换会大幅改变剪枝候选集合；这不是实际删除率，也不是质量因果证明。详见 OPACITY_AUDIT_20261030。
 
 SAD-GS 深读已完成第一轮：补充专用统计 buffer、计时边界、标准 PLY 过滤属性问题，并将 E1 改成“诊断→一次限额干预→等子数对照”。详见 STRUCTURE_TRANSFER_20261030。继续研究，不结束12小时目标。
+
+## 06:04 — 第二次实验同步与方案去重
+
+新快照共7个eval13候选case完成（增加hw/billboard、basketball、car），仍没有完整baseline配对，两个DL3DV仍受截断图片影响；详见 SYNC_20261030_02。新评测节点文档采用“同卡类缓存预算”，已明确需要改为实际GPU UUID配对或仅作质量比较。
+
+新增 OPTIMIZER_OPTIONS：将低成本单步信赖域作为E6，不照搬完整二阶框架；VIEW_SELECTION_FEASIBILITY：prepared work没有真实tracks，E2增加来源检查，并排除9份现有相机的主点偏移假设；FASTGS_MECHANISM_AUDIT：基线已有多视角误差结构控制，阈值5不是5视角票数，E4须明确差异，E7仅在支持归一化诊断成立后考虑。
+
+研究持续进行，目标结束时间仍为17:43:57 +08:00；未达到12小时，不标完成。
