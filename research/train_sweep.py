@@ -76,7 +76,10 @@ def main(argv=None):
     lp = ModelParams(parser)
     op = OptimizationParams(parser)
     pp = PipelineParams(parser)
-    parser.add_argument("--init_ply", type=str, required=True)
+    parser.add_argument("--init_ply", type=str, default=None)
+    parser.add_argument("--init_random", action="store_true",
+                        help="module-B ablation: no ReSplat init, random frustum points")
+    parser.add_argument("--init_random_num", type=int, default=100_000)
     parser.add_argument("--snapshots", type=str, default="",
                         help="comma separated iterations to dump a PLY for")
     parser.add_argument("--snap_dir", type=str, default=None)
@@ -147,7 +150,33 @@ def main(argv=None):
     scene_load_s = time.perf_counter() - t0
 
     t0 = time.perf_counter()
-    gaussians.load_ply(args.init_ply)
+    if args.init_ply:
+        gaussians.load_ply(args.init_ply)
+        init_mode = f"ply:{os.path.basename(args.init_ply)}"
+    elif args.init_random:
+        # same frustum sampler the organizer's reference trainer uses
+        cams = scene.getTrainCameras()
+        r = max(scene.cameras_extent, 1e-6)
+        per = max(args.init_random_num // len(cams), 1)
+        points, colors = [], []
+        for cam in cams:
+            c2w = cam.world_view_transform.inverse().cpu().numpy()
+            R, C = c2w[:3, :3], c2w[:3, 3]
+            us = np.random.rand(per) * 2 - 1
+            vs = np.random.rand(per) * 2 - 1
+            depths = np.exp(np.random.uniform(np.log(0.05 * r), np.log(1.5 * r), per))
+            tanx, tany = np.tan(cam.FoVx / 2), np.tan(cam.FoVy / 2)
+            dirs = np.stack([us * tanx * depths, vs * tany * depths, depths], axis=1)
+            points.append((R @ dirs.T).T + C)
+            colors.append(np.random.rand(per, 3))
+        from scene.dataset_readers import BasicPointCloud
+        xyz = np.concatenate(points, 0).astype(np.float32)
+        rgb = np.concatenate(colors, 0).astype(np.float32)
+        gaussians.create_from_pcd(BasicPointCloud(xyz, rgb, np.zeros_like(xyz)),
+                                  scene.cameras_extent)
+        init_mode = f"random:{gaussians.get_xyz.shape[0]}"
+    else:
+        raise SystemExit("either --init_ply or --init_random is required")
     n_init = int(gaussians.get_xyz.shape[0])
     gaussians.spatial_lr_scale = scene.cameras_extent
     gaussians.training_setup(opt)
@@ -291,7 +320,7 @@ def main(argv=None):
     total_s = time.perf_counter() - t_total0
 
     record = dict(
-        init_ply=str(args.init_ply), init_mode=f"ply:{os.path.basename(args.init_ply)}",
+        init_ply=str(args.init_ply), init_mode=init_mode,
         num_init_gaussians=n_init, num_final_gaussians=int(gaussians.get_xyz.shape[0]),
         iterations=iterations, completed_iterations=iteration, stop_reason=stop_reason,
         final_ply=final_ply,

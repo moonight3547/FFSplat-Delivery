@@ -67,7 +67,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--case", required=True)
     parser.add_argument("--work", required=True, help="prepared scene dir (module_a output)")
-    parser.add_argument("--init-ply", required=True, dest="init_ply")
+    parser.add_argument("--init-ply", default=None, dest="init_ply")
+    parser.add_argument("--init-random", action="store_true", dest="init_random")
     parser.add_argument("--out", required=True)
     parser.add_argument("--iterations", type=int, default=12000)
     parser.add_argument("--snapshots", type=str, default="")
@@ -113,8 +114,12 @@ def main(argv=None):
         snapshots.append(str(args.iterations))
 
     train_argv = [f"--source={args.work}", f"--model_path={model_dir}",
-                  "--eval", "-r", "1", "--sh_degree", "3", "--quiet",
-                  "--init_ply", args.init_ply,
+                  "--eval", "-r", "1", "--sh_degree", "3", "--quiet"]
+    if args.init_random:
+        train_argv.append("--init_random")
+    else:
+        train_argv += ["--init_ply", args.init_ply]
+    train_argv += [
                   "--iterations", str(args.iterations),
                   "--snapshots", ",".join(snapshots),
                   "--snap_dir", str(snaps_dir),
