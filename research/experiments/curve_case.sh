@@ -12,6 +12,13 @@ cd "$(dirname "$0")/../.." || exit 1
 export PYTHONPATH=$PWD
 PY=${PY:-/opt/conda/bin/conda}
 RESPLAT=${RESPLAT:-ffsplat-enhance}; FASTGS=${FASTGS:-organizer-fastgs}
+# The ReSplat env may live outside the conda root that $PY belongs to (copied node),
+# so allow a direct interpreter path: RESPLAT_PY=/path/to/env/bin/python
+if [ -n "${RESPLAT_PY:-}" ]; then
+  resplat() { "$RESPLAT_PY" "$@"; }
+else
+  resplat() { $PY run --no-capture-output -n "$RESPLAT" python "$@"; }
+fi
 CKPT=${CKPT:-/workspace/organizer-assets/resplat-base-dl3dv-540x960-view16-a72dc6d0.pth}
 DATA=${DATA:-/workspace/organizer-assets/datasets}
 OUT=${OUT:-outputs/curve}; SNAP=${SNAP:-6,15,30}; BUDGET=${BUDGET:-42}
@@ -22,9 +29,9 @@ case $g in dl3dv) dd=DL3DV;; hw) dd=hw;; *) dd=$g;; esac
 src="$DATA/$dd/$s"; tag=$(echo "$CASE" | tr '/' '-'); d="$OUT/$tag"; mkdir -p "$d"
 export CUDA_VISIBLE_DEVICES=$GPU
 if [ ! -f "$d/resplat/resplat_world.ply" ]; then
-  [ -f "$d/work/split.json" ] || $PY run --no-capture-output -n "$RESPLAT" python competition/upstream/baseline/module_a/preprocess.py \
+  [ -f "$d/work/split.json" ] || resplat competition/upstream/baseline/module_a/preprocess.py \
     --scene_dir "$src" --group "$g" --out "$d/work" --num_context 16 --llffhold 8 --max_resolution 960 > "$d/a.log" 2>&1
-  $PY run --no-capture-output -n "$RESPLAT" python -m research.resplat_variant --work "$d/work" \
+  resplat -m research.resplat_variant --work "$d/work" \
     --out "$d/resplat" --checkpoint "$CKPT" --num_refine 2 --device cuda:0 > "$d/r.log" 2>&1
 fi
 [ -f "$d/resplat/resplat_world.ply" ] || { echo "RESPLAT_FAIL $CASE"; exit 1; }
