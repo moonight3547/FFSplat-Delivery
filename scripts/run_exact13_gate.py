@@ -138,14 +138,22 @@ def main(argv=None):
     ap.add_argument("--out-root", default="outputs/exact13-gate-20261030")
     ap.add_argument("--tau", type=float, default=0.48)
     ap.add_argument("--keep", type=float, default=0.6)
+    ap.add_argument("--mid-prune", choices=("auto", "off"), default="auto",
+                    help="auto = evaluate the train-LPIPS gate per case; off = exact Codex r0")
+    ap.add_argument("--realloc-frac", type=float, default=0.15,
+                    help="0 = exact Codex r0 (no extra primitive reallocation)")
     ap.add_argument("--recipe", choices=("delivery", "bigd2500", "bigd3500", "bigd4000"),
                     default="delivery")
     ap.add_argument("--vgg-tail", type=int, choices=(0, 100, 200), default=0)
     ap.add_argument("--scene-cache", action="store_true")
+    ap.add_argument("--official-adam", action="store_true",
+                    help="opt into official FasterGSCudaBackend FusedAdam (requires backend)")
     ap.add_argument("--quiet-wait", type=int, default=3600)
     ap.add_argument("--only", default=None, help="comma-separated tags subset")
     args = ap.parse_args(argv)
 
+    if args.official_adam:
+        os.environ["FFSPLAT_OFFICIAL_ADAM"] = "1"
     profile = read(PROFILE)
     out_root = REPO / args.out_root
     (out_root / "logs").mkdir(parents=True, exist_ok=True)
@@ -170,14 +178,20 @@ def main(argv=None):
         log = open(out_root / "logs" / f"{tag}.log", "a", encoding="utf-8")
         try:
             wait_quiet(args.quiet_wait, log)
-            gate_rec = cell / "gate.json"
-            run(conda_cmd(profile, "fastgs", "-m", "research.prune_gate",
-                          "--work", work, "--ply", init,
-                          "--tau", args.tau, "--keep", args.keep,
-                          "--record", str(gate_rec)), log)
-            gate = read(gate_rec)
-            keep = float(gate["keep"])
-            print(f"[gate] {tag}: train_lpips={gate['train_lpips']} keep={keep}", flush=True)
+            if args.mid_prune == "auto":
+                gate_rec = cell / "gate.json"
+                run(conda_cmd(profile, "fastgs", "-m", "research.prune_gate",
+                              "--work", work, "--ply", init,
+                              "--tau", args.tau, "--keep", args.keep,
+                              "--record", str(gate_rec)), log)
+                gate = read(gate_rec)
+                keep = float(gate["keep"])
+                print(f"[gate] {tag}: train_lpips={gate['train_lpips']} keep={keep}", flush=True)
+            else:
+                gate = dict(enabled=False, train_lpips=None, keep=1.0,
+                            train_views_only=True)
+                keep = 1.0
+                print(f"[gate] {tag}: disabled (exact r0)", flush=True)
 
             if args.recipe == "delivery":
                 recipe_flags = ["--densify-until", "1250"]
@@ -204,10 +218,11 @@ def main(argv=None):
                           "--iterations", "5000", "--position-lr-max-steps", "5000",
                           "--opacity-reset-interval", "0", "--lambda-dssim", "0.6",
                           "--scaling-lr", "0.01", "--densify-from", "500",
-                          *recipe_flags, "--realloc-frac", "0.15",
+                          *recipe_flags, "--realloc-frac", str(args.realloc_frac),
                           "--realloc-at", "1250", "--image-cache", f"{work}/image_cache",
-                          "--snapshots", "", "--seed", "20261015",
-                          "--mid-prune-at", "1250", "--mid-prune-keep", str(keep)]
+                          "--snapshots", "", "--seed", "20261015"]
+            if args.mid_prune == "auto":
+                argv_sweep += ["--mid-prune-at", "1250", "--mid-prune-keep", str(keep)]
             run(conda_cmd(profile, "fastgs", *argv_sweep), log)
 
             summary = read(cell / "sweep" / "summary.json")
@@ -215,6 +230,8 @@ def main(argv=None):
             score = row["score"]
             rec = dict(tag=tag, case=case, budget=budget,
                        recipe=args.recipe, vgg_tail=args.vgg_tail,
+                       realloc_frac=args.realloc_frac, mid_prune=args.mid_prune,
+                       official_adam=bool(args.official_adam),
                        scene_cache=bool(args.scene_cache),
                        gate=gate, keep=keep,
                        num_gaussians=row.get("num_gaussians"),
@@ -238,6 +255,8 @@ def main(argv=None):
         mean_total = sum(r["total_points"] for r in rows) / len(rows)
         mean_clean = sum(r["clean13_total"] for r in rows) / len(rows)
         payload = dict(n=len(rows), recipe=args.recipe, vgg_tail=args.vgg_tail,
+                       realloc_frac=args.realloc_frac, mid_prune=args.mid_prune,
+                       official_adam=bool(args.official_adam),
                        scene_cache=bool(args.scene_cache),
                        mean_total=mean_total, mean_clean13=mean_clean,
                        delta=mean_total - mean_clean,
