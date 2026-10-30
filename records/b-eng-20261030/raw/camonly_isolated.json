@@ -1,0 +1,52 @@
+{
+  "bicycle": {
+    "reps": [
+      {
+        "full_seconds": 2.0995361283421516,
+        "train_only_seconds": 1.622358288615942,
+        "n_test_full": 25,
+        "n_test_train_only": 0
+      },
+      {
+        "full_seconds": 2.1250257566571236,
+        "train_only_seconds": 1.3167557828128338,
+        "n_test_full": 25,
+        "n_test_train_only": 0
+      },
+      {
+        "full_seconds": 1.5663516111671925,
+        "train_only_seconds": 1.315455600619316,
+        "n_test_full": 25,
+        "n_test_train_only": 0
+      }
+    ],
+    "mean_full_seconds": 1.93,
+    "mean_train_only_seconds": 1.418,
+    "mean_saving_seconds": 0.512
+  },
+  "0b5635": {
+    "reps": [
+      {
+        "full_seconds": 3.4141898788511753,
+        "train_only_seconds": 1.4476316943764687,
+        "n_test_full": 48,
+        "n_test_train_only": 0
+      },
+      {
+        "full_seconds": 2.9492286145687103,
+        "train_only_seconds": 1.6103299520909786,
+        "n_test_full": 48,
+        "n_test_train_only": 0
+      },
+      {
+        "full_seconds": 2.6866803392767906,
+        "train_only_seconds": 1.3943996876478195,
+        "n_test_full": 48,
+        "n_test_train_only": 0
+      }
+    ],
+    "mean_full_seconds": 3.017,
+    "mean_train_only_seconds": 1.484,
+    "mean_saving_seconds": 1.533
+  }
+}

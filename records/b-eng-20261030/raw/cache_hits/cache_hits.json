@@ -1,0 +1,28 @@
+[
+  {
+    "case": "mipnerf360/bicycle",
+    "tag": "bicycle",
+    "scene_load_seconds": 0.212,
+    "init_seconds": 0.783,
+    "train_seconds": 22.955,
+    "num_final_gaussians": 974664,
+    "eng": {
+      "train_cameras_only": false,
+      "lean_step": false,
+      "scene_cache": "/root/gpufree-data/outputs/b-eng-20261030/scene_cache/bicycle"
+    }
+  },
+  {
+    "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+    "tag": "0b5635",
+    "scene_load_seconds": 0.241,
+    "init_seconds": 0.646,
+    "train_seconds": 25.801,
+    "num_final_gaussians": 798641,
+    "eng": {
+      "train_cameras_only": false,
+      "lean_step": false,
+      "scene_cache": "/root/gpufree-data/outputs/b-eng-20261030/scene_cache/0b5635"
+    }
+  }
+]

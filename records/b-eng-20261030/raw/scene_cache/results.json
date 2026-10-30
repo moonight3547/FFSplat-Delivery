@@ -1,0 +1,112 @@
+{
+  "bicycle": {
+    "build": {
+      "cache_version": "scene-cache-v1",
+      "seed": 20261015,
+      "work": "/root/gpufree-data/outputs/prep/mipnerf360/bicycle/work",
+      "n_train": 169,
+      "resolution": [
+        576,
+        960
+      ],
+      "cameras_extent": 4.970494747161865,
+      "build_scene_seconds": 2.408,
+      "save_images_seconds": 0.896,
+      "save_cams_seconds": 0.01,
+      "bytes": 280383994,
+      "images_bytes": 280350848,
+      "gpu_images_f32_bytes": 1121402880,
+      "version": "be2e4a48867ea010855045cc47ee2da79b8d9e34182715a6af83db5268396572",
+      "wall_seconds": 5.15
+    },
+    "verify": {
+      "n_train": 169,
+      "images_maxdiff": 5.960464477539063e-08,
+      "wvt_maxdiff": 0.0,
+      "fpt_maxdiff": 0.0,
+      "center_maxdiff": 0.0,
+      "fov_maxdiff": 2.614360683494965e-08,
+      "identical": false,
+      "seed": 20261015,
+      "cached_load_timings": {
+        "read_meta_seconds": 0.0013146325945854187,
+        "open_npy_seconds": 0.0008623525500297546,
+        "h2d_seconds": 0.04157762974500656,
+        "gpu_convert_seconds": 0.004684701561927795,
+        "build_cams_seconds": 0.004539120942354202,
+        "total_seconds": 0.05297843739390373
+      }
+    },
+    "bench": {
+      "reps": 3,
+      "full_seconds": [
+        2.3251,
+        1.7072,
+        1.6624
+      ],
+      "cache_seconds": [
+        0.0659,
+        0.0692,
+        0.0569
+      ],
+      "mean_full": 1.8982,
+      "mean_cache": 0.064,
+      "mean_saving": 1.8342
+    }
+  },
+  "0b5635": {
+    "build": {
+      "cache_version": "scene-cache-v1",
+      "seed": 20261015,
+      "work": "/root/gpufree-data/outputs/curve/dl3dv-0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce/work",
+      "n_train": 333,
+      "resolution": [
+        512,
+        960
+      ],
+      "cameras_extent": 5.463841438293457,
+      "build_scene_seconds": 3.46,
+      "save_images_seconds": 1.559,
+      "save_cams_seconds": 0.017,
+      "bytes": 491095270,
+      "images_bytes": 491028608,
+      "gpu_images_f32_bytes": 1964113920,
+      "version": "4438bcdb4717049dca867442ab04bc942b7db24e5f5e70743b1f542c38d9a688",
+      "wall_seconds": 6.85
+    },
+    "verify": {
+      "n_train": 333,
+      "images_maxdiff": 5.960464477539063e-08,
+      "wvt_maxdiff": 0.0,
+      "fpt_maxdiff": 0.0,
+      "center_maxdiff": 0.0,
+      "fov_maxdiff": 2.9282034796906942e-08,
+      "identical": false,
+      "seed": 20261015,
+      "cached_load_timings": {
+        "read_meta_seconds": 0.0009912513196468353,
+        "open_npy_seconds": 0.0008161813020706177,
+        "h2d_seconds": 0.07354031130671501,
+        "gpu_convert_seconds": 0.0038708969950675964,
+        "build_cams_seconds": 0.007816344499588013,
+        "total_seconds": 0.08703498542308807
+      }
+    },
+    "bench": {
+      "reps": 3,
+      "full_seconds": [
+        3.9315,
+        2.3989,
+        3.119
+      ],
+      "cache_seconds": [
+        0.0982,
+        0.1219,
+        0.0949
+      ],
+      "mean_full": 3.1498,
+      "mean_cache": 0.105,
+      "mean_saving": 3.0448
+    }
+  }
+}

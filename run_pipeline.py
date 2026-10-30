@@ -101,11 +101,26 @@ def main(argv=None):
                              "measured with 0.15 single-shot, so 15%% is the default")
     parser.add_argument("--b-iterations", type=int, default=5000, dest="b_iterations",
                         help="module-B optimizer steps (matched-LR recipe; measured sweet spot)")
+    parser.add_argument("--b-recipe", choices=("delivery", "bigd2500"), default="delivery",
+                        dest="b_recipe",
+                        help="delivery = 500->S/4 densification; bigd2500 = Codex's "
+                             "500->S/2 window, interval 100 and native grad_abs_thresh "
+                             "0.0008 (19 events at S=5000). The default remains the "
+                             "measured delivery recipe until a full 13-case validation.")
+    parser.add_argument("--vgg-tail", type=int, default=0, choices=(0, 100, 200),
+                        dest="vgg_tail",
+                        help="full-resolution VGG-LPIPS weight 0.1 in the LAST N of the "
+                             "same B iterations (not a post-S continuation): 100 => 4901-5000, "
+                             "200 => 4801-5000 at S=5000")
     parser.add_argument("--b-fraction", type=float, default=0.5,
                         help="hard safety cap: module-B wall clock as a fraction of the budget")
     parser.add_argument("--num-refine", type=int, default=2)
     parser.add_argument("--context-policy", default="uniform", choices=["uniform"],
                         help="16-view policy; uniform is the organizer baseline")
+    parser.add_argument("--scene-cache", action="store_true", dest="scene_cache",
+                        help="build/consume the A-side tensor scene cache (user-approved "
+                             "data residency): one B-side upload, no PNG/PIL/camera-matrix "
+                             "recomputation. Default off preserves the measured recipe.")
     # ---- optional M1 mid-training prune, gated pre-module-B on TRAIN views only.
     # See records/M1-GATE-20261030.md.  Default off so the measured 51.153
     # delivery recipe stays the default and reproducible.
@@ -141,8 +156,9 @@ def main(argv=None):
     logs = out / "logs"
     identity = dict(scene=str(args.scene.resolve()), group=group, checkpoint=args.checkpoint,
                     num_refine=args.num_refine, b_iterations=args.b_iterations,
+                    b_recipe=args.b_recipe, vgg_tail=args.vgg_tail,
                     b_fraction=args.b_fraction,
-                    context_policy=args.context_policy,
+                    context_policy=args.context_policy, scene_cache=args.scene_cache,
                     mid_prune=args.mid_prune, mid_prune_tau=args.mid_prune_tau,
                     mid_prune_keep=args.mid_prune_keep,
                     git_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO,
@@ -185,6 +201,11 @@ def main(argv=None):
     cache_dir = work / "image_cache"
     runner.run("image_cache", runner.conda(
         "fastgs", "-m", "research.image_cache", "--work", work, "--out", cache_dir), logs)
+    scene_cache_dir = work / "scene_tensor_cache"
+    if args.scene_cache:
+        runner.run("scene_tensor_cache", runner.conda(
+            "fastgs", "-m", "research.scene_cache", "build",
+            "--work", work, "--out", scene_cache_dir), logs)
 
     # ---- module B init ------------------------------------------------------
     # Matched 3-case A/B (research/experiments/init_ab3.sh): the raw ReSplat PLY
@@ -219,6 +240,16 @@ def main(argv=None):
     # long one because the default 30k schedule barely decays inside 4k steps.
     # --limit_seconds is only a validity safety net, not the normal stop condition.
     b_limit = args.b_fraction * budget
+    if args.b_recipe == "bigd2500":
+        recipe_flags = ["--densify_until_iter", str(max(1, args.b_iterations // 2)),
+                        "--densification_interval", "100",
+                        "--grad_abs_thresh", "0.0008"]
+    else:
+        recipe_flags = ["--densify_until_iter", str(max(1, args.b_iterations // 4))]
+    if args.vgg_tail:
+        recipe_flags += ["--lpips_weight", "0.1", "--lpips_scale", "1.0",
+                         "--lpips_start", str(args.b_iterations - args.vgg_tail + 1),
+                         "--lpips_end", str(args.b_iterations)]
     runner.run("module_b", runner.conda(
         "fastgs", "-m", "research.train_sweep", "--source", work, "--model_path", results / "module_b",
         "--eval", "-r", "1", "--sh_degree", "3", "--quiet",
@@ -226,12 +257,10 @@ def main(argv=None):
         "--iterations", args.b_iterations,
         "--position_lr_max_steps", args.b_iterations,
         "--opacity_reset_interval", "0",
-        # Step-matched structural schedule, identical to the 13-scene Pareto sweep
-        # (records/pareto-20261030/run_sweep_pareto.py): densify starts at S//10 and
-        # stops, like realloc, at S//4. At the 5000-step default this is exactly the
-        # measured delivery recipe (500 -> 1250, realloc at 1250).
+        # Densify always starts at S//10.  `delivery` stops at S//4;
+        # `bigd2500` extends the window to S//2 with the Codex native threshold.
         "--densify_from_iter", max(20, args.b_iterations // 10),
-        "--densify_until_iter", max(1, args.b_iterations // 4),
+        *recipe_flags,
         "--lambda_dssim", "0.6", "--scaling_lr", "0.01",
         "--realloc_frac", str(args.realloc_frac),
         # ONE shot at the end of the structural window (module-B steps // 4). This is the
@@ -243,6 +272,7 @@ def main(argv=None):
         "--realloc_at", str(max(1, args.b_iterations // 4)),
         "--image_cache", str(cache_dir),
         "--limit_seconds", b_limit, "--record", results / "module_b/train_record.json")
+        + (["--scene_cache", str(scene_cache_dir)] if args.scene_cache else [])
         + (["--mid_prune_at", str(max(1, args.b_iterations // 4)),
             "--mid_prune_keep", str(mid_prune["keep"])]
            if mid_prune["fired"] else []), logs)

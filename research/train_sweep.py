@@ -134,6 +134,21 @@ def main(argv=None):
                         help="restore the per-step loss.item() sync (for the P0-2 A/B)")
     parser.add_argument("--no_quick_test", action="store_true",
                         help="skip the diagnostic PSNR pass (the official eval follows)")
+    # ---- module-B engineering audit prototypes (default off; phase-1 math identical).
+    parser.add_argument("--scene_cache", type=str, default=None,
+                        help="path to an A-side scene tensor cache (research.scene_cache): "
+                             "replaces the PNG/PIL scene load with one uint8 H->D upload + one "
+                             "GPU convert; camera tensors are copied from the cache. Default "
+                             "off; user-approved data residency (see B-ENGINEERING-20261030.md)")
+    parser.add_argument("--train_cameras_only", action="store_true",
+                        help="do not load/convert TEST cameras during module B: they are "
+                             "only used by the post-training diagnostic PSNR pass, never by "
+                             "optimization, but Scene converts their images to GPU inside B. "
+                             "Implies quick_test_psnr=None.")
+    parser.add_argument("--lean_step", action="store_true",
+                        help="pure per-step eliminations: drop the no-op .cuda() on the "
+                             "GPU-resident GT, hoist the realloc_at parse, index-based camera "
+                             "sampling (same RNG stream => bit-identical training)")
     parser.add_argument("--image_cache", type=str, default=None,
                         help="pre-decoded uint8 image cache dir (research.image_cache)")
     parser.add_argument("--limit_seconds", type=float, default=None,
@@ -146,6 +161,10 @@ def main(argv=None):
                         help="apply the perceptual term every N iterations")
     parser.add_argument("--lpips_scale", type=float, default=0.5,
                         help="downscale factor for the perceptual term (1.0 = full res)")
+    parser.add_argument("--lpips_start", type=int, default=1,
+                        help="first iteration applying --lpips_weight (Codex VGG100: 4901)")
+    parser.add_argument("--lpips_end", type=int, default=10**9,
+                        help="last iteration applying --lpips_weight (inclusive)")
     # ---- optional staged continuation after the phase-1 delivery run (~S=5000).
     # Defaults keep phase 1 byte-identical to the delivery recipe; the stages only
     # run when the caller opts in.  See records/STAGED-LOSS-20261030.md.
@@ -285,9 +304,41 @@ def main(argv=None):
     cuts = [float(x) for x in args.res_until.split(",") if x.strip()]
     if len(cuts) != len(scales) - 1:
         raise SystemExit("--res_until needs one cut per resolution transition")
-    t0 = time.perf_counter()
-    scene = Scene(dataset, gaussians, resolution_scales=scales)
-    scene_load_s = time.perf_counter() - t0
+    if args.scene_cache:
+        from .scene_cache import load as _load_scene_cache
+        t0 = time.perf_counter()
+        scene = _load_scene_cache(dataset.source_path, args.scene_cache,
+                                  want_test=not args.no_quick_test)
+        torch.cuda.synchronize() if torch.cuda.is_available() else None
+        scene_load_s = time.perf_counter() - t0
+        print(f"[sweep] scene_cache load {scene_load_s:.3f}s "
+              f"timings={getattr(scene, 'load_timings', None)}")
+    elif args.train_cameras_only:
+        # Test cameras/images are loaded and converted to GPU by Scene but are only
+        # used by the diagnostic quick_test after training; strip them before Scene
+        # so their conversion cost leaves module B. Pure elimination (class A):
+        # optimization never touches test cameras.
+        import scene.dataset_readers as _readers
+
+        def _make_no_test(_orig):
+            def _no_test(*_a, **_k):
+                _info = _orig(*_a, **_k)
+                try:
+                    return _info._replace(test_cameras=[])
+                except Exception:  # pragma: no cover
+                    return _info
+            return _no_test
+
+        for _key in ("Colmap", "Blender"):
+            _orig = _readers.sceneLoadTypeCallbacks.get(_key)
+            if _orig is None:
+                continue
+            _readers.sceneLoadTypeCallbacks[_key] = _make_no_test(_orig)
+        print("[sweep] train_cameras_only: test cameras will not be loaded")
+    if not args.scene_cache:
+        t0 = time.perf_counter()
+        scene = Scene(dataset, gaussians, resolution_scales=scales)
+        scene_load_s = time.perf_counter() - t0
 
     t0 = time.perf_counter()
     if args.init_ply:
@@ -525,11 +576,14 @@ def main(argv=None):
             or args.normal_weight > 0.0):
         shape_stats.append(_shape_stats(0))
     depth_reg_events = []
+    # pure elimination: this string parse used to run on EVERY iteration
+    _realloc_ats = [int(x) for x in str(args.realloc_at).split(",") if str(x).strip()]
 
     state = dict(scale=None, stack=[], indices=[])
     ema_loss = 0.0
     residual_map = None
     prune_events = []
+    densification_events = []
 
     t_train0 = time.perf_counter()
     stop_reason = "iterations"
@@ -554,14 +608,23 @@ def main(argv=None):
         scale = scale_for(iteration)
         if scale != state["scale"]:
             state["scale"] = scale
-            state["stack"] = cams_by_scale[scale].copy()
+            state["stack"] = (cams_by_scale[scale] if args.lean_step
+                              else cams_by_scale[scale].copy())
             state["indices"] = list(range(len(state["stack"])))
-        if not state["stack"]:
-            state["stack"] = cams_by_scale[scale].copy()
+        if not state["indices"]:
+            state["stack"] = (cams_by_scale[scale] if args.lean_step
+                              else cams_by_scale[scale].copy())
             state["indices"] = list(range(len(state["stack"])))
-        rand_idx = random.randint(0, len(state["indices"]) - 1)
-        viewpoint_cam = state["stack"].pop(rand_idx)
-        state["indices"].pop(rand_idx)
+        if args.lean_step:
+            # same RNG stream and same sampled-camera sequence as the pop() version,
+            # but without copying the camera list every step
+            _pos = random.randint(0, len(state["indices"]) - 1)
+            viewpoint_cam = state["stack"][state["indices"][_pos]]
+            state["indices"].pop(_pos)
+        else:
+            rand_idx = random.randint(0, len(state["indices"]) - 1)
+            viewpoint_cam = state["stack"].pop(rand_idx)
+            state["indices"].pop(rand_idx)
 
         if args.time_breakdown:
             _sync()
@@ -576,7 +639,8 @@ def main(argv=None):
             _sync()
             timing["render"] += time.perf_counter() - _t
             _t = time.perf_counter()
-        gt_image = viewpoint_cam.original_image.cuda()
+        gt_image = (viewpoint_cam.original_image if args.lean_step
+                    else viewpoint_cam.original_image.cuda())
         Ll1 = l1_loss(image, gt_image)
         if FUSED_SSIM_AVAILABLE:
             ssim_value = fast_ssim(image.unsqueeze(0), gt_image.unsqueeze(0))
@@ -596,7 +660,8 @@ def main(argv=None):
             loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim_value)
         else:
             loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim_value)
-        if perceptual is not None and iteration % args.lpips_every == 0:
+        if (perceptual is not None and args.lpips_start <= iteration <= args.lpips_end
+                and iteration % args.lpips_every == 0):
             render_p, gt_p = image.unsqueeze(0), gt_image.unsqueeze(0)
             if args.lpips_scale != 1.0:
                 size = (max(32, int(round(render_p.shape[2] * args.lpips_scale))),
@@ -649,12 +714,23 @@ def main(argv=None):
                         and iteration % opt.densification_interval == 0):
                     size_threshold = 20 if iteration > opt.opacity_reset_interval else None
                     camlist = sampling_cameras(cams_by_scale[scale].copy())
+                    # Pass the parsed OptimizationParams, not the raw argparse
+                    # container.  Otherwise native densification silently uses the
+                    # declared default grad_abs_thresh and BigD2500's 0.0008 never
+                    # reaches the actual split rule (Codex audit finding).
                     importance_score, pruning_score = compute_gaussian_score_fastgs(
-                        camlist, gaussians, pipe, background, op, DENSIFY=True)
+                        camlist, gaussians, pipe, background, opt, DENSIFY=True)
+                    _n_before = int(gaussians.get_xyz.shape[0])
                     gaussians.densify_and_prune_fastgs(
                         max_screen_size=size_threshold, min_opacity=0.005,
-                        extent=scene.cameras_extent, radii=radii, args=op,
+                        extent=scene.cameras_extent, radii=radii, args=opt,
                         importance_score=importance_score, pruning_score=pruning_score)
+                    densification_events.append(dict(
+                        iteration=iteration, before=_n_before,
+                        after=int(gaussians.get_xyz.shape[0]),
+                        actual_native_parameters={k: getattr(opt, k) for k in
+                            ("mult", "loss_thresh", "grad_abs_thresh",
+                             "grad_thresh", "dense")}))
 
             if not args.no_densify and (
                     iteration % opt.opacity_reset_interval == 0
@@ -681,7 +757,6 @@ def main(argv=None):
             _sync()
             timing["optimizer"] += time.perf_counter() - _t
 
-        _realloc_ats = [int(x) for x in str(args.realloc_at).split(",") if str(x).strip()]
         if args.realloc_frac > 0 and iteration in _realloc_ats:
             # One-shot, budget-preserving reallocation (Taming-3DGS style primitive
             # budget, RLSplat style allocation): retire low-contribution Gaussians and
@@ -1079,13 +1154,16 @@ def main(argv=None):
         stage2_cams=args.stage2_cams, stage2_lr_from=lr_from,
         stage2_lr_final=lr_to, stage3_lpips_weight=args.stage3_lpips_weight,
         prune_keep=args.prune_keep, prune_views=args.prune_views,
+        eng=dict(train_cameras_only=bool(args.train_cameras_only),
+                 lean_step=bool(args.lean_step),
+                 scene_cache=args.scene_cache),
         pgsr=dict(pgsr, shape_stats=shape_stats,
                   shape_stats_every=args.shape_stats_every),
         depth_reg=dict(weight=args.depth_reg_weight, every=args.depth_reg_every,
                        from_iter=args.depth_reg_from, until_iter=args.depth_reg_until,
                        events=depth_reg_events),
         mid_prune_at=args.mid_prune_at, mid_prune_keep=args.mid_prune_keep,
-        prune_events=prune_events,
+        prune_events=prune_events, densification_events=densification_events,
         timing_breakdown=(timing if args.time_breakdown else None),
         iterations_per_second=round(_abs_iter / train_s, 2) if train_s else None,
         quick_test_psnr=round(final_psnr, 4) if final_psnr is not None else None,
@@ -1104,7 +1182,8 @@ def main(argv=None):
                       no_densify=args.no_densify, seed=args.seed,
                       res_scales=scales, res_until=cuts,
                       lpips_weight=args.lpips_weight, lpips_every=args.lpips_every,
-                      lpips_scale=args.lpips_scale,
+                      lpips_scale=args.lpips_scale, lpips_start=args.lpips_start,
+                      lpips_end=args.lpips_end, grad_abs_thresh=opt.grad_abs_thresh,
                       stage2_iters=args.stage2_iters, stage2_cams=args.stage2_cams,
                       stage2_trainer=args.stage2_trainer,
                       stage2_absgrad_every=args.stage2_absgrad_every,

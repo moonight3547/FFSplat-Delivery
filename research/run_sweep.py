@@ -83,6 +83,7 @@ def main(argv=None):
     parser.add_argument("--densify-from", type=int, default=None, dest="densify_from_iter")
     parser.add_argument("--densify-until", type=int, default=None, dest="densify_until_iter")
     parser.add_argument("--densify-interval", type=int, default=None, dest="densification_interval")
+    parser.add_argument("--grad-abs-thresh", type=float, default=None, dest="grad_abs_thresh")
     parser.add_argument("--opacity-reset-interval", type=int, default=None,
                         dest="opacity_reset_interval")
     parser.add_argument("--sh-up-every", type=int, default=None, dest="sh_up_every")
@@ -94,6 +95,8 @@ def main(argv=None):
     parser.add_argument("--lpips-weight", type=float, default=None, dest="lpips_weight")
     parser.add_argument("--lpips-every", type=int, default=None, dest="lpips_every")
     parser.add_argument("--lpips-scale", type=float, default=None, dest="lpips_scale")
+    parser.add_argument("--lpips-start", type=int, default=None, dest="lpips_start")
+    parser.add_argument("--lpips-end", type=int, default=None, dest="lpips_end")
     parser.add_argument("--densify-count-thresh", type=int, default=None,
                         dest="densify_count_thresh")
     parser.add_argument("--max-gaussians", type=int, default=None, dest="max_gaussians")
@@ -117,6 +120,13 @@ def main(argv=None):
     parser.add_argument("--image-cache", default=None, dest="image_cache",
                         help="pre-decoded uint8 image cache dir (module-A artifact)")
     parser.add_argument("--no-densify", action="store_true", dest="no_densify")
+    parser.add_argument("--train-cameras-only", action="store_true",
+                        dest="train_cameras_only",
+                        help="engineering audit: skip loading/converting TEST cameras in B")
+    parser.add_argument("--lean-step", action="store_true", dest="lean_step",
+                        help="engineering audit: pure per-step eliminations")
+    parser.add_argument("--scene-cache", default=None, dest="scene_cache",
+                        help="A-side scene tensor cache dir (research.scene_cache)")
     # ---- staged post-S continuation pass-through (optional; see train_sweep.py)
     parser.add_argument("--stage2-iters", type=int, default=None, dest="stage2_iters")
     parser.add_argument("--stage2-cams", type=int, default=None, dest="stage2_cams")
@@ -187,6 +197,7 @@ def main(argv=None):
         "--densify_from_iter": args.densify_from_iter,
         "--densify_until_iter": args.densify_until_iter,
         "--densification_interval": args.densification_interval,
+        "--grad_abs_thresh": args.grad_abs_thresh,
         "--opacity_reset_interval": args.opacity_reset_interval,
         "--sh_up_every": args.sh_up_every,
         "--mult": args.mult,
@@ -198,6 +209,8 @@ def main(argv=None):
         "--lpips_weight": args.lpips_weight,
         "--lpips_every": args.lpips_every,
         "--lpips_scale": args.lpips_scale,
+        "--lpips_start": args.lpips_start,
+        "--lpips_end": args.lpips_end,
         "--densify_count_thresh": args.densify_count_thresh,
         "--max_gaussians": args.max_gaussians,
         "--image_cache": args.image_cache,
@@ -234,6 +247,12 @@ def main(argv=None):
             train_argv.extend([flag, str(value)])
     if args.no_densify:
         train_argv.append("--no_densify")
+    if args.train_cameras_only:
+        train_argv.append("--train_cameras_only")
+    if args.lean_step:
+        train_argv.append("--lean_step")
+    if args.scene_cache:
+        train_argv.extend(["--scene_cache", args.scene_cache])
     if args.residual_weight > 0:
         train_argv += ["--residual_weight", str(args.residual_weight)]
     if args.max_sh_degree < 3:
