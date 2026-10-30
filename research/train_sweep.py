@@ -114,6 +114,8 @@ def main(argv=None):
                         help="optimise only the SH/colour parameters (position, scale, "
                              "rotation and opacity frozen); tests how much of the 5k gain "
                              "is appearance rather than geometry")
+    parser.add_argument("--fused_adam", action="store_true",
+                        help="rebuild the per-Gaussian optimizers with fused=True")
     parser.add_argument("--legacy_sync", action="store_true",
                         help="restore the per-step loss.item() sync (for the P0-2 A/B)")
     parser.add_argument("--no_quick_test", action="store_true",
@@ -226,6 +228,22 @@ def main(argv=None):
     else:
         raise SystemExit("either --init_ply or --init_random is required")
     n_init = int(gaussians.get_xyz.shape[0])
+    if args.fused_adam:
+        rebuilt = []
+        for name in ("optimizer", "shoptimizer"):
+            opt = getattr(gaussians, name, None)
+            if opt is not None:
+                groups = opt.param_groups
+                cls = type(opt)
+                base = torch.optim.Adam
+                try:
+                    new_opt = base(groups, lr=0.0, eps=1e-15, fused=True)
+                except (TypeError, RuntimeError) as error:
+                    print(f"[fused] {name} not fused: {error}")
+                    continue
+                setattr(gaussians, name, new_opt)
+                rebuilt.append(name)
+        print(f"[fused] rebuilt {', '.join(rebuilt) or 'nothing'}")
     if args.freeze_geometry:
         frozen = []
         for name in ("_xyz", "_scaling", "_rotation", "_opacity"):

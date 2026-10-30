@@ -104,6 +104,7 @@ def main(argv=None):
                         help="optimizer step-frequency schedule, e.g. '2500:2'")
     parser.add_argument("--realloc-frac", type=float, default=0.0, dest="realloc_frac")
     parser.add_argument("--realloc-at", type=int, default=1250, dest="realloc_at")
+    parser.add_argument("--fused-adam", action="store_true", dest="fused_adam")
     parser.add_argument("--legacy-sync", action="store_true", dest="legacy_sync")
     parser.add_argument("--freeze-geometry", action="store_true", dest="freeze_geometry")
     parser.add_argument("--no-quick-test", action="store_true", dest="no_quick_test")
@@ -169,6 +170,8 @@ def main(argv=None):
             train_argv.extend([flag, str(value)])
     if args.no_densify:
         train_argv.append("--no_densify")
+    if args.fused_adam:
+        train_argv.append("--fused_adam")
     if args.legacy_sync:
         train_argv.append("--legacy_sync")
     if args.freeze_geometry:
