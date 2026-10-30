@@ -94,6 +94,10 @@ def main(argv=None):
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--budget-seconds", type=float, default=None,
                         help="skip the 30K reference and use this budget (grading-machine value)")
+    parser.add_argument("--realloc-frac", type=float, default=0.0, dest="realloc_frac",
+                        help="budget-preserving reallocation ratio; 0.15 measured +0.8..+2.8 "
+                             "quality on six scenes but its module-B time effect is still "
+                             "under paired measurement, so the default stays off")
     parser.add_argument("--b-iterations", type=int, default=5000, dest="b_iterations",
                         help="module-B optimizer steps (matched-LR recipe; measured sweet spot)")
     parser.add_argument("--b-fraction", type=float, default=0.5,
@@ -182,10 +186,8 @@ def main(argv=None):
         # three cases (see records/SUMMARY.md, campaign P)
         "--densify_until_iter", max(1, args.b_iterations // 4),
         "--lambda_dssim", "0.6", "--scaling_lr", "0.01",
-        # one-shot budget-preserving reallocation at the end of the structural phase:
-        # retire the lowest-contribution 15% and split the highest-residual ones.
-        # Measured +0.8..+2.8 on six scenes while module-B time also drops.
-        "--realloc_frac", "0.15", "--realloc_at", str(max(1, args.b_iterations // 4)),
+        "--realloc_frac", str(args.realloc_frac),
+        "--realloc_at", str(max(1, args.b_iterations // 4)),
         "--image_cache", str(cache_dir),
         "--limit_seconds", b_limit, "--record", results / "module_b/train_record.json"), logs)
     record = read(results / "module_b/train_record.json")
