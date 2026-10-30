@@ -49,13 +49,13 @@ fastgs -m research.image_cache --work "$d/work" --out "$d/cache" >/dev/null 2>&1
 
 score_curve(){  # dir snapdir
   local dd="$1" sd="$2" args=""
-  for p in $(ls "$sd"/*.ply 2>/dev/null | sort); do
+  for p in $(find "$dd" -name "snap_*.ply" 2>/dev/null | sort); do
     n=$(basename "$p" .ply | sed 's/snap_//; s/s$//')
     args="$args --ply $p --name $n"
   done
   [ -n "$args" ] && fastgs -m research.curve_metrics \
     --source "$d/work" --out "$dd/curve.json" $args > "$dd/metrics.log" 2>&1
-  if [ -f "$dd/curve.json" ]; then rm -rf "$sd"/*.ply 2>/dev/null; fi
+  if [ -f "$dd/curve.json" ]; then find "$dd" -name "snap_*.ply" -delete 2>/dev/null; fi
 }
 run_fastgs(){
   [ -f "$d/fastgs/curve.json" ] && return; rm -rf "$d/fastgs"; mkdir -p "$d/fastgs/snaps"
