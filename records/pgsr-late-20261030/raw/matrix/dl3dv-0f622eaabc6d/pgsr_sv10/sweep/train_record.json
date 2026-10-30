@@ -1,0 +1,805 @@
+{
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/curve/dl3dv-0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e/resplat/resplat_world.ply",
+  "init_mode": "ply:resplat_world.ply",
+  "num_init_gaussians": 476635,
+  "num_final_gaussians": 878711,
+  "iterations": 5000,
+  "completed_iterations": 5000,
+  "stop_reason": "iterations",
+  "final_ply": "/root/gpufree-data/outputs/pgsr-late-20261030/matrix/dl3dv-0f622eaabc6d/pgsr_sv10/sweep/model/point_cloud/iteration_5000/point_cloud.ply",
+  "limit_seconds": null,
+  "snapshots": [
+    {
+      "iteration": 5000,
+      "train_seconds": 29.8266957141459,
+      "num_gaussians": 878711,
+      "ply": "/root/gpufree-data/outputs/pgsr-late-20261030/matrix/dl3dv-0f622eaabc6d/pgsr_sv10/sweep/snaps/iter05000.ply"
+    }
+  ],
+  "scene_load_seconds": 3.102,
+  "init_seconds": 0.724,
+  "train_seconds": 36.299,
+  "total_seconds": 45.731,
+  "stage1_seconds": 36.299,
+  "stage2_seconds": 0.0,
+  "stage3_seconds": 0.0,
+  "stage1_iterations": 5000,
+  "stage2_iterations": 0,
+  "stage3_iterations": 0,
+  "total_iterations": 5000,
+  "stage2_trainer": "standard",
+  "stage2_cams": 1,
+  "stage2_lr_from": null,
+  "stage2_lr_final": null,
+  "stage3_lpips_weight": 0.0,
+  "prune_keep": 1.0,
+  "prune_views": 24,
+  "pgsr": {
+    "planar_weight": 0.0,
+    "normal_weight": 0.0,
+    "normal_from": 1250,
+    "normal_rebuild": null,
+    "shape_stats": [],
+    "shape_stats_every": 0
+  },
+  "depth_reg": {
+    "weight": 0.2,
+    "every": 10,
+    "from_iter": 4000,
+    "until_iter": 5000,
+    "events": [
+      {
+        "iteration": 4000,
+        "seconds": 0.4705,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.4384989738464355,
+        "normal_cos_mean": 0.34542104601860046
+      },
+      {
+        "iteration": 4010,
+        "seconds": 0.0028,
+        "valid_fraction": 0.9999878406524658,
+        "depth_mean": 4.811764240264893,
+        "normal_cos_mean": 0.3272317349910736
+      },
+      {
+        "iteration": 4020,
+        "seconds": 0.0031,
+        "valid_fraction": 0.9999593496322632,
+        "depth_mean": 4.170046329498291,
+        "normal_cos_mean": 0.3456631004810333
+      },
+      {
+        "iteration": 4030,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9999960064888,
+        "depth_mean": 4.239028453826904,
+        "normal_cos_mean": 0.3021542727947235
+      },
+      {
+        "iteration": 4040,
+        "seconds": 0.0026,
+        "valid_fraction": 0.9999613761901855,
+        "depth_mean": 4.349079608917236,
+        "normal_cos_mean": 0.3245340883731842
+      },
+      {
+        "iteration": 4050,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9998718500137329,
+        "depth_mean": 4.566870212554932,
+        "normal_cos_mean": 0.3201789855957031
+      },
+      {
+        "iteration": 4060,
+        "seconds": 0.0024,
+        "valid_fraction": 0.9999939203262329,
+        "depth_mean": 4.1537251472473145,
+        "normal_cos_mean": 0.3409154713153839
+      },
+      {
+        "iteration": 4070,
+        "seconds": 0.0025,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.205456256866455,
+        "normal_cos_mean": 0.3445446789264679
+      },
+      {
+        "iteration": 4080,
+        "seconds": 0.0025,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.198845386505127,
+        "normal_cos_mean": 0.36182817816734314
+      },
+      {
+        "iteration": 4090,
+        "seconds": 0.0028,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.336246013641357,
+        "normal_cos_mean": 0.3874574303627014
+      },
+      {
+        "iteration": 4100,
+        "seconds": 0.0024,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.032229900360107,
+        "normal_cos_mean": 0.3218267560005188
+      },
+      {
+        "iteration": 4110,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9999227523803711,
+        "depth_mean": 4.72755765914917,
+        "normal_cos_mean": 0.3466411828994751
+      },
+      {
+        "iteration": 4120,
+        "seconds": 0.0029,
+        "valid_fraction": 0.9996338486671448,
+        "depth_mean": 3.9594051837921143,
+        "normal_cos_mean": 0.3589123785495758
+      },
+      {
+        "iteration": 4130,
+        "seconds": 0.0033,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.766046524047852,
+        "normal_cos_mean": 0.3618651330471039
+      },
+      {
+        "iteration": 4140,
+        "seconds": 0.0026,
+        "valid_fraction": 0.999965488910675,
+        "depth_mean": 4.516515254974365,
+        "normal_cos_mean": 0.3309040069580078
+      },
+      {
+        "iteration": 4150,
+        "seconds": 0.0031,
+        "valid_fraction": 0.9998718500137329,
+        "depth_mean": 4.732485294342041,
+        "normal_cos_mean": 0.38028189539909363
+      },
+      {
+        "iteration": 4160,
+        "seconds": 0.0027,
+        "valid_fraction": 0.9999288320541382,
+        "depth_mean": 3.8802361488342285,
+        "normal_cos_mean": 0.34042811393737793
+      },
+      {
+        "iteration": 4170,
+        "seconds": 0.0027,
+        "valid_fraction": 0.9999735951423645,
+        "depth_mean": 4.789480686187744,
+        "normal_cos_mean": 0.3548891246318817
+      },
+      {
+        "iteration": 4180,
+        "seconds": 0.0029,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.273493766784668,
+        "normal_cos_mean": 0.37776073813438416
+      },
+      {
+        "iteration": 4190,
+        "seconds": 0.0026,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.243638038635254,
+        "normal_cos_mean": 0.4000934958457947
+      },
+      {
+        "iteration": 4200,
+        "seconds": 0.0028,
+        "valid_fraction": 0.9998677968978882,
+        "depth_mean": 4.683924674987793,
+        "normal_cos_mean": 0.36846819519996643
+      },
+      {
+        "iteration": 4210,
+        "seconds": 0.003,
+        "valid_fraction": 0.9998800158500671,
+        "depth_mean": 3.9692037105560303,
+        "normal_cos_mean": 0.3799611032009125
+      },
+      {
+        "iteration": 4220,
+        "seconds": 0.0029,
+        "valid_fraction": 0.9999125599861145,
+        "depth_mean": 4.3645710945129395,
+        "normal_cos_mean": 0.40427857637405396
+      },
+      {
+        "iteration": 4230,
+        "seconds": 0.003,
+        "valid_fraction": 0.9995870590209961,
+        "depth_mean": 4.540781497955322,
+        "normal_cos_mean": 0.4081551134586334
+      },
+      {
+        "iteration": 4240,
+        "seconds": 0.003,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.742157936096191,
+        "normal_cos_mean": 0.3869679272174835
+      },
+      {
+        "iteration": 4250,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9999797344207764,
+        "depth_mean": 4.238455295562744,
+        "normal_cos_mean": 0.36922380328178406
+      },
+      {
+        "iteration": 4260,
+        "seconds": 0.0026,
+        "valid_fraction": 0.9999308586120605,
+        "depth_mean": 4.583943843841553,
+        "normal_cos_mean": 0.3516009449958801
+      },
+      {
+        "iteration": 4270,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9999878406524658,
+        "depth_mean": 4.523721694946289,
+        "normal_cos_mean": 0.3791457414627075
+      },
+      {
+        "iteration": 4280,
+        "seconds": 0.0031,
+        "valid_fraction": 0.9999980330467224,
+        "depth_mean": 4.049620151519775,
+        "normal_cos_mean": 0.39678964018821716
+      },
+      {
+        "iteration": 4290,
+        "seconds": 0.003,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.772684097290039,
+        "normal_cos_mean": 0.4010406732559204
+      },
+      {
+        "iteration": 4300,
+        "seconds": 0.0027,
+        "valid_fraction": 1.0,
+        "depth_mean": 3.797508955001831,
+        "normal_cos_mean": 0.3903895318508148
+      },
+      {
+        "iteration": 4310,
+        "seconds": 0.003,
+        "valid_fraction": 0.9997904896736145,
+        "depth_mean": 4.449841499328613,
+        "normal_cos_mean": 0.4178061783313751
+      },
+      {
+        "iteration": 4320,
+        "seconds": 0.0032,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.56782865524292,
+        "normal_cos_mean": 0.36783868074417114
+      },
+      {
+        "iteration": 4330,
+        "seconds": 0.0027,
+        "valid_fraction": 0.9999552965164185,
+        "depth_mean": 4.709842205047607,
+        "normal_cos_mean": 0.3948090076446533
+      },
+      {
+        "iteration": 4340,
+        "seconds": 0.0026,
+        "valid_fraction": 0.9999369978904724,
+        "depth_mean": 4.538990020751953,
+        "normal_cos_mean": 0.3275258243083954
+      },
+      {
+        "iteration": 4350,
+        "seconds": 0.0031,
+        "valid_fraction": 0.9999552965164185,
+        "depth_mean": 3.5963661670684814,
+        "normal_cos_mean": 0.37901514768600464
+      },
+      {
+        "iteration": 4360,
+        "seconds": 0.0031,
+        "valid_fraction": 0.9999735951423645,
+        "depth_mean": 3.8971524238586426,
+        "normal_cos_mean": 0.4087003171443939
+      },
+      {
+        "iteration": 4370,
+        "seconds": 0.0031,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.764743328094482,
+        "normal_cos_mean": 0.4189835786819458
+      },
+      {
+        "iteration": 4380,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9999145865440369,
+        "depth_mean": 4.128289699554443,
+        "normal_cos_mean": 0.39043620228767395
+      },
+      {
+        "iteration": 4390,
+        "seconds": 0.0028,
+        "valid_fraction": 0.9999960064888,
+        "depth_mean": 4.418029308319092,
+        "normal_cos_mean": 0.4256218373775482
+      },
+      {
+        "iteration": 4400,
+        "seconds": 0.0025,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.231794834136963,
+        "normal_cos_mean": 0.354294091463089
+      },
+      {
+        "iteration": 4410,
+        "seconds": 0.0026,
+        "valid_fraction": 0.9999980330467224,
+        "depth_mean": 4.493991374969482,
+        "normal_cos_mean": 0.39667263627052307
+      },
+      {
+        "iteration": 4420,
+        "seconds": 0.0032,
+        "valid_fraction": 0.9999328851699829,
+        "depth_mean": 3.7861063480377197,
+        "normal_cos_mean": 0.4146720767021179
+      },
+      {
+        "iteration": 4430,
+        "seconds": 0.0029,
+        "valid_fraction": 0.9999960064888,
+        "depth_mean": 4.2925286293029785,
+        "normal_cos_mean": 0.41864025592803955
+      },
+      {
+        "iteration": 4440,
+        "seconds": 0.0028,
+        "valid_fraction": 0.9999980330467224,
+        "depth_mean": 3.8928592205047607,
+        "normal_cos_mean": 0.40590763092041016
+      },
+      {
+        "iteration": 4450,
+        "seconds": 0.0026,
+        "valid_fraction": 0.9999085068702698,
+        "depth_mean": 4.045475959777832,
+        "normal_cos_mean": 0.39751750230789185
+      },
+      {
+        "iteration": 4460,
+        "seconds": 0.0032,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.759057998657227,
+        "normal_cos_mean": 0.4329743981361389
+      },
+      {
+        "iteration": 4470,
+        "seconds": 0.0024,
+        "valid_fraction": 0.9999634027481079,
+        "depth_mean": 4.799350261688232,
+        "normal_cos_mean": 0.3711426556110382
+      },
+      {
+        "iteration": 4480,
+        "seconds": 0.0031,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.658654689788818,
+        "normal_cos_mean": 0.3986726701259613
+      },
+      {
+        "iteration": 4490,
+        "seconds": 0.0028,
+        "valid_fraction": 1.0,
+        "depth_mean": 3.9575774669647217,
+        "normal_cos_mean": 0.4070664942264557
+      },
+      {
+        "iteration": 4500,
+        "seconds": 0.003,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.375025272369385,
+        "normal_cos_mean": 0.4480932056903839
+      },
+      {
+        "iteration": 4510,
+        "seconds": 0.0028,
+        "valid_fraction": 0.9999288320541382,
+        "depth_mean": 4.385653495788574,
+        "normal_cos_mean": 0.4340903162956238
+      },
+      {
+        "iteration": 4520,
+        "seconds": 0.0026,
+        "valid_fraction": 0.9999776482582092,
+        "depth_mean": 4.566556453704834,
+        "normal_cos_mean": 0.3983771800994873
+      },
+      {
+        "iteration": 4530,
+        "seconds": 0.0026,
+        "valid_fraction": 0.9999023675918579,
+        "depth_mean": 4.160841464996338,
+        "normal_cos_mean": 0.4077422320842743
+      },
+      {
+        "iteration": 4540,
+        "seconds": 0.0025,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.041433811187744,
+        "normal_cos_mean": 0.37419161200523376
+      },
+      {
+        "iteration": 4550,
+        "seconds": 0.0027,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.084376335144043,
+        "normal_cos_mean": 0.36956533789634705
+      },
+      {
+        "iteration": 4560,
+        "seconds": 0.003,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.388854503631592,
+        "normal_cos_mean": 0.45425233244895935
+      },
+      {
+        "iteration": 4570,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9999512434005737,
+        "depth_mean": 4.757569313049316,
+        "normal_cos_mean": 0.38440823554992676
+      },
+      {
+        "iteration": 4580,
+        "seconds": 0.0028,
+        "valid_fraction": 0.9999552965164185,
+        "depth_mean": 4.360235691070557,
+        "normal_cos_mean": 0.42941921949386597
+      },
+      {
+        "iteration": 4590,
+        "seconds": 0.0029,
+        "valid_fraction": 0.9999675154685974,
+        "depth_mean": 3.8717305660247803,
+        "normal_cos_mean": 0.41014018654823303
+      },
+      {
+        "iteration": 4600,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9999573230743408,
+        "depth_mean": 4.13191556930542,
+        "normal_cos_mean": 0.420898973941803
+      },
+      {
+        "iteration": 4610,
+        "seconds": 0.0025,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.202633380889893,
+        "normal_cos_mean": 0.3922956883907318
+      },
+      {
+        "iteration": 4620,
+        "seconds": 0.0029,
+        "valid_fraction": 0.9999308586120605,
+        "depth_mean": 4.407529830932617,
+        "normal_cos_mean": 0.46353578567504883
+      },
+      {
+        "iteration": 4630,
+        "seconds": 0.0033,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.556270122528076,
+        "normal_cos_mean": 0.4017305076122284
+      },
+      {
+        "iteration": 4640,
+        "seconds": 0.0027,
+        "valid_fraction": 1.0,
+        "depth_mean": 3.7865169048309326,
+        "normal_cos_mean": 0.44887158274650574
+      },
+      {
+        "iteration": 4650,
+        "seconds": 0.0026,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.020946502685547,
+        "normal_cos_mean": 0.45766133069992065
+      },
+      {
+        "iteration": 4660,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9999837875366211,
+        "depth_mean": 4.046206951141357,
+        "normal_cos_mean": 0.3895719051361084
+      },
+      {
+        "iteration": 4670,
+        "seconds": 0.0031,
+        "valid_fraction": 0.9999613761901855,
+        "depth_mean": 4.014342308044434,
+        "normal_cos_mean": 0.4513930678367615
+      },
+      {
+        "iteration": 4680,
+        "seconds": 0.0028,
+        "valid_fraction": 0.9999776482582092,
+        "depth_mean": 4.469821929931641,
+        "normal_cos_mean": 0.4739489257335663
+      },
+      {
+        "iteration": 4690,
+        "seconds": 0.0029,
+        "valid_fraction": 0.9997050762176514,
+        "depth_mean": 3.954430341720581,
+        "normal_cos_mean": 0.4619749188423157
+      },
+      {
+        "iteration": 4700,
+        "seconds": 0.0031,
+        "valid_fraction": 0.9999817609786987,
+        "depth_mean": 3.8546688556671143,
+        "normal_cos_mean": 0.4449850916862488
+      },
+      {
+        "iteration": 4710,
+        "seconds": 0.0031,
+        "valid_fraction": 0.9999817609786987,
+        "depth_mean": 3.1499063968658447,
+        "normal_cos_mean": 0.4408129155635834
+      },
+      {
+        "iteration": 4720,
+        "seconds": 0.003,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.183074951171875,
+        "normal_cos_mean": 0.44446998834609985
+      },
+      {
+        "iteration": 4730,
+        "seconds": 0.003,
+        "valid_fraction": 0.9996440410614014,
+        "depth_mean": 4.623584747314453,
+        "normal_cos_mean": 0.48597481846809387
+      },
+      {
+        "iteration": 4740,
+        "seconds": 0.0026,
+        "valid_fraction": 0.9998902082443237,
+        "depth_mean": 4.582142353057861,
+        "normal_cos_mean": 0.3933364152908325
+      },
+      {
+        "iteration": 4750,
+        "seconds": 0.0031,
+        "valid_fraction": 1.0,
+        "depth_mean": 3.3301947116851807,
+        "normal_cos_mean": 0.4829220175743103
+      },
+      {
+        "iteration": 4760,
+        "seconds": 0.0026,
+        "valid_fraction": 0.9999451041221619,
+        "depth_mean": 4.584739685058594,
+        "normal_cos_mean": 0.4226837754249573
+      },
+      {
+        "iteration": 4770,
+        "seconds": 0.0032,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.643508434295654,
+        "normal_cos_mean": 0.42312389612197876
+      },
+      {
+        "iteration": 4780,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9999776482582092,
+        "depth_mean": 4.285810947418213,
+        "normal_cos_mean": 0.40986207127571106
+      },
+      {
+        "iteration": 4790,
+        "seconds": 0.0026,
+        "valid_fraction": 0.9999980330467224,
+        "depth_mean": 4.459305763244629,
+        "normal_cos_mean": 0.4328194856643677
+      },
+      {
+        "iteration": 4800,
+        "seconds": 0.003,
+        "valid_fraction": 0.9999797344207764,
+        "depth_mean": 3.3597166538238525,
+        "normal_cos_mean": 0.5064888596534729
+      },
+      {
+        "iteration": 4810,
+        "seconds": 0.003,
+        "valid_fraction": 0.9999939203262329,
+        "depth_mean": 4.708108901977539,
+        "normal_cos_mean": 0.4611080288887024
+      },
+      {
+        "iteration": 4820,
+        "seconds": 0.0028,
+        "valid_fraction": 0.9999227523803711,
+        "depth_mean": 4.37347412109375,
+        "normal_cos_mean": 0.480587899684906
+      },
+      {
+        "iteration": 4830,
+        "seconds": 0.0025,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.026703834533691,
+        "normal_cos_mean": 0.38065779209136963
+      },
+      {
+        "iteration": 4840,
+        "seconds": 0.0027,
+        "valid_fraction": 0.999965488910675,
+        "depth_mean": 4.309092044830322,
+        "normal_cos_mean": 0.4331367313861847
+      },
+      {
+        "iteration": 4850,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9999776482582092,
+        "depth_mean": 4.466527462005615,
+        "normal_cos_mean": 0.3652627468109131
+      },
+      {
+        "iteration": 4860,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9998474717140198,
+        "depth_mean": 4.57439661026001,
+        "normal_cos_mean": 0.40847888588905334
+      },
+      {
+        "iteration": 4870,
+        "seconds": 0.0027,
+        "valid_fraction": 0.9999288320541382,
+        "depth_mean": 4.130674362182617,
+        "normal_cos_mean": 0.44880715012550354
+      },
+      {
+        "iteration": 4880,
+        "seconds": 0.0026,
+        "valid_fraction": 1.0,
+        "depth_mean": 3.836527109146118,
+        "normal_cos_mean": 0.4800398647785187
+      },
+      {
+        "iteration": 4890,
+        "seconds": 0.0027,
+        "valid_fraction": 0.9999939203262329,
+        "depth_mean": 4.7880778312683105,
+        "normal_cos_mean": 0.4424510896205902
+      },
+      {
+        "iteration": 4900,
+        "seconds": 0.0028,
+        "valid_fraction": 0.9999960064888,
+        "depth_mean": 4.404926776885986,
+        "normal_cos_mean": 0.49492311477661133
+      },
+      {
+        "iteration": 4910,
+        "seconds": 0.0025,
+        "valid_fraction": 1.0,
+        "depth_mean": 3.9456212520599365,
+        "normal_cos_mean": 0.4929272532463074
+      },
+      {
+        "iteration": 4920,
+        "seconds": 0.0028,
+        "valid_fraction": 0.9999980330467224,
+        "depth_mean": 3.93264102935791,
+        "normal_cos_mean": 0.45148882269859314
+      },
+      {
+        "iteration": 4930,
+        "seconds": 0.0026,
+        "valid_fraction": 0.9999918937683105,
+        "depth_mean": 4.478203773498535,
+        "normal_cos_mean": 0.46784964203834534
+      },
+      {
+        "iteration": 4940,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9999939203262329,
+        "depth_mean": 4.1169304847717285,
+        "normal_cos_mean": 0.3821673095226288
+      },
+      {
+        "iteration": 4950,
+        "seconds": 0.0028,
+        "valid_fraction": 0.9999430775642395,
+        "depth_mean": 4.053302764892578,
+        "normal_cos_mean": 0.4915967583656311
+      },
+      {
+        "iteration": 4960,
+        "seconds": 0.0025,
+        "valid_fraction": 0.9998840689659119,
+        "depth_mean": 4.7643513679504395,
+        "normal_cos_mean": 0.41568154096603394
+      },
+      {
+        "iteration": 4970,
+        "seconds": 0.003,
+        "valid_fraction": 0.9996256828308105,
+        "depth_mean": 4.602964878082275,
+        "normal_cos_mean": 0.496297687292099
+      },
+      {
+        "iteration": 4980,
+        "seconds": 0.0028,
+        "valid_fraction": 1.0,
+        "depth_mean": 3.9760122299194336,
+        "normal_cos_mean": 0.47710585594177246
+      },
+      {
+        "iteration": 4990,
+        "seconds": 0.0027,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.122396469116211,
+        "normal_cos_mean": 0.43510037660598755
+      },
+      {
+        "iteration": 5000,
+        "seconds": 0.0028,
+        "valid_fraction": 1.0,
+        "depth_mean": 4.062532424926758,
+        "normal_cos_mean": 0.43453478813171387
+      }
+    ]
+  },
+  "mid_prune_at": 0,
+  "mid_prune_keep": 1.0,
+  "prune_events": [],
+  "timing_breakdown": null,
+  "iterations_per_second": 137.74,
+  "quick_test_psnr": null,
+  "num_train_views": 283,
+  "num_test_views": 41,
+  "res_scales": [
+    1.0
+  ],
+  "res_until": [],
+  "settings": {
+    "position_lr_max_steps": 5000,
+    "position_lr_init": 0.00016,
+    "position_lr_final": 1.6e-06,
+    "densify_from_iter": 500,
+    "densify_until_iter": 1250,
+    "densification_interval": 100,
+    "opacity_reset_interval": 5001,
+    "mult": 0.5,
+    "lambda_dssim": 0.6,
+    "scaling_lr": 0.01,
+    "opacity_lr": 0.025,
+    "position_lr_delay_mult": 0.01,
+    "no_densify": false,
+    "seed": 20261015,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "lpips_weight": 0.0,
+    "lpips_every": 1,
+    "lpips_scale": 0.5,
+    "stage2_iters": 0,
+    "stage2_cams": 1,
+    "stage2_trainer": "standard",
+    "stage2_absgrad_every": 200,
+    "stage2_split_frac": 0.01,
+    "stage2_lr_final": null,
+    "stage3_iters": 0,
+    "stage3_lpips_weight": 0.0,
+    "densify_count_thresh": null,
+    "max_gaussians": null
+  }
+}

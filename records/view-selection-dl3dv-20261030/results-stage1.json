@@ -1,0 +1,2312 @@
+[
+  {
+    "scene": "dl3dv-0b5635d5",
+    "method": "uniform",
+    "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-0b5635d5/uniform",
+    "source_work": "outputs/multi/dl3dv-0b5635d5/work",
+    "n_context": 16,
+    "control_total": 31.106,
+    "control_q": 17.16,
+    "control_ctx_psnr": 22.68949725981129,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00056.png",
+      "frame_00110.png",
+      "frame_00164.png",
+      "frame_00219.png",
+      "frame_00272.png",
+      "frame_00326.png",
+      "frame_00380.png"
+    ],
+    "context_names": [
+      "frame_00002.png",
+      "frame_00027.png",
+      "frame_00052.png",
+      "frame_00077.png",
+      "frame_00102.png",
+      "frame_00127.png",
+      "frame_00152.png",
+      "frame_00178.png",
+      "frame_00204.png",
+      "frame_00229.png",
+      "frame_00254.png",
+      "frame_00279.png",
+      "frame_00304.png",
+      "frame_00330.png",
+      "frame_00355.png",
+      "frame_00381.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.5292070508003235,
+      "min_pair_jaccard": 0.2399263083934784,
+      "union_visible_frac": 0.9988997799559912,
+      "center_min_pair": null,
+      "center_span_max": null
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-0b5635d5/uniform",
+    "num_gaussians": 450206,
+    "resplat_seconds": 31.3,
+    "ctx_psnr_mean": 22.68949725981129,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 19.313,
+      "ssim": 0.5466,
+      "lpips": 0.4152
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 23.1099,
+        "ssim": 0.7105,
+        "lpips": 0.3126
+      },
+      {
+        "name": "frame_00056.png",
+        "psnr": 19.4343,
+        "ssim": 0.5595,
+        "lpips": 0.3964
+      },
+      {
+        "name": "frame_00110.png",
+        "psnr": 17.6666,
+        "ssim": 0.4144,
+        "lpips": 0.4693
+      },
+      {
+        "name": "frame_00164.png",
+        "psnr": 15.7916,
+        "ssim": 0.4035,
+        "lpips": 0.5272
+      },
+      {
+        "name": "frame_00219.png",
+        "psnr": 17.4304,
+        "ssim": 0.4214,
+        "lpips": 0.485
+      },
+      {
+        "name": "frame_00272.png",
+        "psnr": 18.2097,
+        "ssim": 0.6184,
+        "lpips": 0.4143
+      },
+      {
+        "name": "frame_00326.png",
+        "psnr": 19.5932,
+        "ssim": 0.5306,
+        "lpips": 0.4219
+      },
+      {
+        "name": "frame_00380.png",
+        "psnr": 23.2686,
+        "ssim": 0.7146,
+        "lpips": 0.295
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-0b5635d5",
+    "method": "covis-fps",
+    "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-0b5635d5/covis-fps",
+    "source_work": "outputs/multi/dl3dv-0b5635d5/work",
+    "n_context": 16,
+    "control_total": 31.106,
+    "control_q": 17.16,
+    "control_ctx_psnr": 22.68949725981129,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00056.png",
+      "frame_00110.png",
+      "frame_00164.png",
+      "frame_00219.png",
+      "frame_00272.png",
+      "frame_00326.png",
+      "frame_00380.png"
+    ],
+    "context_names": [
+      "frame_00379.png",
+      "frame_00277.png",
+      "frame_00080.png",
+      "frame_00307.png",
+      "frame_00044.png",
+      "frame_00212.png",
+      "frame_00061.png",
+      "frame_00096.png",
+      "frame_00292.png",
+      "frame_00365.png",
+      "frame_00002.png",
+      "frame_00336.png",
+      "frame_00052.png",
+      "frame_00020.png",
+      "frame_00104.png",
+      "frame_00088.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.6393738985061646,
+      "min_pair_jaccard": 0.3764429986476898,
+      "union_visible_frac": 0.9970994198839768,
+      "center_min_pair": 0.9587538386445418,
+      "center_span_max": 9.275159444532083
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-0b5635d5/covis-fps",
+    "num_gaussians": 459641,
+    "resplat_seconds": 30.95,
+    "ctx_psnr_mean": 23.33598927464972,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 19.204,
+      "ssim": 0.5456,
+      "lpips": 0.423
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 22.6824,
+        "ssim": 0.6936,
+        "lpips": 0.3155
+      },
+      {
+        "name": "frame_00056.png",
+        "psnr": 20.3838,
+        "ssim": 0.5923,
+        "lpips": 0.3623
+      },
+      {
+        "name": "frame_00110.png",
+        "psnr": 18.3531,
+        "ssim": 0.4671,
+        "lpips": 0.4375
+      },
+      {
+        "name": "frame_00164.png",
+        "psnr": 14.5241,
+        "ssim": 0.359,
+        "lpips": 0.6017
+      },
+      {
+        "name": "frame_00219.png",
+        "psnr": 17.2056,
+        "ssim": 0.3811,
+        "lpips": 0.5204
+      },
+      {
+        "name": "frame_00272.png",
+        "psnr": 18.1611,
+        "ssim": 0.626,
+        "lpips": 0.4312
+      },
+      {
+        "name": "frame_00326.png",
+        "psnr": 19.4225,
+        "ssim": 0.5465,
+        "lpips": 0.4158
+      },
+      {
+        "name": "frame_00380.png",
+        "psnr": 22.9005,
+        "ssim": 0.6988,
+        "lpips": 0.2993
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-0b5635d5",
+    "method": "covis-maxmin",
+    "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-0b5635d5/covis-maxmin",
+    "source_work": "outputs/multi/dl3dv-0b5635d5/work",
+    "n_context": 16,
+    "control_total": 31.106,
+    "control_q": 17.16,
+    "control_ctx_psnr": 22.68949725981129,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00056.png",
+      "frame_00110.png",
+      "frame_00164.png",
+      "frame_00219.png",
+      "frame_00272.png",
+      "frame_00326.png",
+      "frame_00380.png"
+    ],
+    "context_names": [
+      "frame_00071.png",
+      "frame_00072.png",
+      "frame_00171.png",
+      "frame_00133.png",
+      "frame_00200.png",
+      "frame_00148.png",
+      "frame_00309.png",
+      "frame_00250.png",
+      "frame_00021.png",
+      "frame_00231.png",
+      "frame_00239.png",
+      "frame_00143.png",
+      "frame_00048.png",
+      "frame_00158.png",
+      "frame_00189.png",
+      "frame_00093.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.4856351613998413,
+      "min_pair_jaccard": 0.24037876725196838,
+      "union_visible_frac": 0.9994332199773288,
+      "center_min_pair": 0.09710957026923069,
+      "center_span_max": 8.348767689140699
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-0b5635d5/covis-maxmin",
+    "num_gaussians": 435469,
+    "resplat_seconds": 31.01,
+    "ctx_psnr_mean": 22.055576097321204,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 18.002,
+      "ssim": 0.4857,
+      "lpips": 0.4645
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 19.041,
+        "ssim": 0.496,
+        "lpips": 0.4453
+      },
+      {
+        "name": "frame_00056.png",
+        "psnr": 18.5699,
+        "ssim": 0.4729,
+        "lpips": 0.4642
+      },
+      {
+        "name": "frame_00110.png",
+        "psnr": 17.4404,
+        "ssim": 0.4214,
+        "lpips": 0.4972
+      },
+      {
+        "name": "frame_00164.png",
+        "psnr": 17.5154,
+        "ssim": 0.4977,
+        "lpips": 0.4503
+      },
+      {
+        "name": "frame_00219.png",
+        "psnr": 17.8631,
+        "ssim": 0.4391,
+        "lpips": 0.4708
+      },
+      {
+        "name": "frame_00272.png",
+        "psnr": 16.0414,
+        "ssim": 0.6029,
+        "lpips": 0.4404
+      },
+      {
+        "name": "frame_00326.png",
+        "psnr": 18.4627,
+        "ssim": 0.4673,
+        "lpips": 0.476
+      },
+      {
+        "name": "frame_00380.png",
+        "psnr": 19.0813,
+        "ssim": 0.4886,
+        "lpips": 0.4719
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-0b5635d5",
+    "method": "coverage-max",
+    "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-0b5635d5/coverage-max",
+    "source_work": "outputs/multi/dl3dv-0b5635d5/work",
+    "n_context": 16,
+    "control_total": 31.106,
+    "control_q": 17.16,
+    "control_ctx_psnr": 22.68949725981129,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00056.png",
+      "frame_00110.png",
+      "frame_00164.png",
+      "frame_00219.png",
+      "frame_00272.png",
+      "frame_00326.png",
+      "frame_00380.png"
+    ],
+    "context_names": [
+      "frame_00277.png",
+      "frame_00381.png",
+      "frame_00080.png",
+      "frame_00231.png",
+      "frame_00307.png",
+      "frame_00045.png",
+      "frame_00195.png",
+      "frame_00252.png",
+      "frame_00062.png",
+      "frame_00096.png",
+      "frame_00292.png",
+      "frame_00029.png",
+      "frame_00184.png",
+      "frame_00144.png",
+      "frame_00242.png",
+      "frame_00135.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.5133692026138306,
+      "min_pair_jaccard": 0.24632716178894043,
+      "union_visible_frac": 0.9989331199573248,
+      "center_min_pair": 1.1963671519911574,
+      "center_span_max": 9.294597573519408
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-0b5635d5/coverage-max",
+    "num_gaussians": 443334,
+    "resplat_seconds": 30.92,
+    "ctx_psnr_mean": 22.420083583168115,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 19.036,
+      "ssim": 0.5347,
+      "lpips": 0.4224
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 19.934,
+        "ssim": 0.5289,
+        "lpips": 0.4163
+      },
+      {
+        "name": "frame_00056.png",
+        "psnr": 19.5634,
+        "ssim": 0.5415,
+        "lpips": 0.4036
+      },
+      {
+        "name": "frame_00110.png",
+        "psnr": 17.8806,
+        "ssim": 0.4317,
+        "lpips": 0.4682
+      },
+      {
+        "name": "frame_00164.png",
+        "psnr": 17.5147,
+        "ssim": 0.4844,
+        "lpips": 0.4601
+      },
+      {
+        "name": "frame_00219.png",
+        "psnr": 18.0477,
+        "ssim": 0.4579,
+        "lpips": 0.4572
+      },
+      {
+        "name": "frame_00272.png",
+        "psnr": 17.5474,
+        "ssim": 0.6374,
+        "lpips": 0.3938
+      },
+      {
+        "name": "frame_00326.png",
+        "psnr": 18.8356,
+        "ssim": 0.4983,
+        "lpips": 0.4561
+      },
+      {
+        "name": "frame_00380.png",
+        "psnr": 22.9644,
+        "ssim": 0.6973,
+        "lpips": 0.3237
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-0b5635d5",
+    "method": "extreme-baseline",
+    "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-0b5635d5/extreme-baseline",
+    "source_work": "outputs/multi/dl3dv-0b5635d5/work",
+    "n_context": 16,
+    "control_total": 31.106,
+    "control_q": 17.16,
+    "control_ctx_psnr": 22.68949725981129,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00056.png",
+      "frame_00110.png",
+      "frame_00164.png",
+      "frame_00219.png",
+      "frame_00272.png",
+      "frame_00326.png",
+      "frame_00380.png"
+    ],
+    "context_names": [
+      "frame_00277.png",
+      "frame_00381.png",
+      "frame_00080.png",
+      "frame_00231.png",
+      "frame_00307.png",
+      "frame_00045.png",
+      "frame_00195.png",
+      "frame_00252.png",
+      "frame_00062.png",
+      "frame_00096.png",
+      "frame_00292.png",
+      "frame_00029.png",
+      "frame_00184.png",
+      "frame_00144.png",
+      "frame_00242.png",
+      "frame_00135.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.5133692026138306,
+      "min_pair_jaccard": 0.24632716178894043,
+      "union_visible_frac": 0.9989331199573248,
+      "center_min_pair": 1.1963671519911574,
+      "center_span_max": 9.294597573519408
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-0b5635d5/extreme-baseline",
+    "num_gaussians": 443334,
+    "resplat_seconds": 30.84,
+    "ctx_psnr_mean": 22.420083583168115,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 19.036,
+      "ssim": 0.5347,
+      "lpips": 0.4224
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 19.934,
+        "ssim": 0.5289,
+        "lpips": 0.4163
+      },
+      {
+        "name": "frame_00056.png",
+        "psnr": 19.5634,
+        "ssim": 0.5415,
+        "lpips": 0.4036
+      },
+      {
+        "name": "frame_00110.png",
+        "psnr": 17.8806,
+        "ssim": 0.4317,
+        "lpips": 0.4682
+      },
+      {
+        "name": "frame_00164.png",
+        "psnr": 17.5147,
+        "ssim": 0.4844,
+        "lpips": 0.4601
+      },
+      {
+        "name": "frame_00219.png",
+        "psnr": 18.0477,
+        "ssim": 0.4579,
+        "lpips": 0.4572
+      },
+      {
+        "name": "frame_00272.png",
+        "psnr": 17.5474,
+        "ssim": 0.6374,
+        "lpips": 0.3938
+      },
+      {
+        "name": "frame_00326.png",
+        "psnr": 18.8356,
+        "ssim": 0.4983,
+        "lpips": 0.4561
+      },
+      {
+        "name": "frame_00380.png",
+        "psnr": 22.9644,
+        "ssim": 0.6973,
+        "lpips": 0.3237
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-0b5635d5",
+    "method": "arc-uniform",
+    "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-0b5635d5/arc-uniform",
+    "source_work": "outputs/multi/dl3dv-0b5635d5/work",
+    "n_context": 16,
+    "control_total": 31.106,
+    "control_q": 17.16,
+    "control_ctx_psnr": 22.68949725981129,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00056.png",
+      "frame_00110.png",
+      "frame_00164.png",
+      "frame_00219.png",
+      "frame_00272.png",
+      "frame_00326.png",
+      "frame_00380.png"
+    ],
+    "context_names": [
+      "frame_00002.png",
+      "frame_00034.png",
+      "frame_00061.png",
+      "frame_00088.png",
+      "frame_00114.png",
+      "frame_00139.png",
+      "frame_00163.png",
+      "frame_00187.png",
+      "frame_00220.png",
+      "frame_00242.png",
+      "frame_00267.png",
+      "frame_00294.png",
+      "frame_00316.png",
+      "frame_00336.png",
+      "frame_00357.png",
+      "frame_00381.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.5274940133094788,
+      "min_pair_jaccard": 0.23839865624904633,
+      "union_visible_frac": 0.9987997599519904,
+      "center_min_pair": 0.3344830607236921,
+      "center_span_max": 9.158384242205015
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-0b5635d5/arc-uniform",
+    "num_gaussians": 448276,
+    "resplat_seconds": 30.54,
+    "ctx_psnr_mean": 22.33657943697203,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 19.921,
+      "ssim": 0.5873,
+      "lpips": 0.3902
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 23.097,
+        "ssim": 0.7121,
+        "lpips": 0.3091
+      },
+      {
+        "name": "frame_00056.png",
+        "psnr": 19.6521,
+        "ssim": 0.5404,
+        "lpips": 0.4068
+      },
+      {
+        "name": "frame_00110.png",
+        "psnr": 17.847,
+        "ssim": 0.4427,
+        "lpips": 0.453
+      },
+      {
+        "name": "frame_00164.png",
+        "psnr": 18.6929,
+        "ssim": 0.5484,
+        "lpips": 0.4256
+      },
+      {
+        "name": "frame_00219.png",
+        "psnr": 19.3085,
+        "ssim": 0.5831,
+        "lpips": 0.3891
+      },
+      {
+        "name": "frame_00272.png",
+        "psnr": 18.4684,
+        "ssim": 0.6452,
+        "lpips": 0.4044
+      },
+      {
+        "name": "frame_00326.png",
+        "psnr": 19.1461,
+        "ssim": 0.5183,
+        "lpips": 0.4353
+      },
+      {
+        "name": "frame_00380.png",
+        "psnr": 23.1576,
+        "ssim": 0.708,
+        "lpips": 0.2984
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-0f622eaa",
+    "method": "uniform",
+    "case": "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-0f622eaa/uniform",
+    "source_work": "outputs/multi/dl3dv-0f622eaa/work",
+    "n_context": 16,
+    "control_total": 31.553,
+    "control_q": 17.93,
+    "control_ctx_psnr": 20.854213073193286,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00048.png",
+      "frame_00094.png",
+      "frame_00140.png",
+      "frame_00186.png",
+      "frame_00231.png",
+      "frame_00277.png",
+      "frame_00323.png"
+    ],
+    "context_names": [
+      "frame_00002.png",
+      "frame_00022.png",
+      "frame_00044.png",
+      "frame_00066.png",
+      "frame_00087.png",
+      "frame_00109.png",
+      "frame_00130.png",
+      "frame_00151.png",
+      "frame_00173.png",
+      "frame_00195.png",
+      "frame_00216.png",
+      "frame_00237.png",
+      "frame_00259.png",
+      "frame_00280.png",
+      "frame_00302.png",
+      "frame_00324.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.5651643872261047,
+      "min_pair_jaccard": 0.16224759817123413,
+      "union_visible_frac": 0.9994996497548284,
+      "center_min_pair": null,
+      "center_span_max": null
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-0f622eaa/uniform",
+    "num_gaussians": 476635,
+    "resplat_seconds": 33.46,
+    "ctx_psnr_mean": 20.854213073193286,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 18.306,
+      "ssim": 0.4656,
+      "lpips": 0.4016
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 19.2158,
+        "ssim": 0.5609,
+        "lpips": 0.3367
+      },
+      {
+        "name": "frame_00048.png",
+        "psnr": 17.6802,
+        "ssim": 0.4429,
+        "lpips": 0.4131
+      },
+      {
+        "name": "frame_00094.png",
+        "psnr": 18.0832,
+        "ssim": 0.4202,
+        "lpips": 0.4206
+      },
+      {
+        "name": "frame_00140.png",
+        "psnr": 17.4685,
+        "ssim": 0.4438,
+        "lpips": 0.4324
+      },
+      {
+        "name": "frame_00186.png",
+        "psnr": 17.6295,
+        "ssim": 0.3554,
+        "lpips": 0.4752
+      },
+      {
+        "name": "frame_00231.png",
+        "psnr": 17.9148,
+        "ssim": 0.3742,
+        "lpips": 0.4332
+      },
+      {
+        "name": "frame_00277.png",
+        "psnr": 18.3892,
+        "ssim": 0.4826,
+        "lpips": 0.4015
+      },
+      {
+        "name": "frame_00323.png",
+        "psnr": 20.0692,
+        "ssim": 0.6447,
+        "lpips": 0.2996
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-0f622eaa",
+    "method": "covis-fps",
+    "case": "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-0f622eaa/covis-fps",
+    "source_work": "outputs/multi/dl3dv-0f622eaa/work",
+    "n_context": 16,
+    "control_total": 31.553,
+    "control_q": 17.93,
+    "control_ctx_psnr": 20.854213073193286,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00048.png",
+      "frame_00094.png",
+      "frame_00140.png",
+      "frame_00186.png",
+      "frame_00231.png",
+      "frame_00277.png",
+      "frame_00323.png"
+    ],
+    "context_names": [
+      "frame_00005.png",
+      "frame_00164.png",
+      "frame_00244.png",
+      "frame_00038.png",
+      "frame_00200.png",
+      "frame_00223.png",
+      "frame_00292.png",
+      "frame_00055.png",
+      "frame_00136.png",
+      "frame_00280.png",
+      "frame_00015.png",
+      "frame_00234.png",
+      "frame_00028.png",
+      "frame_00046.png",
+      "frame_00146.png",
+      "frame_00308.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.6135970950126648,
+      "min_pair_jaccard": 0.316160649061203,
+      "union_visible_frac": 0.9990660128756796,
+      "center_min_pair": 0.5295372656062696,
+      "center_span_max": 10.97951513635169
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-0f622eaa/covis-fps",
+    "num_gaussians": 476160,
+    "resplat_seconds": 31.32,
+    "ctx_psnr_mean": 20.8792055858046,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 17.586,
+      "ssim": 0.4342,
+      "lpips": 0.4217
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 17.9449,
+        "ssim": 0.5054,
+        "lpips": 0.3639
+      },
+      {
+        "name": "frame_00048.png",
+        "psnr": 18.2712,
+        "ssim": 0.5045,
+        "lpips": 0.3803
+      },
+      {
+        "name": "frame_00094.png",
+        "psnr": 17.4812,
+        "ssim": 0.3489,
+        "lpips": 0.4683
+      },
+      {
+        "name": "frame_00140.png",
+        "psnr": 18.7126,
+        "ssim": 0.5112,
+        "lpips": 0.3833
+      },
+      {
+        "name": "frame_00186.png",
+        "psnr": 17.8049,
+        "ssim": 0.3556,
+        "lpips": 0.4641
+      },
+      {
+        "name": "frame_00231.png",
+        "psnr": 18.4331,
+        "ssim": 0.4173,
+        "lpips": 0.4199
+      },
+      {
+        "name": "frame_00277.png",
+        "psnr": 18.6173,
+        "ssim": 0.5016,
+        "lpips": 0.3897
+      },
+      {
+        "name": "frame_00323.png",
+        "psnr": 13.4205,
+        "ssim": 0.3286,
+        "lpips": 0.5045
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-0f622eaa",
+    "method": "covis-maxmin",
+    "case": "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-0f622eaa/covis-maxmin",
+    "source_work": "outputs/multi/dl3dv-0f622eaa/work",
+    "n_context": 16,
+    "control_total": 31.553,
+    "control_q": 17.93,
+    "control_ctx_psnr": 20.854213073193286,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00048.png",
+      "frame_00094.png",
+      "frame_00140.png",
+      "frame_00186.png",
+      "frame_00231.png",
+      "frame_00277.png",
+      "frame_00323.png"
+    ],
+    "context_names": [
+      "frame_00162.png",
+      "frame_00163.png",
+      "frame_00252.png",
+      "frame_00087.png",
+      "frame_00099.png",
+      "frame_00288.png",
+      "frame_00066.png",
+      "frame_00206.png",
+      "frame_00219.png",
+      "frame_00043.png",
+      "frame_00006.png",
+      "frame_00232.png",
+      "frame_00194.png",
+      "frame_00131.png",
+      "frame_00091.png",
+      "frame_00271.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.526786208152771,
+      "min_pair_jaccard": 0.1578003168106079,
+      "union_visible_frac": 0.9963974782347643,
+      "center_min_pair": 0.009462598238617484,
+      "center_span_max": 10.905384826663573
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-0f622eaa/covis-maxmin",
+    "num_gaussians": 480283,
+    "resplat_seconds": 31.77,
+    "ctx_psnr_mean": 21.211845515402263,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 16.985,
+      "ssim": 0.3906,
+      "lpips": 0.4572
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 16.0439,
+        "ssim": 0.3455,
+        "lpips": 0.4776
+      },
+      {
+        "name": "frame_00048.png",
+        "psnr": 17.3869,
+        "ssim": 0.4321,
+        "lpips": 0.4253
+      },
+      {
+        "name": "frame_00094.png",
+        "psnr": 18.9372,
+        "ssim": 0.4918,
+        "lpips": 0.3689
+      },
+      {
+        "name": "frame_00140.png",
+        "psnr": 16.0308,
+        "ssim": 0.3749,
+        "lpips": 0.4738
+      },
+      {
+        "name": "frame_00186.png",
+        "psnr": 16.7384,
+        "ssim": 0.3372,
+        "lpips": 0.4897
+      },
+      {
+        "name": "frame_00231.png",
+        "psnr": 19.3734,
+        "ssim": 0.489,
+        "lpips": 0.3757
+      },
+      {
+        "name": "frame_00277.png",
+        "psnr": 17.8699,
+        "ssim": 0.4028,
+        "lpips": 0.4527
+      },
+      {
+        "name": "frame_00323.png",
+        "psnr": 13.4958,
+        "ssim": 0.2517,
+        "lpips": 0.5943
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-0f622eaa",
+    "method": "coverage-max",
+    "case": "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-0f622eaa/coverage-max",
+    "source_work": "outputs/multi/dl3dv-0f622eaa/work",
+    "n_context": 16,
+    "control_total": 31.553,
+    "control_q": 17.93,
+    "control_ctx_psnr": 20.854213073193286,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00048.png",
+      "frame_00094.png",
+      "frame_00140.png",
+      "frame_00186.png",
+      "frame_00231.png",
+      "frame_00277.png",
+      "frame_00323.png"
+    ],
+    "context_names": [
+      "frame_00164.png",
+      "frame_00324.png",
+      "frame_00250.png",
+      "frame_00278.png",
+      "frame_00108.png",
+      "frame_00230.png",
+      "frame_00019.png",
+      "frame_00050.png",
+      "frame_00131.png",
+      "frame_00039.png",
+      "frame_00078.png",
+      "frame_00028.png",
+      "frame_00216.png",
+      "frame_00267.png",
+      "frame_00200.png",
+      "frame_00184.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.5535334348678589,
+      "min_pair_jaccard": 0.19283095002174377,
+      "union_visible_frac": 0.999166082924714,
+      "center_min_pair": 0.7717984677324711,
+      "center_span_max": 11.194764939357553
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-0f622eaa/coverage-max",
+    "num_gaussians": 475110,
+    "resplat_seconds": 31.21,
+    "ctx_psnr_mean": 20.79857869262298,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 18.46,
+      "ssim": 0.4716,
+      "lpips": 0.4049
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 15.1022,
+        "ssim": 0.2883,
+        "lpips": 0.5101
+      },
+      {
+        "name": "frame_00048.png",
+        "psnr": 18.4664,
+        "ssim": 0.5127,
+        "lpips": 0.3793
+      },
+      {
+        "name": "frame_00094.png",
+        "psnr": 17.9543,
+        "ssim": 0.3978,
+        "lpips": 0.4303
+      },
+      {
+        "name": "frame_00140.png",
+        "psnr": 17.9799,
+        "ssim": 0.4333,
+        "lpips": 0.4319
+      },
+      {
+        "name": "frame_00186.png",
+        "psnr": 18.8697,
+        "ssim": 0.4386,
+        "lpips": 0.4227
+      },
+      {
+        "name": "frame_00231.png",
+        "psnr": 19.3355,
+        "ssim": 0.4868,
+        "lpips": 0.392
+      },
+      {
+        "name": "frame_00277.png",
+        "psnr": 19.8448,
+        "ssim": 0.5764,
+        "lpips": 0.3517
+      },
+      {
+        "name": "frame_00323.png",
+        "psnr": 20.1271,
+        "ssim": 0.6387,
+        "lpips": 0.321
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-0f622eaa",
+    "method": "extreme-baseline",
+    "case": "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-0f622eaa/extreme-baseline",
+    "source_work": "outputs/multi/dl3dv-0f622eaa/work",
+    "n_context": 16,
+    "control_total": 31.553,
+    "control_q": 17.93,
+    "control_ctx_psnr": 20.854213073193286,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00048.png",
+      "frame_00094.png",
+      "frame_00140.png",
+      "frame_00186.png",
+      "frame_00231.png",
+      "frame_00277.png",
+      "frame_00323.png"
+    ],
+    "context_names": [
+      "frame_00164.png",
+      "frame_00324.png",
+      "frame_00250.png",
+      "frame_00278.png",
+      "frame_00108.png",
+      "frame_00230.png",
+      "frame_00019.png",
+      "frame_00050.png",
+      "frame_00131.png",
+      "frame_00039.png",
+      "frame_00078.png",
+      "frame_00028.png",
+      "frame_00216.png",
+      "frame_00267.png",
+      "frame_00200.png",
+      "frame_00184.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.5535334348678589,
+      "min_pair_jaccard": 0.19283095002174377,
+      "union_visible_frac": 0.999166082924714,
+      "center_min_pair": 0.7717984677324711,
+      "center_span_max": 11.194764939357553
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-0f622eaa/extreme-baseline",
+    "num_gaussians": 475110,
+    "resplat_seconds": 31.49,
+    "ctx_psnr_mean": 20.79857869262298,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 18.46,
+      "ssim": 0.4716,
+      "lpips": 0.4049
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 15.1022,
+        "ssim": 0.2883,
+        "lpips": 0.5101
+      },
+      {
+        "name": "frame_00048.png",
+        "psnr": 18.4664,
+        "ssim": 0.5127,
+        "lpips": 0.3793
+      },
+      {
+        "name": "frame_00094.png",
+        "psnr": 17.9543,
+        "ssim": 0.3978,
+        "lpips": 0.4303
+      },
+      {
+        "name": "frame_00140.png",
+        "psnr": 17.9799,
+        "ssim": 0.4333,
+        "lpips": 0.4319
+      },
+      {
+        "name": "frame_00186.png",
+        "psnr": 18.8697,
+        "ssim": 0.4386,
+        "lpips": 0.4227
+      },
+      {
+        "name": "frame_00231.png",
+        "psnr": 19.3355,
+        "ssim": 0.4868,
+        "lpips": 0.392
+      },
+      {
+        "name": "frame_00277.png",
+        "psnr": 19.8448,
+        "ssim": 0.5764,
+        "lpips": 0.3517
+      },
+      {
+        "name": "frame_00323.png",
+        "psnr": 20.1271,
+        "ssim": 0.6387,
+        "lpips": 0.321
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-0f622eaa",
+    "method": "arc-uniform",
+    "case": "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-0f622eaa/arc-uniform",
+    "source_work": "outputs/multi/dl3dv-0f622eaa/work",
+    "n_context": 16,
+    "control_total": 31.553,
+    "control_q": 17.93,
+    "control_ctx_psnr": 20.854213073193286,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00048.png",
+      "frame_00094.png",
+      "frame_00140.png",
+      "frame_00186.png",
+      "frame_00231.png",
+      "frame_00277.png",
+      "frame_00323.png"
+    ],
+    "context_names": [
+      "frame_00002.png",
+      "frame_00021.png",
+      "frame_00037.png",
+      "frame_00056.png",
+      "frame_00077.png",
+      "frame_00096.png",
+      "frame_00122.png",
+      "frame_00146.png",
+      "frame_00187.png",
+      "frame_00205.png",
+      "frame_00226.png",
+      "frame_00246.png",
+      "frame_00261.png",
+      "frame_00276.png",
+      "frame_00295.png",
+      "frame_00324.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.5525121092796326,
+      "min_pair_jaccard": 0.19079580903053284,
+      "union_visible_frac": 0.9988325160945996,
+      "center_min_pair": 0.34078151436228266,
+      "center_span_max": 10.636141287244316
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-0f622eaa/arc-uniform",
+    "num_gaussians": 476735,
+    "resplat_seconds": 32.12,
+    "ctx_psnr_mean": 20.744585275916883,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 18.651,
+      "ssim": 0.4952,
+      "lpips": 0.3828
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 18.9554,
+        "ssim": 0.5465,
+        "lpips": 0.3455
+      },
+      {
+        "name": "frame_00048.png",
+        "psnr": 17.2878,
+        "ssim": 0.4145,
+        "lpips": 0.4241
+      },
+      {
+        "name": "frame_00094.png",
+        "psnr": 18.8448,
+        "ssim": 0.4843,
+        "lpips": 0.384
+      },
+      {
+        "name": "frame_00140.png",
+        "psnr": 18.1645,
+        "ssim": 0.4738,
+        "lpips": 0.4017
+      },
+      {
+        "name": "frame_00186.png",
+        "psnr": 19.3522,
+        "ssim": 0.4822,
+        "lpips": 0.3946
+      },
+      {
+        "name": "frame_00231.png",
+        "psnr": 17.3568,
+        "ssim": 0.3764,
+        "lpips": 0.4417
+      },
+      {
+        "name": "frame_00277.png",
+        "psnr": 19.4195,
+        "ssim": 0.5446,
+        "lpips": 0.3701
+      },
+      {
+        "name": "frame_00323.png",
+        "psnr": 19.8299,
+        "ssim": 0.6391,
+        "lpips": 0.3007
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-3e4dbe41",
+    "method": "uniform",
+    "case": "dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-3e4dbe41/uniform",
+    "source_work": "outputs/multi/dl3dv-3e4dbe41/work",
+    "n_context": 16,
+    "control_total": 35.039,
+    "control_q": 21.09,
+    "control_ctx_psnr": 22.768642971971136,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00046.png",
+      "frame_00090.png",
+      "frame_00133.png",
+      "frame_00175.png",
+      "frame_00219.png",
+      "frame_00262.png",
+      "frame_00306.png"
+    ],
+    "context_names": [
+      "frame_00002.png",
+      "frame_00021.png",
+      "frame_00042.png",
+      "frame_00062.png",
+      "frame_00083.png",
+      "frame_00103.png",
+      "frame_00123.png",
+      "frame_00143.png",
+      "frame_00164.png",
+      "frame_00184.png",
+      "frame_00205.png",
+      "frame_00224.png",
+      "frame_00245.png",
+      "frame_00266.png",
+      "frame_00286.png",
+      "frame_00307.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.6036365628242493,
+      "min_pair_jaccard": 0.3239838778972626,
+      "union_visible_frac": 0.997995858106754,
+      "center_min_pair": null,
+      "center_span_max": null
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-3e4dbe41/uniform",
+    "num_gaussians": 466887,
+    "resplat_seconds": 31.63,
+    "ctx_psnr_mean": 22.768642971971136,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 19.649,
+      "ssim": 0.5292,
+      "lpips": 0.4052
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 21.7677,
+        "ssim": 0.6391,
+        "lpips": 0.3319
+      },
+      {
+        "name": "frame_00046.png",
+        "psnr": 20.5469,
+        "ssim": 0.5596,
+        "lpips": 0.4342
+      },
+      {
+        "name": "frame_00090.png",
+        "psnr": 19.1894,
+        "ssim": 0.5163,
+        "lpips": 0.4462
+      },
+      {
+        "name": "frame_00133.png",
+        "psnr": 17.634,
+        "ssim": 0.5515,
+        "lpips": 0.3953
+      },
+      {
+        "name": "frame_00175.png",
+        "psnr": 18.6396,
+        "ssim": 0.4883,
+        "lpips": 0.3878
+      },
+      {
+        "name": "frame_00219.png",
+        "psnr": 18.5006,
+        "ssim": 0.4319,
+        "lpips": 0.4557
+      },
+      {
+        "name": "frame_00262.png",
+        "psnr": 20.0147,
+        "ssim": 0.4805,
+        "lpips": 0.4215
+      },
+      {
+        "name": "frame_00306.png",
+        "psnr": 20.8969,
+        "ssim": 0.5664,
+        "lpips": 0.3688
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-3e4dbe41",
+    "method": "covis-fps",
+    "case": "dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-3e4dbe41/covis-fps",
+    "source_work": "outputs/multi/dl3dv-3e4dbe41/work",
+    "n_context": 16,
+    "control_total": 35.039,
+    "control_q": 21.09,
+    "control_ctx_psnr": 22.768642971971136,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00046.png",
+      "frame_00090.png",
+      "frame_00133.png",
+      "frame_00175.png",
+      "frame_00219.png",
+      "frame_00262.png",
+      "frame_00306.png"
+    ],
+    "context_names": [
+      "frame_00186.png",
+      "frame_00301.png",
+      "frame_00235.png",
+      "frame_00263.png",
+      "frame_00210.png",
+      "frame_00159.png",
+      "frame_00042.png",
+      "frame_00279.png",
+      "frame_00198.png",
+      "frame_00223.png",
+      "frame_00118.png",
+      "frame_00005.png",
+      "frame_00243.png",
+      "frame_00107.png",
+      "frame_00256.png",
+      "frame_00270.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.6649553775787354,
+      "min_pair_jaccard": 0.43078237771987915,
+      "union_visible_frac": 0.983298817556283,
+      "center_min_pair": 0.6860105776806358,
+      "center_span_max": 9.590386579138995
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-3e4dbe41/covis-fps",
+    "num_gaussians": 469610,
+    "resplat_seconds": 31.97,
+    "ctx_psnr_mean": 23.02955448220247,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 19.526,
+      "ssim": 0.52,
+      "lpips": 0.4074
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 21.1418,
+        "ssim": 0.6081,
+        "lpips": 0.3385
+      },
+      {
+        "name": "frame_00046.png",
+        "psnr": 20.6945,
+        "ssim": 0.5806,
+        "lpips": 0.4128
+      },
+      {
+        "name": "frame_00090.png",
+        "psnr": 19.0154,
+        "ssim": 0.5216,
+        "lpips": 0.4582
+      },
+      {
+        "name": "frame_00133.png",
+        "psnr": 16.5109,
+        "ssim": 0.4671,
+        "lpips": 0.4539
+      },
+      {
+        "name": "frame_00175.png",
+        "psnr": 19.1065,
+        "ssim": 0.4798,
+        "lpips": 0.39
+      },
+      {
+        "name": "frame_00219.png",
+        "psnr": 18.9833,
+        "ssim": 0.4725,
+        "lpips": 0.4252
+      },
+      {
+        "name": "frame_00262.png",
+        "psnr": 21.621,
+        "ssim": 0.5992,
+        "lpips": 0.3565
+      },
+      {
+        "name": "frame_00306.png",
+        "psnr": 19.136,
+        "ssim": 0.4312,
+        "lpips": 0.4246
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-3e4dbe41",
+    "method": "covis-maxmin",
+    "case": "dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-3e4dbe41/covis-maxmin",
+    "source_work": "outputs/multi/dl3dv-3e4dbe41/work",
+    "n_context": 16,
+    "control_total": 35.039,
+    "control_q": 21.09,
+    "control_ctx_psnr": 22.768642971971136,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00046.png",
+      "frame_00090.png",
+      "frame_00133.png",
+      "frame_00175.png",
+      "frame_00219.png",
+      "frame_00262.png",
+      "frame_00306.png"
+    ],
+    "context_names": [
+      "frame_00303.png",
+      "frame_00304.png",
+      "frame_00074.png",
+      "frame_00099.png",
+      "frame_00234.png",
+      "frame_00032.png",
+      "frame_00189.png",
+      "frame_00147.png",
+      "frame_00091.png",
+      "frame_00056.png",
+      "frame_00215.png",
+      "frame_00014.png",
+      "frame_00042.png",
+      "frame_00135.png",
+      "frame_00275.png",
+      "frame_00173.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.5805582404136658,
+      "min_pair_jaccard": 0.3194531500339508,
+      "union_visible_frac": 0.9992985503373639,
+      "center_min_pair": 0.03664222619788309,
+      "center_span_max": 9.55109279937161
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-3e4dbe41/covis-maxmin",
+    "num_gaussians": 463641,
+    "resplat_seconds": 31.61,
+    "ctx_psnr_mean": 22.913789049795707,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 19.673,
+      "ssim": 0.5204,
+      "lpips": 0.4059
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 18.7615,
+        "ssim": 0.4555,
+        "lpips": 0.4293
+      },
+      {
+        "name": "frame_00046.png",
+        "psnr": 20.4425,
+        "ssim": 0.5604,
+        "lpips": 0.4321
+      },
+      {
+        "name": "frame_00090.png",
+        "psnr": 21.3023,
+        "ssim": 0.6404,
+        "lpips": 0.3729
+      },
+      {
+        "name": "frame_00133.png",
+        "psnr": 19.2225,
+        "ssim": 0.595,
+        "lpips": 0.358
+      },
+      {
+        "name": "frame_00175.png",
+        "psnr": 20.0458,
+        "ssim": 0.5496,
+        "lpips": 0.3637
+      },
+      {
+        "name": "frame_00219.png",
+        "psnr": 18.4261,
+        "ssim": 0.4253,
+        "lpips": 0.4558
+      },
+      {
+        "name": "frame_00262.png",
+        "psnr": 19.6182,
+        "ssim": 0.4517,
+        "lpips": 0.4466
+      },
+      {
+        "name": "frame_00306.png",
+        "psnr": 19.5627,
+        "ssim": 0.4852,
+        "lpips": 0.3884
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-3e4dbe41",
+    "method": "coverage-max",
+    "case": "dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-3e4dbe41/coverage-max",
+    "source_work": "outputs/multi/dl3dv-3e4dbe41/work",
+    "n_context": 16,
+    "control_total": 35.039,
+    "control_q": 21.09,
+    "control_ctx_psnr": 22.768642971971136,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00046.png",
+      "frame_00090.png",
+      "frame_00133.png",
+      "frame_00175.png",
+      "frame_00219.png",
+      "frame_00262.png",
+      "frame_00306.png"
+    ],
+    "context_names": [
+      "frame_00002.png",
+      "frame_00124.png",
+      "frame_00227.png",
+      "frame_00036.png",
+      "frame_00200.png",
+      "frame_00271.png",
+      "frame_00242.png",
+      "frame_00074.png",
+      "frame_00104.png",
+      "frame_00141.png",
+      "frame_00307.png",
+      "frame_00180.png",
+      "frame_00192.png",
+      "frame_00094.png",
+      "frame_00055.png",
+      "frame_00207.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.6083669662475586,
+      "min_pair_jaccard": 0.3494075536727905,
+      "union_visible_frac": 0.9972610060792304,
+      "center_min_pair": 0.8192733728043591,
+      "center_span_max": 9.850345794547891
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-3e4dbe41/coverage-max",
+    "num_gaussians": 465065,
+    "resplat_seconds": 31.6,
+    "ctx_psnr_mean": 22.92227961035816,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 19.892,
+      "ssim": 0.5333,
+      "lpips": 0.402
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 22.094,
+        "ssim": 0.6542,
+        "lpips": 0.3446
+      },
+      {
+        "name": "frame_00046.png",
+        "psnr": 20.0753,
+        "ssim": 0.5458,
+        "lpips": 0.4219
+      },
+      {
+        "name": "frame_00090.png",
+        "psnr": 20.0347,
+        "ssim": 0.5737,
+        "lpips": 0.4131
+      },
+      {
+        "name": "frame_00133.png",
+        "psnr": 18.4327,
+        "ssim": 0.5405,
+        "lpips": 0.3996
+      },
+      {
+        "name": "frame_00175.png",
+        "psnr": 19.3878,
+        "ssim": 0.5047,
+        "lpips": 0.3811
+      },
+      {
+        "name": "frame_00219.png",
+        "psnr": 18.5758,
+        "ssim": 0.4287,
+        "lpips": 0.4456
+      },
+      {
+        "name": "frame_00262.png",
+        "psnr": 19.7488,
+        "ssim": 0.4578,
+        "lpips": 0.4343
+      },
+      {
+        "name": "frame_00306.png",
+        "psnr": 20.7832,
+        "ssim": 0.5606,
+        "lpips": 0.3757
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-3e4dbe41",
+    "method": "extreme-baseline",
+    "case": "dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-3e4dbe41/extreme-baseline",
+    "source_work": "outputs/multi/dl3dv-3e4dbe41/work",
+    "n_context": 16,
+    "control_total": 35.039,
+    "control_q": 21.09,
+    "control_ctx_psnr": 22.768642971971136,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00046.png",
+      "frame_00090.png",
+      "frame_00133.png",
+      "frame_00175.png",
+      "frame_00219.png",
+      "frame_00262.png",
+      "frame_00306.png"
+    ],
+    "context_names": [
+      "frame_00002.png",
+      "frame_00124.png",
+      "frame_00227.png",
+      "frame_00036.png",
+      "frame_00200.png",
+      "frame_00271.png",
+      "frame_00242.png",
+      "frame_00074.png",
+      "frame_00104.png",
+      "frame_00141.png",
+      "frame_00307.png",
+      "frame_00180.png",
+      "frame_00192.png",
+      "frame_00094.png",
+      "frame_00055.png",
+      "frame_00207.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.6083669662475586,
+      "min_pair_jaccard": 0.3494075536727905,
+      "union_visible_frac": 0.9972610060792304,
+      "center_min_pair": 0.8192733728043591,
+      "center_span_max": 9.850345794547891
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-3e4dbe41/extreme-baseline",
+    "num_gaussians": 465065,
+    "resplat_seconds": 31.74,
+    "ctx_psnr_mean": 22.92227961035816,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 19.892,
+      "ssim": 0.5333,
+      "lpips": 0.402
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 22.094,
+        "ssim": 0.6542,
+        "lpips": 0.3446
+      },
+      {
+        "name": "frame_00046.png",
+        "psnr": 20.0753,
+        "ssim": 0.5458,
+        "lpips": 0.4219
+      },
+      {
+        "name": "frame_00090.png",
+        "psnr": 20.0347,
+        "ssim": 0.5737,
+        "lpips": 0.4131
+      },
+      {
+        "name": "frame_00133.png",
+        "psnr": 18.4327,
+        "ssim": 0.5405,
+        "lpips": 0.3996
+      },
+      {
+        "name": "frame_00175.png",
+        "psnr": 19.3878,
+        "ssim": 0.5047,
+        "lpips": 0.3811
+      },
+      {
+        "name": "frame_00219.png",
+        "psnr": 18.5758,
+        "ssim": 0.4287,
+        "lpips": 0.4456
+      },
+      {
+        "name": "frame_00262.png",
+        "psnr": 19.7488,
+        "ssim": 0.4578,
+        "lpips": 0.4343
+      },
+      {
+        "name": "frame_00306.png",
+        "psnr": 20.7832,
+        "ssim": 0.5606,
+        "lpips": 0.3757
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-3e4dbe41",
+    "method": "arc-uniform",
+    "case": "dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-3e4dbe41/arc-uniform",
+    "source_work": "outputs/multi/dl3dv-3e4dbe41/work",
+    "n_context": 16,
+    "control_total": 35.039,
+    "control_q": 21.09,
+    "control_ctx_psnr": 22.768642971971136,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00046.png",
+      "frame_00090.png",
+      "frame_00133.png",
+      "frame_00175.png",
+      "frame_00219.png",
+      "frame_00262.png",
+      "frame_00306.png"
+    ],
+    "context_names": [
+      "frame_00002.png",
+      "frame_00024.png",
+      "frame_00040.png",
+      "frame_00055.png",
+      "frame_00070.png",
+      "frame_00087.png",
+      "frame_00108.png",
+      "frame_00132.png",
+      "frame_00173.png",
+      "frame_00191.png",
+      "frame_00207.png",
+      "frame_00224.png",
+      "frame_00242.png",
+      "frame_00259.png",
+      "frame_00278.png",
+      "frame_00307.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.6009904146194458,
+      "min_pair_jaccard": 0.32463711500167847,
+      "union_visible_frac": 0.9957244972944085,
+      "center_min_pair": 0.7520842827694055,
+      "center_span_max": 9.687123717828031
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-3e4dbe41/arc-uniform",
+    "num_gaussians": 465278,
+    "resplat_seconds": 34.63,
+    "ctx_psnr_mean": 22.763649347632523,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 20.283,
+      "ssim": 0.5601,
+      "lpips": 0.3831
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 21.8465,
+        "ssim": 0.6406,
+        "lpips": 0.3372
+      },
+      {
+        "name": "frame_00046.png",
+        "psnr": 20.4134,
+        "ssim": 0.559,
+        "lpips": 0.4187
+      },
+      {
+        "name": "frame_00090.png",
+        "psnr": 20.3933,
+        "ssim": 0.5808,
+        "lpips": 0.4039
+      },
+      {
+        "name": "frame_00133.png",
+        "psnr": 19.1549,
+        "ssim": 0.6166,
+        "lpips": 0.361
+      },
+      {
+        "name": "frame_00175.png",
+        "psnr": 20.284,
+        "ssim": 0.5543,
+        "lpips": 0.3453
+      },
+      {
+        "name": "frame_00219.png",
+        "psnr": 18.7802,
+        "ssim": 0.4458,
+        "lpips": 0.4306
+      },
+      {
+        "name": "frame_00262.png",
+        "psnr": 20.479,
+        "ssim": 0.5183,
+        "lpips": 0.3955
+      },
+      {
+        "name": "frame_00306.png",
+        "psnr": 20.9124,
+        "ssim": 0.5659,
+        "lpips": 0.3726
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-001dccbc",
+    "method": "uniform",
+    "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-001dccbc/uniform",
+    "source_work": "outputs/multi/dl3dv-001dccbc/work",
+    "n_context": 16,
+    "control_total": 78.942,
+    "control_q": 64.46,
+    "control_ctx_psnr": 30.947608092563776,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00050.png",
+      "frame_00095.png",
+      "frame_00142.png",
+      "frame_00189.png",
+      "frame_00236.png",
+      "frame_00282.png",
+      "frame_00328.png"
+    ],
+    "context_names": [
+      "frame_00002.png",
+      "frame_00023.png",
+      "frame_00045.png",
+      "frame_00067.png",
+      "frame_00088.png",
+      "frame_00110.png",
+      "frame_00132.png",
+      "frame_00154.png",
+      "frame_00176.png",
+      "frame_00198.png",
+      "frame_00220.png",
+      "frame_00242.png",
+      "frame_00263.png",
+      "frame_00285.png",
+      "frame_00307.png",
+      "frame_00330.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.660986065864563,
+      "min_pair_jaccard": 0.43832606077194214,
+      "union_visible_frac": 0.9993974895397489,
+      "center_min_pair": null,
+      "center_span_max": null
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-001dccbc/uniform",
+    "num_gaussians": 455234,
+    "resplat_seconds": 35.9,
+    "ctx_psnr_mean": 30.947608092563776,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 27.415,
+      "ssim": 0.8717,
+      "lpips": 0.2139
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 29.6147,
+        "ssim": 0.907,
+        "lpips": 0.2038
+      },
+      {
+        "name": "frame_00050.png",
+        "psnr": 27.8077,
+        "ssim": 0.8863,
+        "lpips": 0.2135
+      },
+      {
+        "name": "frame_00095.png",
+        "psnr": 28.7833,
+        "ssim": 0.8941,
+        "lpips": 0.2059
+      },
+      {
+        "name": "frame_00142.png",
+        "psnr": 27.6463,
+        "ssim": 0.8702,
+        "lpips": 0.2086
+      },
+      {
+        "name": "frame_00189.png",
+        "psnr": 26.8546,
+        "ssim": 0.8494,
+        "lpips": 0.2243
+      },
+      {
+        "name": "frame_00236.png",
+        "psnr": 25.3767,
+        "ssim": 0.8252,
+        "lpips": 0.2327
+      },
+      {
+        "name": "frame_00282.png",
+        "psnr": 24.9118,
+        "ssim": 0.8481,
+        "lpips": 0.2259
+      },
+      {
+        "name": "frame_00328.png",
+        "psnr": 28.3249,
+        "ssim": 0.8932,
+        "lpips": 0.1969
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-001dccbc",
+    "method": "arc-uniform",
+    "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-001dccbc/arc-uniform",
+    "source_work": "outputs/multi/dl3dv-001dccbc/work",
+    "n_context": 16,
+    "control_total": 78.942,
+    "control_q": 64.46,
+    "control_ctx_psnr": 30.947608092563776,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00050.png",
+      "frame_00095.png",
+      "frame_00142.png",
+      "frame_00189.png",
+      "frame_00236.png",
+      "frame_00282.png",
+      "frame_00328.png"
+    ],
+    "context_names": [
+      "frame_00002.png",
+      "frame_00024.png",
+      "frame_00045.png",
+      "frame_00067.png",
+      "frame_00088.png",
+      "frame_00110.png",
+      "frame_00134.png",
+      "frame_00157.png",
+      "frame_00194.png",
+      "frame_00212.png",
+      "frame_00231.png",
+      "frame_00248.png",
+      "frame_00267.png",
+      "frame_00285.png",
+      "frame_00304.png",
+      "frame_00330.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.669611930847168,
+      "min_pair_jaccard": 0.4459329843521118,
+      "union_visible_frac": 0.9990962343096235,
+      "center_min_pair": 0.4942172097468985,
+      "center_span_max": 11.037314503052903
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-001dccbc/arc-uniform",
+    "num_gaussians": 455248,
+    "resplat_seconds": 33.08,
+    "ctx_psnr_mean": 30.92282479427717,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 27.487,
+      "ssim": 0.8736,
+      "lpips": 0.2112
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 29.247,
+        "ssim": 0.9023,
+        "lpips": 0.2125
+      },
+      {
+        "name": "frame_00050.png",
+        "psnr": 28.3053,
+        "ssim": 0.889,
+        "lpips": 0.2036
+      },
+      {
+        "name": "frame_00095.png",
+        "psnr": 28.5777,
+        "ssim": 0.8905,
+        "lpips": 0.2055
+      },
+      {
+        "name": "frame_00142.png",
+        "psnr": 27.955,
+        "ssim": 0.8737,
+        "lpips": 0.2005
+      },
+      {
+        "name": "frame_00189.png",
+        "psnr": 26.7719,
+        "ssim": 0.8536,
+        "lpips": 0.2154
+      },
+      {
+        "name": "frame_00236.png",
+        "psnr": 25.3404,
+        "ssim": 0.836,
+        "lpips": 0.2247
+      },
+      {
+        "name": "frame_00282.png",
+        "psnr": 25.3694,
+        "ssim": 0.8511,
+        "lpips": 0.2264
+      },
+      {
+        "name": "frame_00328.png",
+        "psnr": 28.3308,
+        "ssim": 0.8923,
+        "lpips": 0.2007
+      }
+    ]
+  },
+  {
+    "scene": "dl3dv-001dccbc",
+    "method": "covis-fps",
+    "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "budget": 94.29,
+    "work": "outputs/viewsel-dl3dv-20261030/work/dl3dv-001dccbc/covis-fps",
+    "source_work": "outputs/multi/dl3dv-001dccbc/work",
+    "n_context": 16,
+    "control_total": 78.942,
+    "control_q": 64.46,
+    "control_ctx_psnr": 30.947608092563776,
+    "heldout_names": [
+      "frame_00003.png",
+      "frame_00050.png",
+      "frame_00095.png",
+      "frame_00142.png",
+      "frame_00189.png",
+      "frame_00236.png",
+      "frame_00282.png",
+      "frame_00328.png"
+    ],
+    "context_names": [
+      "frame_00117.png",
+      "frame_00298.png",
+      "frame_00070.png",
+      "frame_00186.png",
+      "frame_00239.png",
+      "frame_00048.png",
+      "frame_00204.png",
+      "frame_00268.png",
+      "frame_00286.png",
+      "frame_00104.png",
+      "frame_00250.png",
+      "frame_00214.png",
+      "frame_00195.png",
+      "frame_00226.png",
+      "frame_00032.png",
+      "frame_00062.png"
+    ],
+    "sel_stats": {
+      "mean_pair_jaccard": 0.7237813472747803,
+      "min_pair_jaccard": 0.5173221230506897,
+      "union_visible_frac": 0.9370711297071129,
+      "center_min_pair": 0.5673051423742859,
+      "center_span_max": 9.278027755706242
+    },
+    "resplat_rc": 0,
+    "resplat_out": "outputs/viewsel-dl3dv-20261030/resplat/dl3dv-001dccbc/covis-fps",
+    "num_gaussians": 462439,
+    "resplat_seconds": 35.75,
+    "ctx_psnr_mean": 31.667732376865033,
+    "ctx_render_n": 16,
+    "ctx_matched_n": 16,
+    "holdout_rc": 0,
+    "holdout": {
+      "psnr": 24.905,
+      "ssim": 0.8466,
+      "lpips": 0.2502
+    },
+    "holdout_per_view": [
+      {
+        "name": "frame_00003.png",
+        "psnr": 21.4945,
+        "ssim": 0.8209,
+        "lpips": 0.3123
+      },
+      {
+        "name": "frame_00050.png",
+        "psnr": 29.4909,
+        "ssim": 0.9083,
+        "lpips": 0.1882
+      },
+      {
+        "name": "frame_00095.png",
+        "psnr": 28.4484,
+        "ssim": 0.8929,
+        "lpips": 0.2074
+      },
+      {
+        "name": "frame_00142.png",
+        "psnr": 24.2794,
+        "ssim": 0.8318,
+        "lpips": 0.2577
+      },
+      {
+        "name": "frame_00189.png",
+        "psnr": 25.8087,
+        "ssim": 0.8744,
+        "lpips": 0.1967
+      },
+      {
+        "name": "frame_00236.png",
+        "psnr": 25.9296,
+        "ssim": 0.8518,
+        "lpips": 0.2155
+      },
+      {
+        "name": "frame_00282.png",
+        "psnr": 25.4749,
+        "ssim": 0.8567,
+        "lpips": 0.2232
+      },
+      {
+        "name": "frame_00328.png",
+        "psnr": 18.3151,
+        "ssim": 0.7361,
+        "lpips": 0.4006
+      }
+    ]
+  }
+]

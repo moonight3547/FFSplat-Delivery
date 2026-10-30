@@ -19,6 +19,7 @@ Usage (on the GPU host, from the repo root):
 """
 import argparse
 import json
+import re
 import os
 import subprocess
 import sys
@@ -91,6 +92,10 @@ def run(argv, log):
 
 
 def gpu_busy():
+    """True when the box is not exclusive: GPU memory, CPU load, or a foreign
+    research/selection process.  The module-B seconds are the scored quantity,
+    so a shared box voids the measurement (this caught a concurrent
+    view-selection run that inflated B by 8 %)."""
     try:
         out = subprocess.run(
             ["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits"],
@@ -100,11 +105,20 @@ def gpu_busy():
         return True
     if any(u > 1200 for u in used):
         return True
-    ps = subprocess.run(["pgrep", "-af",
-                         "resplat_variant|research.run_sweep|train_sweep|render_eval"],
-                        capture_output=True, text=True)
-    foreign = [l for l in ps.stdout.splitlines()
-               if "run_exact13_gate" not in l and "pgrep" not in l]
+    try:
+        load1 = float(Path("/proc/loadavg").read_text().split()[0])
+    except Exception:
+        load1 = 0.0
+    if load1 >= 4.0:
+        return True
+    ps = subprocess.run(["ps", "-eo", "args"], capture_output=True, text=True)
+    foreign = []
+    for line in ps.stdout.splitlines():
+        if "run_exact13_gate" in line or "ps -eo" in line or "pgrep" in line:
+            continue
+        if re.search(r"research\.(run_sweep|train_sweep|resplat_variant|render_eval)"
+                     r"|/run[0-9]+\.py|viewsel|holdout|init_error_diag|ply_", line):
+            foreign.append(line)
     return bool(foreign)
 
 

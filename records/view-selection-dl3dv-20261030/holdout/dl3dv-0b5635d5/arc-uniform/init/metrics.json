@@ -1,0 +1,58 @@
+{
+  "num_views": 8,
+  "mean": {
+    "psnr": 19.921,
+    "ssim": 0.5873,
+    "lpips": 0.3902
+  },
+  "per_view": [
+    {
+      "name": "frame_00003.png",
+      "psnr": 23.097,
+      "ssim": 0.7121,
+      "lpips": 0.3091
+    },
+    {
+      "name": "frame_00056.png",
+      "psnr": 19.6521,
+      "ssim": 0.5404,
+      "lpips": 0.4068
+    },
+    {
+      "name": "frame_00110.png",
+      "psnr": 17.847,
+      "ssim": 0.4427,
+      "lpips": 0.453
+    },
+    {
+      "name": "frame_00164.png",
+      "psnr": 18.6929,
+      "ssim": 0.5484,
+      "lpips": 0.4256
+    },
+    {
+      "name": "frame_00219.png",
+      "psnr": 19.3085,
+      "ssim": 0.5831,
+      "lpips": 0.3891
+    },
+    {
+      "name": "frame_00272.png",
+      "psnr": 18.4684,
+      "ssim": 0.6452,
+      "lpips": 0.4044
+    },
+    {
+      "name": "frame_00326.png",
+      "psnr": 19.1461,
+      "ssim": 0.5183,
+      "lpips": 0.4353
+    },
+    {
+      "name": "frame_00380.png",
+      "psnr": 23.1576,
+      "ssim": 0.708,
+      "lpips": 0.2984
+    }
+  ]
+}
