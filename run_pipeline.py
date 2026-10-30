@@ -182,6 +182,10 @@ def main(argv=None):
         # three cases (see records/SUMMARY.md, campaign P)
         "--densify_until_iter", max(1, args.b_iterations // 4),
         "--lambda_dssim", "0.6", "--scaling_lr", "0.01",
+        # one-shot budget-preserving reallocation at the end of the structural phase:
+        # retire the lowest-contribution 15% and split the highest-residual ones.
+        # Measured +0.8..+2.8 on six scenes while module-B time also drops.
+        "--realloc_frac", "0.15", "--realloc_at", str(max(1, args.b_iterations // 4)),
         "--image_cache", str(cache_dir),
         "--limit_seconds", b_limit, "--record", results / "module_b/train_record.json"), logs)
     record = read(results / "module_b/train_record.json")
