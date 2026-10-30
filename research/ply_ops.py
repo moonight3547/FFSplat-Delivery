@@ -182,6 +182,23 @@ def voxel_fuse(data, voxels=128, max_scale_quantile=1.0, target_frac=1.0):
            for n in names}
     return out, dict(count=len(out_rows), merged_away=int(len(xyz) - len(out_rows)))
 
+
+def op_scale_mult(data, mult=1.1):
+    """Bake a mild low-pass filter into the PLY by dilating every Gaussian.
+
+    The pinned FastGS rasteriser hardcodes prefiltered=False (no 2D filter), while the
+    ReSplat decoder ran gsplat in antialiased mode. On high-frequency scenes that
+    mismatch shows up as aliasing, which VGG-LPIPS punishes. Since the deliverable is
+    the PLY (the official renderer is fixed), the filter has to live in the parameters:
+    a small uniform scale-up softens the reconstruction the same way a prefilter would.
+    """
+    import numpy as np
+    out = dict(data)
+    cols = [c for c in data if c.startswith("scale_")]
+    for c in cols:
+        out[c] = data[c] + float(np.log(mult))
+    return out, dict(count=len(data["x"]), mult=float(mult))
+
 def op_densify(data, factor=2, shrink=0.7, jitter=0.15):
     rng = np.random.default_rng(20261030)
     index = []
@@ -212,9 +229,10 @@ def main(argv=None):
     p.add_argument("--out", required=True)
     p.add_argument("--op", required=True,
                    choices=["inspect", "prune", "sharpen", "densify", "merge", "voxelmerge",
-                            "voxelfuse"])
+                            "voxelfuse", "scalemult"])
     p.add_argument("--voxels", type=int, default=128)
     p.add_argument("--target-frac", type=float, default=1.0, dest="target_frac")
+    p.add_argument("--scale-mult", type=float, default=1.1, dest="scale_mult")
     p.add_argument("--factor", type=int, default=2)
     p.add_argument("--shrink", type=float, default=0.7)
     p.add_argument("--jitter", type=float, default=0.15)
@@ -254,6 +272,8 @@ def main(argv=None):
         out, info = op_sharpen(data, args.gain)
     elif args.op == "voxelmerge":
         out, info = data, vinfo  # already filtered above
+    elif args.op == "scalemult":
+        out, info = op_scale_mult(data, args.scale_mult)
     elif args.op == "voxelfuse":
         out, info = voxel_fuse(data, voxels=args.voxels, target_frac=args.target_frac)
     else:
