@@ -19,6 +19,7 @@ CASES=(); for s in $DL; do CASES+=("dl3dv/$s"); done
 for s in $HW; do CASES+=("hw/$s"); done; for s in $MP; do CASES+=("mipnerf360/$s"); done
 
 for case in "${CASES[@]}"; do
+  if [ -n "${ONLY:-}" ] && [ "${case#*/}" != "${ONLY}" ]; then continue; fi
   group=${case%%/*}; scene=${case#*/}; d="$OUT/work"
   case "$group" in dl3dv) dd=DL3DV ;; *) dd=$group ;; esac
   src="$DATA/$dd/$scene"

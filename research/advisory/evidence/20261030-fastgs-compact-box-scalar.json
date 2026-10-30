@@ -1,0 +1,36 @@
+{
+  "source": "https://raw.githubusercontent.com/fastgs/FastGS/main/submodules/diff-gaussian-rasterization_fastgs/cuda_rasterizer/auxiliary.h",
+  "type": "scalar ideal Compact Box ellipse calculation; not actual tile/pixel equivalence or GPU timing",
+  "formula": "squared Mahalanobis bound t=2*mult*log(255*opacity)",
+  "rows": [
+    {
+      "opacity": 0.005,
+      "mult1_radius_sigma": 0.6970597945806222,
+      "mult_half_radius_sigma": 0.49289570764045976,
+      "ideal_half_bound_alpha": 0.004428074427700476,
+      "radius_ratio_half_to_one": 0.7071067811865476
+    },
+    {
+      "opacity": 0.01,
+      "mult1_radius_sigma": 1.368278742925092,
+      "mult_half_radius_sigma": 0.9675191776757373,
+      "ideal_half_bound_alpha": 0.006262242910851495,
+      "radius_ratio_half_to_one": 0.7071067811865476
+    },
+    {
+      "opacity": 0.1,
+      "mult1_radius_sigma": 2.5450652063019445,
+      "mult_half_radius_sigma": 1.7996328659380447,
+      "ideal_half_bound_alpha": 0.019802950859533486,
+      "radius_ratio_half_to_one": 0.7071067811865476
+    },
+    {
+      "opacity": 1.0,
+      "mult1_radius_sigma": 3.3290429691304455,
+      "mult_half_radius_sigma": 2.3539888583335364,
+      "ideal_half_bound_alpha": 0.06262242910851495,
+      "radius_ratio_half_to_one": 0.7071067811865476
+    }
+  ],
+  "limitations": "mult affects tile support, not conic covariance; full intersected tiles are evaluated, so boundary alpha is not a per-pixel hard cutoff. Installed CUDA source identity not yet captured."
+}

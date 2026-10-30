@@ -1,0 +1,71 @@
+{
+  "type": "CPU identity trace of the pinned append-then-remove split followed by positional score padding; no training",
+  "source": "competition/upstream/baseline/fastgs/scene/gaussian_model.py",
+  "source_sha256": "1797a5e71d831beac0d1d0d8d0968c4348814612d8314c94034edb10d6b0ce70",
+  "old_identities": [
+    "old0",
+    "old1",
+    "old2"
+  ],
+  "old_pruning_scores": [
+    0.1,
+    0.9,
+    0.2
+  ],
+  "split_parent": "old1",
+  "after_split": [
+    "old0",
+    "old2",
+    "child1a",
+    "child1b"
+  ],
+  "rows": [
+    {
+      "current_index": 0,
+      "gaussian_identity": "old0",
+      "old_score_assigned_by_position": 0.1,
+      "score_for_surviving_old_identity": 0.1,
+      "matches_identity": true
+    },
+    {
+      "current_index": 1,
+      "gaussian_identity": "old2",
+      "old_score_assigned_by_position": 0.9,
+      "score_for_surviving_old_identity": 0.2,
+      "matches_identity": false
+    },
+    {
+      "current_index": 2,
+      "gaussian_identity": "child1a",
+      "old_score_assigned_by_position": 0.2,
+      "score_for_surviving_old_identity": null,
+      "matches_identity": false
+    },
+    {
+      "current_index": 3,
+      "gaussian_identity": "child1b",
+      "old_score_assigned_by_position": null,
+      "score_for_surviving_old_identity": null,
+      "matches_identity": true
+    }
+  ],
+  "all_surviving_old_scores_correct": false,
+  "new_points_receive_old_scores": [
+    "child1a"
+  ],
+  "prune_condition": "Misalignment changes actual deletion only when relevant split and prune sampling/eligibility occur in the same update; current runs not instrumented",
+  "source_methods": {
+    "prune_points": {
+      "start_line": 364,
+      "end_line": 381
+    },
+    "densify_and_split_fastgs": {
+      "start_line": 431,
+      "end_line": 453
+    },
+    "densify_and_prune_fastgs": {
+      "start_line": 468,
+      "end_line": 526
+    }
+  }
+}
