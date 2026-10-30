@@ -109,8 +109,8 @@ def main(argv=None):
                         help="budget-preserving reallocation: retire this fraction of the "
                              "lowest-contribution Gaussians and split the same number of "
                              "high-residual ones at --realloc_at")
-    parser.add_argument("--realloc_at", type=int, default=1250,
-                        help="one or more iterations (comma separated) for the reallocation")
+    parser.add_argument("--realloc_at", type=str, default="1250",
+                        help="one or more iterations, comma separated")
     parser.add_argument("--freeze_geometry", action="store_true",
                         help="optimise only the SH/colour parameters (position, scale, "
                              "rotation and opacity frozen); tests how much of the 5k gain "
