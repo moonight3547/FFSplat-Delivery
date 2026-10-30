@@ -1,0 +1,3 @@
+mipnerf360/bicycle ctrl 2
+mipnerf360/bicycle pgsr_planar 2
+mipnerf360/counter pgsr_planar 2

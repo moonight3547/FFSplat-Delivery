@@ -1,0 +1,57 @@
+{
+  "per_mode": {
+    "RGB": {
+      "forward_ms_mean": 1.9525414539708033,
+      "forward_ms_median": 1.9431114196777344,
+      "forward_ms_p90": 2.086573839187622,
+      "backward_ms_mean": 5.517942541175419,
+      "forward_backward_ms_mean": 7.470483995146222,
+      "channels": 3,
+      "num_gaussians": 993861,
+      "resolution": [
+        576,
+        960
+      ],
+      "views": 3,
+      "reps_per_view": 15
+    },
+    "RGB+ED": {
+      "forward_ms_mean": 1.9857968721124861,
+      "forward_ms_median": 1.9984766840934753,
+      "forward_ms_p90": 2.102046459913254,
+      "backward_ms_mean": 5.666358851724201,
+      "forward_backward_ms_mean": 7.652155723836687,
+      "channels": 4,
+      "num_gaussians": 993861,
+      "resolution": [
+        576,
+        960
+      ],
+      "views": 3,
+      "reps_per_view": 15
+    }
+  },
+  "summary": {
+    "num_gaussians": 993861,
+    "resolution": [
+      576,
+      960
+    ],
+    "views": [
+      0,
+      1,
+      2
+    ],
+    "rgb_forward_ms": 1.9525414539708033,
+    "rgb_ed_forward_ms": 1.9857968721124861,
+    "rgb_forward_backward_ms": 7.470483995146222,
+    "rgb_ed_forward_backward_ms": 7.652155723836687,
+    "extra_depth_forward_ms": 0.03325541814168287,
+    "extra_depth_forward_backward_ms": 0.181671728690465,
+    "fastgs_1cam_step_fwd_bwd_ms_reference": 4.84,
+    "extra_depth_as_fraction_of_fastgs_step": 0.037535481134393596,
+    "full_rate_depth_b_pct": 3.7535481134393596,
+    "every10steps_depth_b_pct": 0.37535481134393595,
+    "every10steps_time_points_bicycle": -0.0008780229505121309
+  }
+}

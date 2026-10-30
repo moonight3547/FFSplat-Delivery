@@ -139,6 +139,12 @@ def main(argv=None):
                         dest="mid_prune_keep")
     parser.add_argument("--mid-prune-views", type=int, default=None,
                         dest="mid_prune_views")
+    # ---- PGSR hybrid (free per-Gaussian priors; see research/train_sweep.py)
+    parser.add_argument("--planar-weight", type=float, default=None, dest="planar_weight")
+    parser.add_argument("--normal-weight", type=float, default=None, dest="normal_weight")
+    parser.add_argument("--normal-from", type=int, default=None, dest="normal_from")
+    parser.add_argument("--shape-stats-every", type=int, default=None,
+                        dest="shape_stats_every")
     args = parser.parse_args(argv)
 
     profile = read(args.profile)
@@ -206,6 +212,10 @@ def main(argv=None):
         "--mid_prune_at": args.mid_prune_at,
         "--mid_prune_keep": args.mid_prune_keep,
         "--mid_prune_views": args.mid_prune_views,
+        "--planar_weight": args.planar_weight,
+        "--normal_weight": args.normal_weight,
+        "--normal_from": args.normal_from,
+        "--shape_stats_every": args.shape_stats_every,
     }
     for flag, value in optional.items():
         if value is not None:

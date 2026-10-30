@@ -96,6 +96,11 @@ DEFAULT_ARMS = {
                        mid_prune_at=1250, mid_prune_keep=0.9, mid_prune_views=24),
     "m1_2000_70": dict(kind="train", trainer="standard", stage2_iters=0, stage3=0,
                        mid_prune_at=2000, mid_prune_keep=0.7, mid_prune_views=24),
+    # ---- PGSR hybrid (task-12): free per-Gaussian planar prior on the delivery loss
+    "pgsr_planar": dict(kind="train", trainer="standard", stage2_iters=0, stage3=0,
+                        planar_weight=1.0, normal_weight=0.0),
+    "pgsr_normal": dict(kind="train", trainer="standard", stage2_iters=0, stage3=0,
+                        planar_weight=0.0, normal_weight=1.0),
     "ctrl": dict(kind="train", trainer="standard", stage2_iters=0, stage3=0),
     # +100 VGG-LPIPS steps directly on top of the delivery recipe (no phase 2):
     # the Lead's priority-2 arm because the MCMC pilot was already negative.
@@ -365,6 +370,11 @@ def cell_train(root, entry, arm, spec, lane, timeout, stage3_iters=None,
         flags["--mid-prune-at"] = spec["mid_prune_at"]
         flags["--mid-prune-keep"] = spec.get("mid_prune_keep", 1.0)
         flags["--mid-prune-views"] = spec.get("mid_prune_views", 24)
+    if spec.get("planar_weight") is not None:
+        flags["--planar-weight"] = spec["planar_weight"]
+    if spec.get("normal_weight") is not None:
+        flags["--normal-weight"] = spec["normal_weight"]
+        flags["--normal-from"] = spec.get("normal_from", 1250)
     # run_sweep refuses a non-empty --out dir, so the trainer output lives in
     # its own subdir (cell.json/rows.json stay in the cell dir)
     sweep = cell / "sweep"
