@@ -103,7 +103,8 @@ def main(argv=None):
     parser.add_argument("--opt-step-schedule", default="", dest="opt_step_schedule",
                         help="optimizer step-frequency schedule, e.g. '2500:2'")
     parser.add_argument("--realloc-frac", type=float, default=0.0, dest="realloc_frac")
-    parser.add_argument("--realloc-mode", type=str, default="inplace", dest="realloc_mode")
+    parser.add_argument("--realloc-mode", type=str, default="concat", dest="realloc_mode")
+    parser.add_argument("--realloc-select", type=str, default="argsort", dest="realloc_select")
     parser.add_argument("--realloc-at", type=str, default="1250", dest="realloc_at",
                         help="one or more iterations, comma separated")
     parser.add_argument("--sh-degree", type=int, default=3, dest="sh_degree")

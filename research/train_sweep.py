@@ -119,6 +119,9 @@ def main(argv=None):
                         help="soft attention on hard pixels (iSplat-style region-aware "
                              "enhancement): weight the term by an EMA of the per-pixel "
                              "residual so ambiguous regions get more gradient")
+    parser.add_argument("--realloc_select", choices=("argsort", "topk"), default="argsort",
+                        help="argsort is the version that produced the good multi-shot numbers; "
+                             "topk was a speed micro-optimisation and must be validated")
     parser.add_argument("--realloc_mode", choices=("inplace", "concat"), default="concat",
                         help="inplace reuses the retired slots (O(n) writes); concat grows "
                              "the tensors through densification_postfix (3 full copies)")
@@ -481,7 +484,10 @@ def main(argv=None):
                 if n_rel >= 4:
                     # topk is O(N) for small k; a full argsort on 0.5-1M elements was the
                     # dominant per-shot cost (each shot otherwise costs 4-5 s).
-                    low = _t.topk(contrib, n_rel, largest=False).indices
+                    if args.realloc_select == "topk":
+                        low = _t.topk(contrib, n_rel, largest=False).indices
+                    else:
+                        low = _t.argsort(contrib)[:n_rel]
                     gaussians._opacity[low] = _inv(_t.full((n_rel, 1), 0.001,
                                                            device=contrib.device))
                     n_all = gaussians.get_xyz.shape[0]
@@ -491,7 +497,10 @@ def main(argv=None):
                         gaussians.denom = _t.zeros((n_all, 1), device=contrib.device)
                     grad = (gaussians.xyz_gradient_accum_abs / (gaussians.denom + 1e-8)).view(-1)
                     n_split = n_rel // 2
-                    top = _t.topk(grad, n_split, largest=True).indices
+                    if args.realloc_select == "topk":
+                        top = _t.topk(grad, n_split, largest=True).indices
+                    else:
+                        top = _t.argsort(grad, descending=True)[:n_split]
                     sel = gaussians.get_xyz[top].repeat(2, 1)
                     jitter = _t.randn_like(sel) * gaussians.get_scaling[top].repeat(2, 1) * 0.3
                     new_xyz = sel + jitter
