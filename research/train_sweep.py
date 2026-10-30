@@ -264,6 +264,19 @@ def main(argv=None):
                 clean["fused"] = True
                 clean["foreach"] = False
                 groups.append(clean)
+            # the fused kernel needs one dtype/device/layout across params and state
+            # Cast IN PLACE (.data) so the optimizer keeps the very same Parameter
+            # objects the model uses; replacing them would silently detach the model.
+            dtypes = {p.dtype for g in groups for p in g["params"]}
+            grads = {p.grad.dtype for g in groups for p in g["params"] if p.grad is not None}
+            if dtypes != {torch.float32} or grads - {torch.float32}:
+                print(f"[fused] {name}: param dtypes {dtypes}, grad dtypes {grads}; casting")
+                for g in groups:
+                    for prm in g["params"]:
+                        if prm.dtype != torch.float32:
+                            prm.data = prm.data.float()
+                        if prm.grad is not None and prm.grad.dtype != torch.float32:
+                            prm.grad.data = prm.grad.data.float()
             try:
                 new_opt = torch.optim.Adam(groups, lr=0.0, eps=1e-15, fused=True)
             except (TypeError, RuntimeError) as error:
