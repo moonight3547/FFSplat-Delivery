@@ -105,6 +105,8 @@ def main(argv=None):
                              "iteration; the LR is scaled by N so the step size is kept")
     parser.add_argument("--time_breakdown", action="store_true",
                         help="accumulate per-section wall clock (render/backward/optimizer)")
+    parser.add_argument("--no_quick_test", action="store_true",
+                        help="skip the diagnostic PSNR pass (the official eval follows)")
     parser.add_argument("--image_cache", type=str, default=None,
                         help="pre-decoded uint8 image cache dir (research.image_cache)")
     parser.add_argument("--limit_seconds", type=float, default=None,
@@ -319,7 +321,9 @@ def main(argv=None):
             _t = time.perf_counter()
 
         with torch.no_grad():
-            ema_loss = 0.4 * loss.item() + 0.6 * ema_loss
+            # loss.item() forces a device sync; only pay it when something prints
+            if (not args.quiet and iteration % 100 == 0) or args.time_breakdown:
+                ema_loss = 0.4 * loss.item() + 0.6 * ema_loss
             if not args.quiet and iteration % 100 == 0:
                 progress.set_postfix({"loss": f"{ema_loss:.5f}",
                                       "N": gaussians.get_xyz.shape[0]})
@@ -440,12 +444,15 @@ def main(argv=None):
         os.makedirs(final_dir, exist_ok=True)
         final_ply = os.path.join(final_dir, "point_cloud.ply")
         gaussians.save_ply(final_ply)
-    final_psnr = None
-    try:
-        final_psnr = quick_test_psnr(scene, gaussians, pipe, background)
-    except Exception as error:  # noqa: BLE001
-        print(f"[sweep] quick psnr failed: {error}")
     total_s = time.perf_counter() - t_total0
+    final_psnr = None
+    if not args.no_quick_test:
+        # Diagnostic only: the pipeline evaluates with the official renderer right
+        # after this, so the pass is optional and its cost is outside module-B time.
+        try:
+            final_psnr = quick_test_psnr(scene, gaussians, pipe, background)
+        except Exception as error:  # noqa: BLE001
+            print(f"[sweep] quick psnr failed: {error}")
 
     record = dict(
         init_ply=str(args.init_ply), init_mode=init_mode,
