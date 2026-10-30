@@ -1,0 +1,364 @@
+{
+  "case": "mipnerf360/bicycle",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/work",
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/resplat/resplat_world.ply",
+  "budget_seconds": 95.0,
+  "train_record": {
+    "init_ply": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/resplat/resplat_world.ply",
+    "init_mode": "ply:resplat_world.ply",
+    "num_init_gaussians": 520980,
+    "num_final_gaussians": 1209038,
+    "iterations": 5000,
+    "completed_iterations": 5000,
+    "stop_reason": "iterations",
+    "final_ply": "/root/gpufree-data/outputs/final-combo-20261030/matrix/bicycle/d2500_m1_cache_v100/sweep/model/point_cloud/iteration_5000/point_cloud.ply",
+    "limit_seconds": null,
+    "scene_load_seconds": 0.222,
+    "init_seconds": 0.797,
+    "train_seconds": 38.974,
+    "total_seconds": 49.298,
+    "stage1_seconds": 38.974,
+    "stage2_seconds": 0.0,
+    "stage3_seconds": 0.0,
+    "stage1_iterations": 5000,
+    "stage2_iterations": 0,
+    "stage3_iterations": 0,
+    "total_iterations": 5000,
+    "stage2_trainer": "standard",
+    "stage2_cams": 1,
+    "stage2_lr_from": null,
+    "stage2_lr_final": null,
+    "stage3_lpips_weight": 0.0,
+    "prune_keep": 1.0,
+    "prune_views": 24,
+    "eng": {
+      "train_cameras_only": false,
+      "lean_step": false,
+      "scene_cache": "/root/gpufree-data/outputs/b-eng-20261030/scene_cache/bicycle"
+    },
+    "pgsr": {
+      "planar_weight": 0.0,
+      "normal_weight": 0.0,
+      "normal_from": 1250,
+      "normal_rebuild": null,
+      "shape_stats": [],
+      "shape_stats_every": 0
+    },
+    "depth_reg": {
+      "weight": 0.0,
+      "every": 10,
+      "from_iter": 4000,
+      "until_iter": 5000,
+      "events": []
+    },
+    "mid_prune_at": 1250,
+    "mid_prune_keep": 0.6,
+    "prune_events": [
+      {
+        "n_before": 1094024,
+        "n_after": 656414,
+        "keep_requested": 0.6,
+        "keep_actual": 0.599999634377308,
+        "seconds": 0.091,
+        "views": 24,
+        "label": "mid1250"
+      }
+    ],
+    "densification_events": [
+      {
+        "iteration": 600,
+        "before": 520980,
+        "after": 580879,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 700,
+        "before": 580879,
+        "after": 643904,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 800,
+        "before": 643904,
+        "after": 706121,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 900,
+        "before": 706121,
+        "after": 784229,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1000,
+        "before": 784229,
+        "after": 841274,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1100,
+        "before": 841274,
+        "after": 895305,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1200,
+        "before": 895305,
+        "after": 951326,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1300,
+        "before": 656414,
+        "after": 738277,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1400,
+        "before": 738277,
+        "after": 785430,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1500,
+        "before": 785430,
+        "after": 843088,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1600,
+        "before": 843088,
+        "after": 897552,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1700,
+        "before": 897552,
+        "after": 955312,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1800,
+        "before": 955312,
+        "after": 994277,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1900,
+        "before": 994277,
+        "after": 1032138,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2000,
+        "before": 1032138,
+        "after": 1072765,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2100,
+        "before": 1072765,
+        "after": 1104197,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2200,
+        "before": 1104197,
+        "after": 1154892,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2300,
+        "before": 1154892,
+        "after": 1173933,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2400,
+        "before": 1173933,
+        "after": 1209038,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      }
+    ],
+    "timing_breakdown": null,
+    "iterations_per_second": 128.29,
+    "quick_test_psnr": null,
+    "num_train_views": 169,
+    "num_test_views": 0,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "settings": {
+      "position_lr_max_steps": 5000,
+      "position_lr_init": 0.00016,
+      "position_lr_final": 1.6e-06,
+      "densify_from_iter": 500,
+      "densify_until_iter": 2500,
+      "densification_interval": 100,
+      "opacity_reset_interval": 5001,
+      "mult": 0.5,
+      "lambda_dssim": 0.6,
+      "scaling_lr": 0.01,
+      "opacity_lr": 0.025,
+      "position_lr_delay_mult": 0.01,
+      "no_densify": false,
+      "seed": 20261015,
+      "res_scales": [
+        1.0
+      ],
+      "res_until": [],
+      "lpips_weight": 0.1,
+      "lpips_every": 1,
+      "lpips_scale": 1.0,
+      "lpips_start": 4901,
+      "lpips_end": 5000,
+      "grad_abs_thresh": 0.0008,
+      "stage2_iters": 0,
+      "stage2_cams": 1,
+      "stage2_trainer": "standard",
+      "stage2_absgrad_every": 200,
+      "stage2_split_frac": 0.01,
+      "stage2_lr_final": null,
+      "stage3_iters": 0,
+      "stage3_lpips_weight": 0.0,
+      "densify_count_thresh": null,
+      "max_gaussians": null
+    }
+  },
+  "results": [
+    {
+      "iteration": 5000,
+      "num_gaussians": 1209038,
+      "train_seconds": 30.97,
+      "b_seconds_estimate": 32.49,
+      "psnr": 24.844,
+      "ssim": 0.754,
+      "lpips": 0.2266,
+      "score": {
+        "psnr_points": 7.875200000000001,
+        "ssim_points": 4.320000000000004,
+        "lpips_points": 4.680000000000001,
+        "time_points": 14.622593826487746,
+        "quality_points": 16.875200000000007,
+        "total_points": 31.49779382648775,
+        "budget_ratio": 0.3419832778080513,
+        "valid": true
+      }
+    }
+  ]
+}

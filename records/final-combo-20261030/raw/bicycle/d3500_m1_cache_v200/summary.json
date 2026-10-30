@@ -1,0 +1,484 @@
+{
+  "case": "mipnerf360/bicycle",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/work",
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/resplat/resplat_world.ply",
+  "budget_seconds": 95.0,
+  "train_record": {
+    "init_ply": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/resplat/resplat_world.ply",
+    "init_mode": "ply:resplat_world.ply",
+    "num_init_gaussians": 520980,
+    "num_final_gaussians": 1433880,
+    "iterations": 5000,
+    "completed_iterations": 5000,
+    "stop_reason": "iterations",
+    "final_ply": "/root/gpufree-data/outputs/final-combo-20261030/matrix/bicycle/d3500_m1_cache_v200/sweep/model/point_cloud/iteration_5000/point_cloud.ply",
+    "limit_seconds": null,
+    "scene_load_seconds": 0.222,
+    "init_seconds": 0.805,
+    "train_seconds": 47.019,
+    "total_seconds": 58.967,
+    "stage1_seconds": 47.019,
+    "stage2_seconds": 0.0,
+    "stage3_seconds": 0.0,
+    "stage1_iterations": 5000,
+    "stage2_iterations": 0,
+    "stage3_iterations": 0,
+    "total_iterations": 5000,
+    "stage2_trainer": "standard",
+    "stage2_cams": 1,
+    "stage2_lr_from": null,
+    "stage2_lr_final": null,
+    "stage3_lpips_weight": 0.0,
+    "prune_keep": 1.0,
+    "prune_views": 24,
+    "eng": {
+      "train_cameras_only": false,
+      "lean_step": false,
+      "scene_cache": "/root/gpufree-data/outputs/b-eng-20261030/scene_cache/bicycle"
+    },
+    "pgsr": {
+      "planar_weight": 0.0,
+      "normal_weight": 0.0,
+      "normal_from": 1250,
+      "normal_rebuild": null,
+      "shape_stats": [],
+      "shape_stats_every": 0
+    },
+    "depth_reg": {
+      "weight": 0.0,
+      "every": 10,
+      "from_iter": 4000,
+      "until_iter": 5000,
+      "events": []
+    },
+    "mid_prune_at": 1250,
+    "mid_prune_keep": 0.6,
+    "prune_events": [
+      {
+        "n_before": 1087624,
+        "n_after": 652574,
+        "keep_requested": 0.6,
+        "keep_actual": 0.5999996322258427,
+        "seconds": 0.091,
+        "views": 24,
+        "label": "mid1250"
+      }
+    ],
+    "densification_events": [
+      {
+        "iteration": 600,
+        "before": 520980,
+        "after": 580903,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 700,
+        "before": 580903,
+        "after": 641122,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 800,
+        "before": 641122,
+        "after": 703901,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 900,
+        "before": 703901,
+        "after": 778444,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1000,
+        "before": 778444,
+        "after": 831341,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1100,
+        "before": 831341,
+        "after": 889817,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1200,
+        "before": 889817,
+        "after": 945760,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1300,
+        "before": 652574,
+        "after": 727421,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1400,
+        "before": 727421,
+        "after": 780282,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1500,
+        "before": 780282,
+        "after": 842956,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1600,
+        "before": 842956,
+        "after": 898606,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1700,
+        "before": 898606,
+        "after": 957915,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1800,
+        "before": 957915,
+        "after": 996992,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1900,
+        "before": 996992,
+        "after": 1027967,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2000,
+        "before": 1027967,
+        "after": 1069989,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2100,
+        "before": 1069989,
+        "after": 1103327,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2200,
+        "before": 1103327,
+        "after": 1154369,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2300,
+        "before": 1154369,
+        "after": 1173225,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2400,
+        "before": 1173225,
+        "after": 1200073,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2500,
+        "before": 1200073,
+        "after": 1219625,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2600,
+        "before": 1219625,
+        "after": 1249828,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2700,
+        "before": 1249828,
+        "after": 1273491,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2800,
+        "before": 1273491,
+        "after": 1307608,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2900,
+        "before": 1307608,
+        "after": 1339341,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 3000,
+        "before": 1339341,
+        "after": 1357748,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 3100,
+        "before": 1357748,
+        "after": 1369016,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 3200,
+        "before": 1369016,
+        "after": 1383470,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 3300,
+        "before": 1383470,
+        "after": 1413046,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 3400,
+        "before": 1413046,
+        "after": 1433880,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      }
+    ],
+    "timing_breakdown": null,
+    "iterations_per_second": 106.34,
+    "quick_test_psnr": null,
+    "num_train_views": 169,
+    "num_test_views": 0,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "settings": {
+      "position_lr_max_steps": 5000,
+      "position_lr_init": 0.00016,
+      "position_lr_final": 1.6e-06,
+      "densify_from_iter": 500,
+      "densify_until_iter": 3500,
+      "densification_interval": 100,
+      "opacity_reset_interval": 5001,
+      "mult": 0.5,
+      "lambda_dssim": 0.6,
+      "scaling_lr": 0.01,
+      "opacity_lr": 0.025,
+      "position_lr_delay_mult": 0.01,
+      "no_densify": false,
+      "seed": 20261015,
+      "res_scales": [
+        1.0
+      ],
+      "res_until": [],
+      "lpips_weight": 0.1,
+      "lpips_every": 1,
+      "lpips_scale": 1.0,
+      "lpips_start": 4801,
+      "lpips_end": 5000,
+      "grad_abs_thresh": 0.0008,
+      "stage2_iters": 0,
+      "stage2_cams": 1,
+      "stage2_trainer": "standard",
+      "stage2_absgrad_every": 200,
+      "stage2_split_frac": 0.01,
+      "stage2_lr_final": null,
+      "stage3_iters": 0,
+      "stage3_lpips_weight": 0.0,
+      "densify_count_thresh": null,
+      "max_gaussians": null
+    }
+  },
+  "results": [
+    {
+      "iteration": 5000,
+      "num_gaussians": 1433880,
+      "train_seconds": 37.04,
+      "b_seconds_estimate": 38.56,
+      "psnr": 24.879,
+      "ssim": 0.7588,
+      "lpips": 0.2159,
+      "score": {
+        "psnr_points": 7.903200000000002,
+        "ssim_points": 4.704000000000006,
+        "lpips_points": 6.8199999999999985,
+        "time_points": 13.201380844952768,
+        "quality_points": 19.427200000000006,
+        "total_points": 32.62858084495277,
+        "budget_ratio": 0.4059378619771255,
+        "valid": true
+      }
+    }
+  ]
+}
