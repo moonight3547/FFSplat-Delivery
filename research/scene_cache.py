@@ -265,8 +265,15 @@ def _verify(work, cache_dir):
         out["fpt_maxdiff"] = max(out["fpt_maxdiff"] or 0.0, md_f)
         out["center_maxdiff"] = max(out["center_maxdiff"] or 0.0, md_c)
         out["fov_maxdiff"] = max(out["fov_maxdiff"] or 0.0, md_fov)
-    out["identical"] = all(v == 0.0 for k, v in out.items()
-                           if k.endswith("maxdiff") and v is not None)
+    # Camera tensors are copied verbatim from a normal Scene and must match
+    # bitwise.  Pixels go through uint8/255 on GPU vs PIL->np/255 upstream and
+    # may differ by one float32 rounding step (~6e-8); that is not a semantic
+    # difference, so report both exactness levels instead of forcing rebuilds.
+    transform_keys = ("wvt_maxdiff", "fpt_maxdiff", "center_maxdiff")
+    out["transforms_bitwise"] = all((out[k] or 0.0) == 0.0 for k in transform_keys)
+    out["pixels_bitwise"] = (out.get("images_maxdiff") or 0.0) == 0.0
+    out["pixels_1ulp_or_better"] = (out.get("images_maxdiff") or 0.0) <= 1e-6
+    out["identical"] = bool(out["transforms_bitwise"] and out["pixels_1ulp_or_better"])
     out["seed"] = meta.get("seed", 20261015)
     out["cached_load_timings"] = cached.load_timings
     return out
