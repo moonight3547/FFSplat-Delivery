@@ -1,0 +1,354 @@
+{
+  "case": "mipnerf360/bicycle",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/work",
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/resplat/resplat_world.ply",
+  "budget_seconds": 95.0,
+  "train_record": {
+    "init_ply": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/resplat/resplat_world.ply",
+    "init_mode": "ply:resplat_world.ply",
+    "num_init_gaussians": 520980,
+    "num_final_gaussians": 1528177,
+    "iterations": 5000,
+    "completed_iterations": 5000,
+    "stop_reason": "iterations",
+    "final_ply": "/root/gpufree-data/outputs/bigd-combo-20261030/matrix/bicycle/bigd/sweep/model/point_cloud/iteration_5000/point_cloud.ply",
+    "limit_seconds": null,
+    "scene_load_seconds": 2.375,
+    "init_seconds": 0.893,
+    "train_seconds": 42.498,
+    "total_seconds": 55.86,
+    "stage1_seconds": 42.498,
+    "stage2_seconds": 0.0,
+    "stage3_seconds": 0.0,
+    "stage1_iterations": 5000,
+    "stage2_iterations": 0,
+    "stage3_iterations": 0,
+    "total_iterations": 5000,
+    "stage2_trainer": "standard",
+    "stage2_cams": 1,
+    "stage2_lr_from": null,
+    "stage2_lr_final": null,
+    "stage3_lpips_weight": 0.0,
+    "prune_keep": 1.0,
+    "prune_views": 24,
+    "eng": {
+      "train_cameras_only": false,
+      "lean_step": false,
+      "scene_cache": null
+    },
+    "pgsr": {
+      "planar_weight": 0.0,
+      "normal_weight": 0.0,
+      "normal_from": 1250,
+      "normal_rebuild": null,
+      "shape_stats": [],
+      "shape_stats_every": 0
+    },
+    "depth_reg": {
+      "weight": 0.0,
+      "every": 10,
+      "from_iter": 4000,
+      "until_iter": 5000,
+      "events": []
+    },
+    "mid_prune_at": 0,
+    "mid_prune_keep": 1.0,
+    "prune_events": [],
+    "densification_events": [
+      {
+        "iteration": 600,
+        "before": 520980,
+        "after": 587723,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 700,
+        "before": 587723,
+        "after": 649392,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 800,
+        "before": 649392,
+        "after": 732866,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 900,
+        "before": 732866,
+        "after": 797860,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1000,
+        "before": 797860,
+        "after": 868698,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1100,
+        "before": 868698,
+        "after": 923370,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1200,
+        "before": 923370,
+        "after": 988126,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1300,
+        "before": 1136344,
+        "after": 1183321,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1400,
+        "before": 1183321,
+        "after": 1225917,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1500,
+        "before": 1225917,
+        "after": 1276574,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1600,
+        "before": 1276574,
+        "after": 1310828,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1700,
+        "before": 1310828,
+        "after": 1347225,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1800,
+        "before": 1347225,
+        "after": 1374645,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 1900,
+        "before": 1374645,
+        "after": 1397047,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2000,
+        "before": 1397047,
+        "after": 1412628,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2100,
+        "before": 1412628,
+        "after": 1453379,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2200,
+        "before": 1453379,
+        "after": 1484790,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2300,
+        "before": 1484790,
+        "after": 1506198,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      },
+      {
+        "iteration": 2400,
+        "before": 1506198,
+        "after": 1528177,
+        "actual_native_parameters": {
+          "mult": 0.5,
+          "loss_thresh": 0.1,
+          "grad_abs_thresh": 0.0008,
+          "grad_thresh": 0.0002,
+          "dense": 0.001
+        }
+      }
+    ],
+    "timing_breakdown": null,
+    "iterations_per_second": 117.65,
+    "quick_test_psnr": null,
+    "num_train_views": 169,
+    "num_test_views": 25,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "settings": {
+      "position_lr_max_steps": 5000,
+      "position_lr_init": 0.00016,
+      "position_lr_final": 1.6e-06,
+      "densify_from_iter": 500,
+      "densify_until_iter": 2500,
+      "densification_interval": 100,
+      "opacity_reset_interval": 5001,
+      "mult": 0.5,
+      "lambda_dssim": 0.6,
+      "scaling_lr": 0.01,
+      "opacity_lr": 0.025,
+      "position_lr_delay_mult": 0.01,
+      "no_densify": false,
+      "seed": 20261015,
+      "res_scales": [
+        1.0
+      ],
+      "res_until": [],
+      "lpips_weight": 0.0,
+      "lpips_every": 1,
+      "lpips_scale": 0.5,
+      "lpips_start": 1,
+      "lpips_end": 1000000000,
+      "grad_abs_thresh": 0.0008,
+      "stage2_iters": 0,
+      "stage2_cams": 1,
+      "stage2_trainer": "standard",
+      "stage2_absgrad_every": 200,
+      "stage2_split_frac": 0.01,
+      "stage2_lr_final": null,
+      "stage3_iters": 0,
+      "stage3_lpips_weight": 0.0,
+      "densify_count_thresh": null,
+      "max_gaussians": null
+    }
+  },
+  "results": [
+    {
+      "iteration": 5000,
+      "num_gaussians": 1528177,
+      "train_seconds": 31.59,
+      "b_seconds_estimate": 35.35,
+      "psnr": 24.925,
+      "ssim": 0.7581,
+      "lpips": 0.2586,
+      "score": {
+        "psnr_points": 7.94,
+        "ssim_points": 4.648000000000003,
+        "lpips_points": 0.0,
+        "time_points": 13.952118568594692,
+        "quality_points": 12.588000000000005,
+        "total_points": 26.540118568594696,
+        "budget_ratio": 0.37215466441323886,
+        "valid": true
+      }
+    }
+  ]
+}

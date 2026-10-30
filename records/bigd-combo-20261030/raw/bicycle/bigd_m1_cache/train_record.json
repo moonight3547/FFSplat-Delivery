@@ -1,0 +1,345 @@
+{
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/resplat/resplat_world.ply",
+  "init_mode": "ply:resplat_world.ply",
+  "num_init_gaussians": 520980,
+  "num_final_gaussians": 1204926,
+  "iterations": 5000,
+  "completed_iterations": 5000,
+  "stop_reason": "iterations",
+  "final_ply": "/root/gpufree-data/outputs/bigd-combo-20261030/matrix/bicycle/bigd_m1_cache/sweep/model/point_cloud/iteration_5000/point_cloud.ply",
+  "limit_seconds": null,
+  "snapshots": [
+    {
+      "iteration": 5000,
+      "train_seconds": 27.014593672007322,
+      "num_gaussians": 1204926,
+      "ply": "/root/gpufree-data/outputs/bigd-combo-20261030/matrix/bicycle/bigd_m1_cache/sweep/snaps/iter05000.ply"
+    }
+  ],
+  "scene_load_seconds": 0.219,
+  "init_seconds": 0.811,
+  "train_seconds": 35.201,
+  "total_seconds": 44.543,
+  "stage1_seconds": 35.201,
+  "stage2_seconds": 0.0,
+  "stage3_seconds": 0.0,
+  "stage1_iterations": 5000,
+  "stage2_iterations": 0,
+  "stage3_iterations": 0,
+  "total_iterations": 5000,
+  "stage2_trainer": "standard",
+  "stage2_cams": 1,
+  "stage2_lr_from": null,
+  "stage2_lr_final": null,
+  "stage3_lpips_weight": 0.0,
+  "prune_keep": 1.0,
+  "prune_views": 24,
+  "eng": {
+    "train_cameras_only": false,
+    "lean_step": false,
+    "scene_cache": "/root/gpufree-data/outputs/b-eng-20261030/scene_cache/bicycle"
+  },
+  "pgsr": {
+    "planar_weight": 0.0,
+    "normal_weight": 0.0,
+    "normal_from": 1250,
+    "normal_rebuild": null,
+    "shape_stats": [],
+    "shape_stats_every": 0
+  },
+  "depth_reg": {
+    "weight": 0.0,
+    "every": 10,
+    "from_iter": 4000,
+    "until_iter": 5000,
+    "events": []
+  },
+  "mid_prune_at": 1250,
+  "mid_prune_keep": 0.6,
+  "prune_events": [
+    {
+      "n_before": 1078021,
+      "n_after": 646813,
+      "keep_requested": 0.6,
+      "keep_actual": 0.6000003710502857,
+      "seconds": 0.09,
+      "views": 24,
+      "label": "mid1250"
+    }
+  ],
+  "densification_events": [
+    {
+      "iteration": 600,
+      "before": 520980,
+      "after": 579859,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 700,
+      "before": 579859,
+      "after": 643690,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 800,
+      "before": 643690,
+      "after": 703133,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 900,
+      "before": 703133,
+      "after": 777242,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1000,
+      "before": 777242,
+      "after": 832917,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1100,
+      "before": 832917,
+      "after": 887629,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1200,
+      "before": 887629,
+      "after": 937411,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1300,
+      "before": 646813,
+      "after": 726914,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1400,
+      "before": 726914,
+      "after": 775217,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1500,
+      "before": 775217,
+      "after": 839095,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1600,
+      "before": 839095,
+      "after": 897295,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1700,
+      "before": 897295,
+      "after": 956003,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1800,
+      "before": 956003,
+      "after": 998336,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1900,
+      "before": 998336,
+      "after": 1031458,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2000,
+      "before": 1031458,
+      "after": 1073979,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2100,
+      "before": 1073979,
+      "after": 1104797,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2200,
+      "before": 1104797,
+      "after": 1155409,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2300,
+      "before": 1155409,
+      "after": 1171898,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2400,
+      "before": 1171898,
+      "after": 1204926,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    }
+  ],
+  "timing_breakdown": null,
+  "iterations_per_second": 142.04,
+  "quick_test_psnr": null,
+  "num_train_views": 169,
+  "num_test_views": 0,
+  "res_scales": [
+    1.0
+  ],
+  "res_until": [],
+  "settings": {
+    "position_lr_max_steps": 5000,
+    "position_lr_init": 0.00016,
+    "position_lr_final": 1.6e-06,
+    "densify_from_iter": 500,
+    "densify_until_iter": 2500,
+    "densification_interval": 100,
+    "opacity_reset_interval": 5001,
+    "mult": 0.5,
+    "lambda_dssim": 0.6,
+    "scaling_lr": 0.01,
+    "opacity_lr": 0.025,
+    "position_lr_delay_mult": 0.01,
+    "no_densify": false,
+    "seed": 20261015,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "lpips_weight": 0.0,
+    "lpips_every": 1,
+    "lpips_scale": 0.5,
+    "lpips_start": 1,
+    "lpips_end": 1000000000,
+    "grad_abs_thresh": 0.0008,
+    "stage2_iters": 0,
+    "stage2_cams": 1,
+    "stage2_trainer": "standard",
+    "stage2_absgrad_every": 200,
+    "stage2_split_frac": 0.01,
+    "stage2_lr_final": null,
+    "stage3_iters": 0,
+    "stage3_lpips_weight": 0.0,
+    "densify_count_thresh": null,
+    "max_gaussians": null
+  }
+}

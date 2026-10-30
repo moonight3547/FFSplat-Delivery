@@ -1,0 +1,208 @@
+[
+  {
+    "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+    "scene": "0b5635",
+    "arm": "bigd",
+    "n": 1100210,
+    "psnr": 24.119,
+    "ssim": 0.8309,
+    "lpips": 0.2268,
+    "q": 22.4072,
+    "b": 38.16,
+    "time": 13.22951,
+    "total": 35.63671,
+    "budget": 94.29,
+    "scene_load": 3.765,
+    "init": 0.646,
+    "record_train": 53.586,
+    "snap_train": 33.246,
+    "densify_events": 19,
+    "densify_thresholds": [
+      0.0008
+    ],
+    "prune_events": [],
+    "scene_cache": false
+  },
+  {
+    "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+    "scene": "0b5635",
+    "arm": "bigd_cache",
+    "n": 1088029,
+    "psnr": 24.122,
+    "ssim": 0.8309,
+    "lpips": 0.2266,
+    "q": 22.4496,
+    "b": 34.19,
+    "time": 14.16543,
+    "total": 36.61503,
+    "budget": 94.29,
+    "scene_load": 0.28,
+    "init": 0.652,
+    "record_train": 40.163,
+    "snap_train": 32.753,
+    "densify_events": 19,
+    "densify_thresholds": [
+      0.0008
+    ],
+    "prune_events": [],
+    "scene_cache": true
+  },
+  {
+    "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+    "scene": "0b5635",
+    "arm": "delivery",
+    "n": 793594,
+    "psnr": 23.844,
+    "ssim": 0.8158,
+    "lpips": 0.2462,
+    "q": 17.0992,
+    "b": 30.89,
+    "time": 14.94314,
+    "total": 32.04234,
+    "budget": 94.29,
+    "scene_load": 3.685,
+    "init": 0.657,
+    "record_train": 31.353,
+    "snap_train": 26.044,
+    "densify_events": 7,
+    "densify_thresholds": [
+      0.0012
+    ],
+    "prune_events": [],
+    "scene_cache": false
+  },
+  {
+    "case": "mipnerf360/bicycle",
+    "scene": "bicycle",
+    "arm": "bigd",
+    "n": 1528177,
+    "psnr": 24.925,
+    "ssim": 0.7581,
+    "lpips": 0.2586,
+    "q": 12.588,
+    "b": 35.35,
+    "time": 13.95212,
+    "total": 26.54012,
+    "budget": 95.0,
+    "scene_load": 2.375,
+    "init": 0.893,
+    "record_train": 42.498,
+    "snap_train": 31.587,
+    "densify_events": 19,
+    "densify_thresholds": [
+      0.0008
+    ],
+    "prune_events": [],
+    "scene_cache": false
+  },
+  {
+    "case": "mipnerf360/bicycle",
+    "scene": "bicycle",
+    "arm": "bigd_cache",
+    "n": 1562185,
+    "psnr": 24.897,
+    "ssim": 0.7561,
+    "lpips": 0.2608,
+    "q": 12.4056,
+    "b": 32.96,
+    "time": 14.51162,
+    "total": 26.91722,
+    "budget": 95.0,
+    "scene_load": 0.224,
+    "init": 0.865,
+    "record_train": 42.545,
+    "snap_train": 31.374,
+    "densify_events": 19,
+    "densify_thresholds": [
+      0.0008
+    ],
+    "prune_events": [],
+    "scene_cache": true
+  },
+  {
+    "case": "mipnerf360/bicycle",
+    "scene": "bicycle",
+    "arm": "bigd_m1",
+    "n": 1272524,
+    "psnr": 24.868,
+    "ssim": 0.7571,
+    "lpips": 0.2636,
+    "q": 12.4624,
+    "b": 31.22,
+    "time": 14.91915,
+    "total": 27.38155,
+    "budget": 95.0,
+    "scene_load": 2.231,
+    "init": 0.771,
+    "record_train": 36.453,
+    "snap_train": 27.719,
+    "densify_events": 19,
+    "densify_thresholds": [
+      0.0008
+    ],
+    "prune_events": [
+      {
+        "n_before": 1140113,
+        "n_after": 684068,
+        "keep_requested": 0.6,
+        "seconds": 0.098
+      }
+    ],
+    "scene_cache": false
+  },
+  {
+    "case": "mipnerf360/bicycle",
+    "scene": "bicycle",
+    "arm": "bigd_m1_cache",
+    "n": 1204926,
+    "psnr": 24.917,
+    "ssim": 0.7581,
+    "lpips": 0.2623,
+    "q": 12.5816,
+    "b": 28.54,
+    "time": 15.54512,
+    "total": 28.12672,
+    "budget": 95.0,
+    "scene_load": 0.219,
+    "init": 0.811,
+    "record_train": 35.201,
+    "snap_train": 27.015,
+    "densify_events": 19,
+    "densify_thresholds": [
+      0.0008
+    ],
+    "prune_events": [
+      {
+        "n_before": 1078021,
+        "n_after": 646813,
+        "keep_requested": 0.6,
+        "seconds": 0.09
+      }
+    ],
+    "scene_cache": true
+  },
+  {
+    "case": "mipnerf360/bicycle",
+    "scene": "bicycle",
+    "arm": "delivery",
+    "n": 998924,
+    "psnr": 24.54,
+    "ssim": 0.7295,
+    "lpips": 0.298,
+    "q": 9.992,
+    "b": 26.95,
+    "time": 15.91714,
+    "total": 25.90914,
+    "budget": 95.0,
+    "scene_load": 2.157,
+    "init": 0.909,
+    "record_train": 31.865,
+    "snap_train": 23.388,
+    "densify_events": 7,
+    "densify_thresholds": [
+      0.0012
+    ],
+    "prune_events": [],
+    "scene_cache": false
+  }
+]
