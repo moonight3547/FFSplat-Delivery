@@ -114,6 +114,9 @@ def main(argv=None):
                         help="optimise only the SH/colour parameters (position, scale, "
                              "rotation and opacity frozen); tests how much of the 5k gain "
                              "is appearance rather than geometry")
+    parser.add_argument("--max_sh_degree", type=int, default=3,
+                        help="cap the ACTIVE SH degree (model keeps SH3 tensors, the "
+                             "rasteriser evaluates fewer channels -> cheaper backward)")
     parser.add_argument("--fused_adam", action="store_true",
                         help="rebuild the per-Gaussian optimizers with fused=True")
     parser.add_argument("--legacy_sync", action="store_true",
@@ -238,6 +241,9 @@ def main(argv=None):
         print(f"[sweep] geometry frozen: {', '.join(frozen)}")
     gaussians.spatial_lr_scale = scene.cameras_extent
     gaussians.training_setup(opt)
+    if args.max_sh_degree < 3:
+        gaussians.active_sh_degree = min(gaussians.active_sh_degree, args.max_sh_degree)
+        print(f"[sh] active SH degree capped at {gaussians.active_sh_degree}")
     if args.fused_adam:
         # Must run after training_setup: FastGS writes opt.percent_dense and creates
         # the Adam instances there. Only the kernel changes; param groups, LRs and the
@@ -303,7 +309,7 @@ def main(argv=None):
                 stop_reason = "wall_clock"
                 break
         gaussians.update_learning_rate(iteration)
-        if iteration % sh_up_every == 0:
+        if iteration % sh_up_every == 0 and gaussians.active_sh_degree < args.max_sh_degree:
             gaussians.oneupSHdegree()
 
         scale = scale_for(iteration)
