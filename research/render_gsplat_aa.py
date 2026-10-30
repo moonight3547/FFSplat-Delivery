@@ -39,6 +39,7 @@ def main(argv=None):
     p.add_argument("--ply", required=True)
     p.add_argument("--out", required=True, help="output metrics json")
     p.add_argument("--eps2d", type=float, default=0.3)
+    p.add_argument("--flip-y", action="store_true", help="negate the camera y axis")
     p.add_argument("--eval", action="store_true", default=True)
     args = p.parse_args(argv)
 
@@ -65,7 +66,9 @@ def main(argv=None):
     ps, ss, lps = [], [], []
     for cam in cams:
         w, h = cam.image_width, cam.image_height
-        viewmat = cam.world_view_transform.transpose(0, 1)
+        viewmat = cam.world_view_transform.transpose(0, 1).clone()
+        if args.flip_y:
+            viewmat[1, :] *= -1
         K = torch.tensor([[cam.FoVx, 0, w / 2], [0, cam.FoVy, h / 2], [0, 0, 1]],
                          device=device, dtype=torch.float32)
         # build a proper pinhole K from the camera FOV

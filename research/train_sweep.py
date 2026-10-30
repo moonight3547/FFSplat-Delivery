@@ -109,7 +109,8 @@ def main(argv=None):
                         help="budget-preserving reallocation: retire this fraction of the "
                              "lowest-contribution Gaussians and split the same number of "
                              "high-residual ones at --realloc_at")
-    parser.add_argument("--realloc_at", type=int, default=1250)
+    parser.add_argument("--realloc_at", type=int, default=1250,
+                        help="one or more iterations (comma separated) for the reallocation")
     parser.add_argument("--freeze_geometry", action="store_true",
                         help="optimise only the SH/colour parameters (position, scale, "
                              "rotation and opacity frozen); tests how much of the 5k gain "
@@ -439,7 +440,8 @@ def main(argv=None):
             _sync()
             timing["optimizer"] += time.perf_counter() - _t
 
-        if args.realloc_frac > 0 and iteration == args.realloc_at:
+        _realloc_ats = [int(x) for x in str(args.realloc_at).split(",") if str(x).strip()]
+        if args.realloc_frac > 0 and iteration in _realloc_ats:
             # One-shot, budget-preserving reallocation (Taming-3DGS style primitive
             # budget, RLSplat style allocation): retire low-contribution Gaussians and
             # spend the freed slots on high-residual regions instead of adding points.
