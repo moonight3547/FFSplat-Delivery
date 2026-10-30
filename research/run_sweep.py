@@ -97,6 +97,9 @@ def main(argv=None):
     parser.add_argument("--densify-count-thresh", type=int, default=None,
                         dest="densify_count_thresh")
     parser.add_argument("--max-gaussians", type=int, default=None, dest="max_gaussians")
+    parser.add_argument("--inject-holes", type=int, default=0, dest="inject_holes",
+                        help="add N low-opacity Gaussians in empty voxels (hole injection)")
+    parser.add_argument("--inject-at", type=int, default=800, dest="inject_at")
     parser.add_argument("--opt-step-schedule", default="", dest="opt_step_schedule",
                         help="optimizer step-frequency schedule, e.g. '2500:2'")
     parser.add_argument("--image-cache", default=None, dest="image_cache",
@@ -151,6 +154,8 @@ def main(argv=None):
         "--max_gaussians": args.max_gaussians,
         "--image_cache": args.image_cache,
         "--opt_step_schedule": args.opt_step_schedule,
+        "--inject_holes": args.inject_holes,
+        "--inject_at": args.inject_at,
     }
     for flag, value in optional.items():
         if value is not None:
