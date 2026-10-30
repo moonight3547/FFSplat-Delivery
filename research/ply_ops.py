@@ -199,6 +199,80 @@ def op_scale_mult(data, mult=1.1):
         out[c] = data[c] + float(np.log(mult))
     return out, dict(count=len(data["x"]), mult=float(mult))
 
+
+def op_texresample(data, voxels=128, seed=0):
+    """Texture-adaptive resampling at CONSTANT primitive count.
+
+    Split the scene into voxels, score each one by a texture proxy (the mean inverse
+    Gaussian scale: small primitives == high frequency detail), then redistribute a
+    fixed budget proportionally to that score. Dense-texture voxels receive extra
+    primitives by randomly splitting their Gaussians; smooth voxels lose them by random
+    pruning. Unlike voxelmerge/voxelfuse the total never changes, so this isolates the
+    effect of the density distribution from the effect of the budget.
+    """
+    import numpy as np
+    rng = np.random.default_rng(seed)
+    xyz = np.stack([data["x"], data["y"], data["z"]], axis=1)
+    lo, hi = np.quantile(xyz, 0.005, axis=0), np.quantile(xyz, 0.995, axis=0)
+    cell = np.maximum(hi - lo, 1e-6) / voxels
+    idx = np.clip(((xyz - lo) / cell).astype(np.int64), 0, voxels - 1)
+    keys = (idx[:, 0] * voxels + idx[:, 1]) * voxels + idx[:, 2]
+    scale_cols = [c for c in data if c.startswith("scale_")]
+    scl = np.stack([np.exp(data[c]) for c in scale_cols], axis=1).mean(axis=1)
+    tex = 1.0 / np.maximum(scl, 1e-6)          # small primitive -> high texture
+    uniq, inv = np.unique(keys, return_inverse=True)
+    n_vox = len(uniq)
+    counts = np.bincount(inv, minlength=n_vox).astype(np.float64)
+    tex_mean = np.bincount(inv, weights=tex, minlength=n_vox) / np.maximum(counts, 1)
+    target = len(xyz) * (tex_mean * counts) / np.maximum((tex_mean * counts).sum(), 1e-9)
+    target = np.maximum(target, 1.0)
+    # integer allocation that keeps the total exactly
+    alloc = np.floor(target).astype(np.int64)
+    short = len(xyz) - int(alloc.sum())
+    if short > 0:
+        order = np.argsort(-(target - alloc))
+        alloc[order[:short]] += 1
+    elif short < 0:
+        order = np.argsort(target - alloc)
+        for k in order[:(-short)]:
+            if alloc[k] > 1:
+                alloc[k] -= 1
+    keep = np.ones(len(xyz), dtype=bool)
+    dup_src = []
+    for vi in range(n_vox):
+        members = np.nonzero(inv == vi)[0]
+        want = int(alloc[vi])
+        have = len(members)
+        if want < have:
+            drop = rng.choice(members, size=have - want, replace=False)
+            keep[drop] = False
+        elif want > have:
+            extra = want - have
+            dup_src.extend(rng.choice(members, size=extra, replace=True).tolist())
+    out = {}
+    for k, v in data.items():
+        try:
+            arr = v[keep]
+            if dup_src and k in ("x", "y", "z"):
+                arr = np.concatenate([arr, v[np.asarray(dup_src)]])
+            elif dup_src and k.startswith("scale_"):
+                arr = np.concatenate([arr, (v[np.asarray(dup_src)] - np.log(1.6))])
+            else:
+                arr = np.concatenate([arr, v[np.asarray(dup_src)]])
+            out[k] = arr
+        except Exception:
+            out[k] = v
+    # jitter the duplicates' positions so they are not exact copies
+    n_dup = len(dup_src)
+    if n_dup:
+        base = len(xyz) - int((~keep).sum())
+        jit = rng.normal(scale=0.3, size=(n_dup, 3)) * np.stack(
+            [np.exp(out[c][base:]) for c in scale_cols], axis=1)
+        out["x"][base:] += jit[:, 0]
+        out["y"][base:] += jit[:, 1]
+        out["z"][base:] += jit[:, 2]
+    return out, dict(count=len(out["x"]), target_total=len(xyz), n_dup=n_dup)
+
 def op_densify(data, factor=2, shrink=0.7, jitter=0.15):
     rng = np.random.default_rng(20261030)
     index = []
@@ -229,7 +303,7 @@ def main(argv=None):
     p.add_argument("--out", required=True)
     p.add_argument("--op", required=True,
                    choices=["inspect", "prune", "sharpen", "densify", "merge", "voxelmerge",
-                            "voxelfuse", "scalemult"])
+                            "voxelfuse", "scalemult", "texresample"])
     p.add_argument("--voxels", type=int, default=128)
     p.add_argument("--target-frac", type=float, default=1.0, dest="target_frac")
     p.add_argument("--scale-mult", type=float, default=1.1, dest="scale_mult")
@@ -272,6 +346,8 @@ def main(argv=None):
         out, info = op_sharpen(data, args.gain)
     elif args.op == "voxelmerge":
         out, info = data, vinfo  # already filtered above
+    elif args.op == "texresample":
+        out, info = op_texresample(data, args.voxels)
     elif args.op == "scalemult":
         out, info = op_scale_mult(data, args.scale_mult)
     elif args.op == "voxelfuse":
