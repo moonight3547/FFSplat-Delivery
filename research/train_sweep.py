@@ -166,6 +166,12 @@ def main(argv=None):
             model_class.densify_count_thresh = args.densify_count_thresh
         if args.max_gaussians is not None:
             model_class.max_gaussians = args.max_gaussians
+            # The aggressive model defaults its densify gate to 2 sampled views while the
+            # standard model uses 5. Leaving it at 2 would change the densification policy
+            # as well as the cap, so every "capped vs uncapped" comparison would be
+            # confounded. Match the control unless the caller explicitly overrides it.
+            if args.densify_count_thresh is None:
+                model_class.densify_count_thresh = 5
         print(f"[sweep] densify gate > {model_class.densify_count_thresh} sampled views, "
               f"cap {model_class.max_gaussians}")
     else:
@@ -479,6 +485,17 @@ def main(argv=None):
                                                     _t.zeros(new_xyz.shape[0], device=new_xyz.device))
                     print(f"[realloc] retired {n_rel}, split {n_split*2} at step {iteration} "
                           f"-> N={gaussians.get_xyz.shape[0]}")
+                    if args.max_gaussians and gaussians.get_xyz.shape[0] > args.max_gaussians:
+                        excess = gaussians.get_xyz.shape[0] - args.max_gaussians
+                        with _t.no_grad():
+                            score = (gaussians.get_opacity.view(-1)
+                                     * gaussians.get_scaling.mean(dim=1))
+                            drop = _t.argsort(score)[:excess]
+                            from utils.general_utils import inverse_sigmoid as _inv2
+                            gaussians._opacity[drop] = _inv2(_t.full((excess, 1), 0.001,
+                                                                     device=score.device))
+                        print(f"[realloc] cap enforced: suppressed {excess} lowest-contribution "
+                              f"Gaussians -> N={gaussians.get_xyz.shape[0]} (hard={args.max_gaussians})")
         if args.inject_holes and iteration == args.inject_at:
             # Mature hole-filling idea (Gaussian Frosting / PUP-3DGS): place fresh
             # low-opacity Gaussians where the current model has no primitives, then let
