@@ -1,0 +1,21 @@
+{
+  "scene": "mipnerf360-counter",
+  "method": "covis-cover",
+  "case": "mipnerf360/counter",
+  "e2e_rc": 0,
+  "delta_ctx_vs_uniform": 0.4566,
+  "ctx_psnr_mean": 27.095347271806453,
+  "num_gaussians": 480626,
+  "control_total": 55.172,
+  "control_q": 40.28,
+  "psnr": 27.853,
+  "ssim": 0.898,
+  "lpips": 0.1873,
+  "quality_points": 38.662400000000005,
+  "b_seconds": 28.82,
+  "time_points": 15.303902446476664,
+  "total_points": 53.96630244647667,
+  "delta_total_vs_control": -1.2056975535233292,
+  "delta_q_vs_control": -1.617599999999996,
+  "note": "runner logging crashed on KeyError('total_points') after summary.json was written; values reconstructed from runs/mipnerf360-counter/covis-cover/summary.json"
+}

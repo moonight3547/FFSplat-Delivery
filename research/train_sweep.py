@@ -192,6 +192,20 @@ def main(argv=None):
                         help="M1: kept fraction at --mid_prune_at")
     parser.add_argument("--mid_prune_views", type=int, default=24,
                         help="M1: train views used for the importance score")
+    # ---- PGSR hybrid: planar / normal priors (per-Gaussian, no second render pass).
+    # Defaults 0 -> the delivery recipe stays bit-identical.
+    parser.add_argument("--planar_weight", type=float, default=0.0,
+                        help="PGSR planar regularizer: weight of mean((s_min/s_max)^2) "
+                             "over all Gaussians (0 = off)")
+    parser.add_argument("--normal_weight", type=float, default=0.0,
+                        help="PGSR normal alignment: weight of mean(1-|cos|^2) between "
+                             "the smallest-scale axis and the ReSplat PLY normal")
+    parser.add_argument("--normal_from", type=int, default=1250,
+                        help="rebuild the normal table by nearest-init lookup at this "
+                             "iteration (after the densification window) when --normal_weight>0")
+    parser.add_argument("--shape_stats_every", type=int, default=0,
+                        help="log Gaussian shape statistics every N iterations "
+                             "(0 = off; forced on when a PGSR weight is set)")
     parser.add_argument("--res_scales", type=str, default="",
                         help="coarse-to-fine training resolutions, e.g. 0.5,0.75,1.0")
     parser.add_argument("--res_until", type=str, default="",
@@ -294,6 +308,35 @@ def main(argv=None):
     else:
         raise SystemExit("either --init_ply or --init_random is required")
     n_init = int(gaussians.get_xyz.shape[0])
+    # ---- PGSR hybrid side tables: ReSplat per-Gaussian normals from the init PLY.
+    # The FastGS model does not carry normals and densification changes N, so the
+    # table is valid before the first densification event and is rebuilt once after
+    # the densification window (--normal_from) by nearest-init lookup.
+    _init_means = _init_normals = _gauss_normals = None
+    pgsr = dict(planar_weight=args.planar_weight, normal_weight=args.normal_weight,
+                normal_from=args.normal_from, normal_rebuild=None)
+    if args.planar_weight > 0.0 or args.normal_weight > 0.0:
+        pgsr["enabled"] = True
+    if args.normal_weight > 0.0 and args.init_ply:
+        try:
+            from plyfile import PlyData
+            _verts = PlyData.read(args.init_ply)["vertex"].data
+            if all(k in _verts.dtype.names for k in ("nx", "ny", "nz")):
+                _n = torch.tensor(np.stack([np.asarray(_verts[k]) for k in
+                                            ("nx", "ny", "nz")], axis=1),
+                                  dtype=torch.float32)
+                _n = _n / _n.norm(dim=1, keepdim=True).clamp_min(1e-8)
+                _init_normals = _n.cuda()
+                _init_means = torch.tensor(np.stack([np.asarray(_verts[k]) for k in
+                                                     ("x", "y", "z")], axis=1),
+                                           dtype=torch.float32).cuda()
+                if _init_normals.shape[0] == n_init:
+                    _gauss_normals = _init_normals.clone()
+                    print(f"[pgsr] loaded {_init_normals.shape[0]} init normals")
+            else:
+                print("[pgsr] init PLY has no nx/ny/nz; normal_align disabled")
+        except Exception as error:  # noqa: BLE001
+            print(f"[pgsr] normal load failed: {error}; normal_align disabled")
     if args.freeze_geometry:
         frozen = []
         for name in ("_xyz", "_scaling", "_rotation", "_opacity"):
@@ -399,6 +442,79 @@ def main(argv=None):
               f"{stats['seconds']:.2f}s")
         return stats
 
+    def _smallest_axis():
+        """World-space direction of each Gaussian's smallest scale axis."""
+        rot = gaussians.get_rotation
+        w, x, y, z = rot[:, 0], rot[:, 1], rot[:, 2], rot[:, 3]
+        R = torch.zeros((rot.shape[0], 3, 3), device=rot.device, dtype=rot.dtype)
+        R[:, 0, 0] = 1 - 2 * (y * y + z * z)
+        R[:, 0, 1] = 2 * (x * y - w * z)
+        R[:, 0, 2] = 2 * (x * z + w * y)
+        R[:, 1, 0] = 2 * (x * y + w * z)
+        R[:, 1, 1] = 1 - 2 * (x * x + z * z)
+        R[:, 1, 2] = 2 * (y * z - w * x)
+        R[:, 2, 0] = 2 * (x * z - w * y)
+        R[:, 2, 1] = 2 * (y * z + w * x)
+        R[:, 2, 2] = 1 - 2 * (x * x + y * y)
+        idx = gaussians.get_scaling.argmin(dim=1)
+        return R[torch.arange(R.shape[0], device=R.device), :, idx]
+
+    def _pgsr_terms(loss):
+        """Add the free PGSR priors (planar + normal alignment) to the loss."""
+        if args.planar_weight <= 0.0 and args.normal_weight <= 0.0:
+            return loss
+        scales = gaussians.get_scaling
+        if args.planar_weight > 0.0:
+            s_min = scales.min(dim=1).values
+            s_max = scales.max(dim=1).values
+            loss = loss + args.planar_weight * (
+                s_min / s_max.detach().clamp_min(1e-12)).pow(2).mean()
+        if (args.normal_weight > 0.0 and _gauss_normals is not None
+                and _gauss_normals.shape[0] == scales.shape[0]):
+            axis = _smallest_axis()
+            cos_abs = (axis * _gauss_normals).sum(dim=1).abs()
+            loss = loss + args.normal_weight * (1.0 - cos_abs.pow(2)).mean()
+        return loss
+
+    def _shape_stats(it):
+        with torch.no_grad():
+            scales = gaussians.get_scaling
+            s_min = scales.min(dim=1).values
+            s_max = scales.max(dim=1).values
+            stats = dict(iteration=int(it), n=int(scales.shape[0]),
+                         s_min_mean=float(s_min.mean()),
+                         s_max_mean=float(s_max.mean()),
+                         anisotropy_mean=float((s_min / s_max.clamp_min(1e-12)).mean()),
+                         s_min_median=float(s_min.median()),
+                         s_max_median=float(s_max.median()))
+            if _gauss_normals is not None and _gauss_normals.shape[0] == scales.shape[0]:
+                axis = _smallest_axis()
+                stats["normal_cos_mean"] = float(
+                    (axis * _gauss_normals).sum(dim=1).abs().mean())
+            return stats
+
+    def _rebuild_normals(it):
+        """Nearest-init normal lookup once N is frozen (approximation, documented)."""
+        nonlocal _gauss_normals
+        if _init_means is None or _init_normals is None:
+            return
+        t0n = time.perf_counter()
+        from scipy.spatial import cKDTree
+        tree = cKDTree(_init_means.detach().cpu().numpy())
+        _, idx = tree.query(gaussians.get_xyz.detach().cpu().numpy(), k=1,
+                            workers=-1)
+        _gauss_normals = _init_normals[torch.from_numpy(idx).to("cuda")]
+        pgsr["normal_rebuild"] = dict(
+            iteration=int(it), seconds=round(time.perf_counter() - t0n, 3),
+            n=int(_gauss_normals.shape[0]))
+        print(f"[pgsr] rebuilt {_gauss_normals.shape[0]} normals by nearest-init "
+              f"lookup at {it} in {pgsr['normal_rebuild']['seconds']:.2f}s")
+
+    shape_stats = []
+    if (args.shape_stats_every > 0 or args.planar_weight > 0.0
+            or args.normal_weight > 0.0):
+        shape_stats.append(_shape_stats(0))
+
     state = dict(scale=None, stack=[], indices=[])
     ema_loss = 0.0
     residual_map = None
@@ -478,6 +594,7 @@ def main(argv=None):
                 gt_p = torch.nn.functional.interpolate(gt_p, size=size, mode="area")
             perceptual_loss = perceptual(render_p * 2.0 - 1.0, gt_p * 2.0 - 1.0).mean()
             loss = loss + args.lpips_weight * perceptual_loss
+        loss = _pgsr_terms(loss)
         if args.time_breakdown:
             _sync()
             timing["grad_to_step"] += time.perf_counter() - _t
@@ -497,6 +614,9 @@ def main(argv=None):
                                       "N": gaussians.get_xyz.shape[0]})
                 progress.update(100)
 
+            if (args.shape_stats_every > 0
+                    and iteration % args.shape_stats_every == 0):
+                shape_stats.append(_shape_stats(iteration))
             if not args.no_densify and iteration < opt.densify_until_iter:
                 gaussians.max_radii2D[visibility_filter] = torch.max(
                     gaussians.max_radii2D[visibility_filter], radii[visibility_filter])
@@ -671,6 +791,9 @@ def main(argv=None):
                                                     _t.zeros(n_new, device=xyz.device))
                     print(f"[inject] added {n_new} hole Gaussians at step {iteration} "
                           f"(total {gaussians.get_xyz.shape[0]})")
+        if (args.normal_weight > 0.0 and iteration == args.normal_from
+                and _init_means is not None):
+            _rebuild_normals(iteration)
         if (args.mid_prune_at and iteration == args.mid_prune_at
                 and args.mid_prune_keep < 1.0):
             prune_events.append(_importance_prune(
@@ -713,6 +836,9 @@ def main(argv=None):
     # --stage2_lr_final over the whole extension; phase 1's own schedule is
     # untouched.  Every stage end dumps a snapshot PLY at the cumulative step
     # count so research.run_sweep evaluates it with a cumulative B time.
+    if (args.shape_stats_every > 0 or args.planar_weight > 0.0
+            or args.normal_weight > 0.0):
+        shape_stats.append(_shape_stats(iteration))
     stage1_s = time.perf_counter() - t_train0
     stage2_s = 0.0
     stage3_s = 0.0
@@ -842,7 +968,7 @@ def main(argv=None):
                         view_loss = view_loss + lpips_weight * perceptual_loss
                     loss_view = view_loss if loss_view is None else loss_view + view_loss
                     viewspace.append(render_pkg["viewspace_points"])
-                (loss_view / len(cams)).backward()
+                _pgsr_terms(loss_view / len(cams)).backward()
                 with torch.no_grad():
                     if (name == "stage2" and args.stage2_trainer == "absgrad"
                             and viewspace):
@@ -929,6 +1055,8 @@ def main(argv=None):
         stage2_cams=args.stage2_cams, stage2_lr_from=lr_from,
         stage2_lr_final=lr_to, stage3_lpips_weight=args.stage3_lpips_weight,
         prune_keep=args.prune_keep, prune_views=args.prune_views,
+        pgsr=dict(pgsr, shape_stats=shape_stats,
+                  shape_stats_every=args.shape_stats_every),
         mid_prune_at=args.mid_prune_at, mid_prune_keep=args.mid_prune_keep,
         prune_events=prune_events,
         timing_breakdown=(timing if args.time_breakdown else None),

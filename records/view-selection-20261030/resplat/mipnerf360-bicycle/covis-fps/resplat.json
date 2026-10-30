@@ -1,0 +1,14 @@
+{
+  "checkpoint": "/workspace/organizer-assets/resplat-base-dl3dv-540x960-view16-a72dc6d0.pth",
+  "num_context": 16,
+  "num_refine": 2,
+  "resolution": [
+    576,
+    960
+  ],
+  "num_gaussians": 506702,
+  "model_load_seconds": 5.63,
+  "inference_seconds": 3.83,
+  "export_seconds": 8.57,
+  "total_seconds": 35.58
+}
