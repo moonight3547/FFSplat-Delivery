@@ -101,13 +101,13 @@ def main(argv=None):
                              "measured with 0.15 single-shot, so 15%% is the default")
     parser.add_argument("--b-iterations", type=int, default=5000, dest="b_iterations",
                         help="module-B optimizer steps (matched-LR recipe; measured sweet spot)")
-    parser.add_argument("--b-recipe", choices=("delivery", "bigd2500", "bigd3500"),
+    parser.add_argument("--b-recipe", choices=("delivery", "bigd2500", "bigd3500", "bigd4000"),
                         default="delivery", dest="b_recipe",
                         help="delivery = 500->S/4 densification; bigd2500 = 500->S/2 "
-                             "(19 events at S=5000); bigd3500 = 500->3500 (29 events). "
-                             "Both Big recipes use interval 100 and native grad_abs_thresh "
-                             "0.0008. Default remains the measured delivery recipe until a "
-                             "full 13-case validation.")
+                             "(19 events at S=5000); bigd3500 = 500->3500 (29 events); "
+                             "bigd4000 = 500->4000 (34 events). Big recipes use interval "
+                             "100 and native grad_abs_thresh 0.0008. Default remains the "
+                             "measured delivery recipe until a full 13-case validation.")
     parser.add_argument("--vgg-tail", type=int, default=0, choices=(0, 100, 200),
                         dest="vgg_tail",
                         help="full-resolution VGG-LPIPS weight 0.1 in the LAST N of the "
@@ -241,9 +241,10 @@ def main(argv=None):
     # long one because the default 30k schedule barely decays inside 4k steps.
     # --limit_seconds is only a validity safety net, not the normal stop condition.
     b_limit = args.b_fraction * budget
-    if args.b_recipe in ("bigd2500", "bigd3500"):
-        dense_until = (args.b_iterations // 2 if args.b_recipe == "bigd2500"
-                       else min(3500, args.b_iterations))
+    if args.b_recipe in ("bigd2500", "bigd3500", "bigd4000"):
+        dense_until = {"bigd2500": args.b_iterations // 2,
+                       "bigd3500": min(3500, args.b_iterations),
+                       "bigd4000": min(4000, args.b_iterations)}[args.b_recipe]
         recipe_flags = ["--densify_until_iter", str(max(1, dense_until)),
                         "--densification_interval", "100",
                         "--grad_abs_thresh", "0.0008"]

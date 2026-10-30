@@ -138,7 +138,7 @@ def main(argv=None):
     ap.add_argument("--out-root", default="outputs/exact13-gate-20261030")
     ap.add_argument("--tau", type=float, default=0.48)
     ap.add_argument("--keep", type=float, default=0.6)
-    ap.add_argument("--recipe", choices=("delivery", "bigd2500", "bigd3500"),
+    ap.add_argument("--recipe", choices=("delivery", "bigd2500", "bigd3500", "bigd4000"),
                     default="delivery")
     ap.add_argument("--vgg-tail", type=int, choices=(0, 100, 200), default=0)
     ap.add_argument("--scene-cache", action="store_true")
@@ -183,7 +183,8 @@ def main(argv=None):
                 recipe_flags = ["--densify-until", "1250"]
             else:
                 recipe_flags = ["--densify-until",
-                                "2500" if args.recipe == "bigd2500" else "3500",
+                                {"bigd2500": "2500", "bigd3500": "3500",
+                                 "bigd4000": "4000"}[args.recipe],
                                 "--densify-interval", "100",
                                 "--grad-abs-thresh", "0.0008"]
             if args.vgg_tail:
