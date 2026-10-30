@@ -27,7 +27,7 @@ def load_ply_params(path, device):
     rot = np.stack([ply[f"rot_{i}"] for i in range(4)], 1).astype(np.float32)
     dc = np.stack([ply[f"f_dc_{i}"] for i in range(3)], 1).astype(np.float32)
     rest = np.stack([np.asarray(ply[f"f_rest_{i}"], dtype=np.float32)
-                     for i in range(45)], 1).reshape(-1, 3, 15)
+                     for i in range(45)], 1).reshape(-1, 15, 3)
     to = lambda a: torch.from_numpy(a).to(device)
     return dict(means=to(xyz), scales=to(scale), quats=to(rot), opacities=to(opacity),
                 sh0=to(dc)[:, None, :], shN=to(rest))

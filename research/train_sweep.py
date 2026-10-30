@@ -253,12 +253,26 @@ def main(argv=None):
             opt_obj = getattr(gaussians, name, None)
             if opt_obj is None:
                 continue
+            # A passed param_group keeps its OWN fused/foreach value, overriding the
+            # constructor default, so the flags must be overridden per group; otherwise
+            # the rebuild silently stays on the non-fused path.
+            groups = []
+            for group in opt_obj.param_groups:
+                clean = {k: v for k, v in group.items()
+                         if k not in ("fused", "foreach", "capturable", "differentiable",
+                                      "maximize")}
+                clean["fused"] = True
+                clean["foreach"] = False
+                groups.append(clean)
             try:
-                setattr(gaussians, name,
-                        torch.optim.Adam(opt_obj.param_groups, lr=0.0, eps=1e-15, fused=True))
-                rebuilt.append(name)
+                new_opt = torch.optim.Adam(groups, lr=0.0, eps=1e-15, fused=True)
             except (TypeError, RuntimeError) as error:
                 print(f"[fused] {name} not fused: {error}")
+                continue
+            setattr(gaussians, name, new_opt)
+            rebuilt.append(name)
+            print(f"[fused] {name} groups fused flags: "
+                  f"{[g.get('fused') for g in new_opt.param_groups]}")
         print(f"[fused] rebuilt {', '.join(rebuilt) or 'nothing'}")
     gaussians.max_radii2D = torch.zeros((gaussians.get_xyz.shape[0]), device="cuda")
     init_s = time.perf_counter() - t0
