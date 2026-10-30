@@ -271,6 +271,14 @@ def op_texresample(data, voxels=128, seed=0):
         out["x"][base:] += jit[:, 0]
         out["y"][base:] += jit[:, 1]
         out["z"][base:] += jit[:, 2]
+    # enforce an exact constant count regardless of rounding in the allocation
+    cur, tgt = len(out["x"]), len(xyz)
+    if cur > tgt:
+        drop = rng.choice(cur, size=cur - tgt, replace=False)
+        out = {k: np.delete(v, drop, axis=0) for k, v in out.items()}
+    elif cur < tgt:
+        extra = rng.choice(cur, size=tgt - cur, replace=True)
+        out = {k: np.concatenate([v, v[extra]], axis=0) for k, v in out.items()}
     return out, dict(count=len(out["x"]), target_total=len(xyz), n_dup=n_dup)
 
 def op_densify(data, factor=2, shrink=0.7, jitter=0.15):

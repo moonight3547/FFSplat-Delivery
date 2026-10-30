@@ -119,6 +119,9 @@ def main(argv=None):
                         help="soft attention on hard pixels (iSplat-style region-aware "
                              "enhancement): weight the term by an EMA of the per-pixel "
                              "residual so ambiguous regions get more gradient")
+    parser.add_argument("--realloc_mode", choices=("inplace", "concat"), default="inplace",
+                        help="inplace reuses the retired slots (O(n) writes); concat grows "
+                             "the tensors through densification_postfix (3 full copies)")
     parser.add_argument("--max_sh_degree", type=int, default=3,
                         help="cap the ACTIVE SH degree (model keeps SH3 tensors, the "
                              "rasteriser evaluates fewer channels -> cheaper backward)")
@@ -497,14 +500,46 @@ def main(argv=None):
                     new_op = gaussians._opacity[top].repeat(2, 1)
                     new_dc = gaussians._features_dc[top].repeat(2, 1, 1)
                     new_rest = gaussians._features_rest[top].repeat(2, 1, 1)
-                    if getattr(gaussians, "tmp_radii", None) is None:
-                        gaussians.tmp_radii = _t.zeros(gaussians.get_xyz.shape[0],
-                                                       device=new_xyz.device)
-                    gaussians.densification_postfix(new_xyz, new_dc, new_rest, new_op,
-                                                    new_scaling, new_rot,
-                                                    _t.zeros(new_xyz.shape[0], device=new_xyz.device))
-                    print(f"[realloc] retired {n_rel}, split {n_split*2} at step {iteration} "
-                          f"-> N={gaussians.get_xyz.shape[0]}")
+                    if args.realloc_mode == "inplace":
+                        # Reuse the retired slots instead of growing the tensors: the
+                        # budget-preserving reallocation keeps the count constant anyway,
+                        # and cat_tensors_to_optimizer would copy the whole model (param
+                        # + both Adam moments ~ 700 MB) on every shot.
+                        n_pair = min(n_rel // 2, top.numel())
+                        dst_a = low[0:2 * n_pair:2]
+                        dst_b = low[1:2 * n_pair:2]
+                        src = top[:n_pair]
+                        for dst in (dst_a, dst_b):
+                            gaussians._xyz.data[dst] = gaussians._xyz.data[src] + (
+                                _t.randn_like(gaussians._xyz.data[src])
+                                * gaussians.get_scaling.data[src] * 0.3)
+                            gaussians._scaling.data[dst] = gaussians._scaling.data[src] - 0.4700036
+                            gaussians._rotation.data[dst] = gaussians._rotation.data[src]
+                            gaussians._opacity.data[dst] = gaussians._opacity.data[src]
+                            gaussians._features_dc.data[dst] = gaussians._features_dc.data[src]
+                            gaussians._features_rest.data[dst] = gaussians._features_rest.data[src]
+                        touched = _t.cat((dst_a, dst_b))
+                        for _opt in (getattr(gaussians, "optimizer", None),
+                                     getattr(gaussians, "shoptimizer", None)):
+                            if _opt is None:
+                                continue
+                            for _g in _opt.param_groups:
+                                _st = _opt.state.get(_g["params"][0])
+                                if _st and _st.get("exp_avg") is not None:
+                                    _st["exp_avg"][touched] = 0.0
+                                    _st["exp_avg_sq"][touched] = 0.0
+                        print(f"[realloc] inplace retire {n_rel}, refill {2 * n_pair} "
+                              f"at step {iteration} -> N={gaussians.get_xyz.shape[0]}")
+                    else:
+                        if getattr(gaussians, "tmp_radii", None) is None:
+                            gaussians.tmp_radii = _t.zeros(gaussians.get_xyz.shape[0],
+                                                           device=new_xyz.device)
+                        gaussians.densification_postfix(new_xyz, new_dc, new_rest, new_op,
+                                                        new_scaling, new_rot,
+                                                        _t.zeros(new_xyz.shape[0], device=new_xyz.device))
+                    if args.realloc_mode == "concat":
+                        print(f"[realloc] retired {n_rel}, split {n_split*2} at step {iteration} "
+                              f"-> N={gaussians.get_xyz.shape[0]}")
                     if args.max_gaussians and gaussians.get_xyz.shape[0] > args.max_gaussians:
                         excess = gaussians.get_xyz.shape[0] - args.max_gaussians
                         with _t.no_grad():
