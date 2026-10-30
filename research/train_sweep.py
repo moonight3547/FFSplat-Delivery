@@ -105,6 +105,11 @@ def main(argv=None):
                              "iteration; the LR is scaled by N so the step size is kept")
     parser.add_argument("--time_breakdown", action="store_true",
                         help="accumulate per-section wall clock (render/backward/optimizer)")
+    parser.add_argument("--realloc_frac", type=float, default=0.0,
+                        help="budget-preserving reallocation: retire this fraction of the "
+                             "lowest-contribution Gaussians and split the same number of "
+                             "high-residual ones at --realloc_at")
+    parser.add_argument("--realloc_at", type=int, default=1250)
     parser.add_argument("--freeze_geometry", action="store_true",
                         help="optimise only the SH/colour parameters (position, scale, "
                              "rotation and opacity frozen); tests how much of the 5k gain "
@@ -381,6 +386,39 @@ def main(argv=None):
             _sync()
             timing["optimizer"] += time.perf_counter() - _t
 
+        if args.realloc_frac > 0 and iteration == args.realloc_at:
+            # One-shot, budget-preserving reallocation (Taming-3DGS style primitive
+            # budget, RLSplat style allocation): retire low-contribution Gaussians and
+            # spend the freed slots on high-residual regions instead of adding points.
+            import torch as _t
+            from utils.general_utils import inverse_sigmoid as _inv
+            with _t.no_grad():
+                contrib = (gaussians.get_opacity.view(-1)
+                           * gaussians.get_scaling.mean(dim=1))
+                n_rel = int(args.realloc_frac * contrib.numel())
+                if n_rel >= 4:
+                    low = _t.argsort(contrib)[:n_rel]
+                    gaussians._opacity[low] = _inv(_t.full((n_rel, 1), 0.001,
+                                                           device=contrib.device))
+                    grad = (gaussians.xyz_gradient_accum_abs / (gaussians.denom + 1e-8)).view(-1)
+                    n_split = n_rel // 2
+                    top = _t.argsort(grad, descending=True)[:n_split]
+                    sel = gaussians.get_xyz[top].repeat(2, 1)
+                    jitter = _t.randn_like(sel) * gaussians.get_scaling[top].repeat(2, 1) * 0.3
+                    new_xyz = sel + jitter
+                    new_scaling = _t.log(gaussians.get_scaling[top].repeat(2, 1) / 1.6)
+                    new_rot = gaussians.get_rotation[top].repeat(2, 1)
+                    new_op = gaussians._opacity[top].repeat(2, 1)
+                    new_dc = gaussians._features_dc[top].repeat(2, 1, 1)
+                    new_rest = gaussians._features_rest[top].repeat(2, 1, 1)
+                    if not hasattr(gaussians, "tmp_radii"):
+                        gaussians.tmp_radii = _t.zeros(gaussians.get_xyz.shape[0],
+                                                       device=new_xyz.device)
+                    gaussians.densification_postfix(new_xyz, new_dc, new_rest, new_op,
+                                                    new_scaling, new_rot,
+                                                    _t.zeros(new_xyz.shape[0], device=new_xyz.device))
+                    print(f"[realloc] retired {n_rel}, split {n_split*2} at step {iteration} "
+                          f"-> N={gaussians.get_xyz.shape[0]}")
         if args.inject_holes and iteration == args.inject_at:
             # Mature hole-filling idea (Gaussian Frosting / PUP-3DGS): place fresh
             # low-opacity Gaussians where the current model has no primitives, then let
