@@ -119,7 +119,7 @@ def main(argv=None):
                         help="soft attention on hard pixels (iSplat-style region-aware "
                              "enhancement): weight the term by an EMA of the per-pixel "
                              "residual so ambiguous regions get more gradient")
-    parser.add_argument("--realloc_mode", choices=("inplace", "concat"), default="inplace",
+    parser.add_argument("--realloc_mode", choices=("inplace", "concat"), default="concat",
                         help="inplace reuses the retired slots (O(n) writes); concat grows "
                              "the tensors through densification_postfix (3 full copies)")
     parser.add_argument("--max_sh_degree", type=int, default=3,
