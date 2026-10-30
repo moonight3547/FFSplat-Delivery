@@ -51,7 +51,10 @@ def load_scene(work, ply, sh_degree, white_background):
     dataset, opt, pipe = lp.extract(args), op.extract(args), pp.extract(args)
     Path(dataset.model_path).mkdir(parents=True, exist_ok=True)
     gaussians = GaussianModel(dataset.sh_degree, opt.optimizer_type)
-    scene = Scene(dataset, gaussians, resolution_scales=[1.0])
+    # Scene's training default randomly shuffles cameras.  The gate must not use
+    # that default: otherwise the "fixed" eight indices select different views
+    # on every invocation and a scene can randomly cross the prune threshold.
+    scene = Scene(dataset, gaussians, shuffle=False, resolution_scales=[1.0])
     gaussians.load_ply(str(ply))
     return scene, gaussians, pipe, dataset
 
@@ -110,7 +113,9 @@ def main(argv=None):
                    keep=keep, tau=float(args.tau), n_views=int(len(picks)),
                    train_views_only=True, init_ply=str(args.ply),
                    work=str(args.work),
-                   view_indices=[int(i) for i in picks])
+                   view_indices=[int(i) for i in picks],
+                   view_names=[train_cams[i].image_name for i in picks],
+                   camera_order="unshuffled")
     if args.record:
         Path(args.record).parent.mkdir(parents=True, exist_ok=True)
         Path(args.record).write_text(json.dumps(payload, indent=2))
