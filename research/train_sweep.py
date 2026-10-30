@@ -228,22 +228,6 @@ def main(argv=None):
     else:
         raise SystemExit("either --init_ply or --init_random is required")
     n_init = int(gaussians.get_xyz.shape[0])
-    if args.fused_adam:
-        rebuilt = []
-        for name in ("optimizer", "shoptimizer"):
-            opt = getattr(gaussians, name, None)
-            if opt is not None:
-                groups = opt.param_groups
-                cls = type(opt)
-                base = torch.optim.Adam
-                try:
-                    new_opt = base(groups, lr=0.0, eps=1e-15, fused=True)
-                except (TypeError, RuntimeError) as error:
-                    print(f"[fused] {name} not fused: {error}")
-                    continue
-                setattr(gaussians, name, new_opt)
-                rebuilt.append(name)
-        print(f"[fused] rebuilt {', '.join(rebuilt) or 'nothing'}")
     if args.freeze_geometry:
         frozen = []
         for name in ("_xyz", "_scaling", "_rotation", "_opacity"):
@@ -254,6 +238,22 @@ def main(argv=None):
         print(f"[sweep] geometry frozen: {', '.join(frozen)}")
     gaussians.spatial_lr_scale = scene.cameras_extent
     gaussians.training_setup(opt)
+    if args.fused_adam:
+        # Must run after training_setup: FastGS writes opt.percent_dense and creates
+        # the Adam instances there. Only the kernel changes; param groups, LRs and the
+        # update schedule are byte-identical to the control arm.
+        rebuilt = []
+        for name in ("optimizer", "shoptimizer"):
+            opt_obj = getattr(gaussians, name, None)
+            if opt_obj is None:
+                continue
+            try:
+                setattr(gaussians, name,
+                        torch.optim.Adam(opt_obj.param_groups, lr=0.0, eps=1e-15, fused=True))
+                rebuilt.append(name)
+            except (TypeError, RuntimeError) as error:
+                print(f"[fused] {name} not fused: {error}")
+        print(f"[fused] rebuilt {', '.join(rebuilt) or 'nothing'}")
     gaussians.max_radii2D = torch.zeros((gaussians.get_xyz.shape[0]), device="cuda")
     init_s = time.perf_counter() - t0
 
