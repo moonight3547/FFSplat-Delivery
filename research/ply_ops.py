@@ -73,6 +73,115 @@ def op_sharpen(data, gain=2.0):
     return out, dict(gain=gain)
 
 
+
+def voxel_merge(data, voxels=128, max_scale_quantile=0.6, keep_small=True):
+    """Merge Gaussians that share a voxel, but only the large/low-frequency ones.
+
+    Rationale: a feed-forward init spends primitives roughly uniformly in space, so
+    smooth regions are over-sampled and textured regions under-sampled. Merging only
+    the primitives whose scale is above `max_scale_quantile` concentrates the budget
+    on fine detail while leaving small (high-frequency) primitives untouched.
+    """
+    import numpy as np
+    xyz = np.stack([data["x"], data["y"], data["z"]], axis=1)
+    lo = np.quantile(xyz, 0.005, axis=0)
+    hi = np.quantile(xyz, 0.995, axis=0)
+    cell = np.maximum(hi - lo, 1e-6) / voxels
+    idx = np.clip(((xyz - lo) / cell).astype(np.int64), 0, voxels - 1)
+    keys = (idx[:, 0] * voxels + idx[:, 1]) * voxels + idx[:, 2]
+    opacity = sigmoid(data["opacity"].reshape(-1))
+    scale = np.stack([np.exp(data[c]) for c in data if c.startswith("scale_")], axis=1).mean(axis=1)
+    thresh = np.quantile(scale, max_scale_quantile)
+    mergeable = scale >= thresh if keep_small else np.ones_like(scale, dtype=bool)
+    order = np.argsort(keys, kind="stable")
+    keys_sorted = keys[order]
+    merged = data
+    keep_mask = np.ones(len(xyz), dtype=bool)
+    # for every voxel that contains at least two mergeable gaussians, keep the most
+    # opaque one and drop the rest (a cheap, deterministic merge)
+    from collections import defaultdict
+    groups = defaultdict(list)
+    for pos in order:
+        if mergeable[pos]:
+            groups[keys[pos]].append(pos)
+    drop = []
+    for key, members in groups.items():
+        if len(members) < 2:
+            continue
+        members.sort(key=lambda i: -opacity[i])
+        # keep two strongest, drop the rest
+        drop.extend(members[2:])
+    if drop:
+        keep_mask[np.asarray(drop, dtype=np.int64)] = False
+    out = {}
+    for k, v in data.items():
+        try:
+            out[k] = v[keep_mask]
+        except Exception:
+            out[k] = v
+    return out, dict(count=int(keep_mask.sum()), merged_away=int((~keep_mask).sum()))
+
+
+def voxel_fuse(data, voxels=128, max_scale_quantile=1.0, target_frac=1.0):
+    """Proper voxel FUSION (InfiniSplat/AnySplat style) instead of dropping primitives.
+
+    Gaussians sharing a voxel are merged into one primitive whose alpha is the
+    composited alpha of the group (1 - prod(1 - a_i)), with opacity-weighted centroid,
+    scale and SH. This keeps the coverage that the plain "keep the strongest" merge
+    throws away.
+    """
+    import numpy as np
+    xyz = np.stack([data["x"], data["y"], data["z"]], axis=1)
+    lo = np.quantile(xyz, 0.005, axis=0)
+    hi = np.quantile(xyz, 0.995, axis=0)
+    cell = np.maximum(hi - lo, 1e-6) / voxels
+    idx = np.clip(((xyz - lo) / cell).astype(np.int64), 0, voxels - 1)
+    keys = (idx[:, 0] * voxels + idx[:, 1]) * voxels + idx[:, 2]
+    a = sigmoid(data["opacity"].reshape(-1))
+    scale_cols = [c for c in data if c.startswith("scale_")]
+    scl = np.stack([np.exp(data[c]) for c in scale_cols], axis=1)
+    big = scl.mean(axis=1) >= np.quantile(scl.mean(axis=1), max_scale_quantile)
+    order = np.argsort(keys, kind="stable")
+    out_rows = []
+    names = list(data.keys())
+    i = 0
+    keys_sorted = keys[order]
+    # process the most crowded voxels first so a target_FRAC can stop early
+    counts = {}
+    for k in keys:
+        counts[int(k)] = counts.get(int(k), 0) + 1
+    dense = {k for k, c in counts.items() if c >= 2}
+    remaining = len(xyz) - int(round(target_frac * len(xyz)))
+    fused_so_far = 0
+    while i < len(order):
+        cur_key = int(keys_sorted[i])
+        j = i
+        while j + 1 < len(order) and keys_sorted[j + 1] == keys_sorted[i]:
+            j += 1
+        members = order[i:j + 1]
+        i = j + 1
+        if len(members) == 1 or cur_key not in dense or fused_so_far >= remaining:
+            out_rows.extend(members); continue
+        fused_so_far += len(members) - 1
+        w = a[members]
+        wsum = w.sum() + 1e-8
+        row = {n: data[n][members[0]] for n in names}
+        centroid = (xyz[members] * w[:, None]).sum(0) / wsum
+        row["x"], row["y"], row["z"] = centroid
+        combined = 1.0 - np.prod(1.0 - np.clip(w, 0, 0.999))
+        row["opacity"] = logit(np.clip(combined, 1e-6, 1 - 1e-6))
+        for c_i, c in enumerate([n for n in names if n.startswith("scale_")]):
+            row[c] = np.log(max((scl[members][:, c_i] * w).sum() / wsum, 1e-8))
+        for c in [n for n in names if n.startswith("rot_")]:
+            vals = data[c][members]
+            row[c] = vals[int(np.argmax(w))]
+        for c in [n for n in names if n.startswith("f_dc_") or n.startswith("f_rest_")]:
+            row[c] = (data[c][members] * w).sum() / wsum
+        out_rows.append(row)
+    out = {n: np.asarray([r[n] if isinstance(r, dict) else data[n][r] for r in out_rows])
+           for n in names}
+    return out, dict(count=len(out_rows), merged_away=int(len(xyz) - len(out_rows)))
+
 def op_densify(data, factor=2, shrink=0.7, jitter=0.15):
     rng = np.random.default_rng(20261030)
     index = []
@@ -101,7 +210,11 @@ def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--in", dest="inputs", action="append", required=True)
     p.add_argument("--out", required=True)
-    p.add_argument("--op", required=True, choices=["inspect", "prune", "sharpen", "densify", "merge"])
+    p.add_argument("--op", required=True,
+                   choices=["inspect", "prune", "sharpen", "densify", "merge", "voxelmerge",
+                            "voxelfuse"])
+    p.add_argument("--voxels", type=int, default=128)
+    p.add_argument("--target-frac", type=float, default=1.0, dest="target_frac")
     p.add_argument("--factor", type=int, default=2)
     p.add_argument("--shrink", type=float, default=0.7)
     p.add_argument("--jitter", type=float, default=0.15)
@@ -126,6 +239,12 @@ def main(argv=None):
 
     data, names = load(args.inputs[0])
     before = stats(data)
+    if args.op == "voxelmerge":
+        import numpy as _np
+        before = len(data["x"])
+        data, vinfo = voxel_merge(data, voxels=args.voxels)
+        print(f"[voxelmerge] {before} -> {vinfo['count']} gaussians "
+              f"({vinfo['merged_away']} merged away)")
     if args.op == "inspect":
         print(json.dumps(dict(path=args.inputs[0], **before), indent=2))
         return
@@ -133,6 +252,10 @@ def main(argv=None):
         out, info = op_prune(data, args.min_opacity, args.max_scale)
     elif args.op == "sharpen":
         out, info = op_sharpen(data, args.gain)
+    elif args.op == "voxelmerge":
+        out, info = data, vinfo  # already filtered above
+    elif args.op == "voxelfuse":
+        out, info = voxel_fuse(data, voxels=args.voxels, target_frac=args.target_frac)
     else:
         out, info = op_densify(data, args.factor, args.shrink, args.jitter)
     save(args.out, out, names)
