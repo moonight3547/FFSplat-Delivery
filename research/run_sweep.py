@@ -155,8 +155,6 @@ def main(argv=None):
         "--densify_count_thresh": args.densify_count_thresh,
         "--max_gaussians": args.max_gaussians,
         "--image_cache": args.image_cache,
-        "--freeze_geometry": args.freeze_geometry,
-        "--no_quick_test": args.no_quick_test,
         "--opt_step_schedule": args.opt_step_schedule,
         "--inject_holes": args.inject_holes,
         "--inject_at": args.inject_at,
@@ -166,6 +164,10 @@ def main(argv=None):
             train_argv.extend([flag, str(value)])
     if args.no_densify:
         train_argv.append("--no_densify")
+    if args.freeze_geometry:
+        train_argv.append("--freeze_geometry")
+    if args.no_quick_test:
+        train_argv.append("--no_quick_test")
 
     run(conda_python(profile, "fastgs", "-m", "research.train_sweep", *train_argv), profile=profile)
     record = read(out / "train_record.json")
