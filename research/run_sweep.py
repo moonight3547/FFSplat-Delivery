@@ -102,6 +102,8 @@ def main(argv=None):
     parser.add_argument("--inject-at", type=int, default=800, dest="inject_at")
     parser.add_argument("--opt-step-schedule", default="", dest="opt_step_schedule",
                         help="optimizer step-frequency schedule, e.g. '2500:2'")
+    parser.add_argument("--freeze-geometry", action="store_true", dest="freeze_geometry")
+    parser.add_argument("--no-quick-test", action="store_true", dest="no_quick_test")
     parser.add_argument("--image-cache", default=None, dest="image_cache",
                         help="pre-decoded uint8 image cache dir (module-A artifact)")
     parser.add_argument("--no-densify", action="store_true", dest="no_densify")
@@ -153,6 +155,8 @@ def main(argv=None):
         "--densify_count_thresh": args.densify_count_thresh,
         "--max_gaussians": args.max_gaussians,
         "--image_cache": args.image_cache,
+        "--freeze_geometry": args.freeze_geometry,
+        "--no_quick_test": args.no_quick_test,
         "--opt_step_schedule": args.opt_step_schedule,
         "--inject_holes": args.inject_holes,
         "--inject_at": args.inject_at,
