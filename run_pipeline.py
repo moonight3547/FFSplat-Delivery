@@ -94,10 +94,10 @@ def main(argv=None):
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--budget-seconds", type=float, default=None,
                         help="skip the 30K reference and use this budget (grading-machine value)")
-    parser.add_argument("--realloc-frac", type=float, default=0.0, dest="realloc_frac",
-                        help="budget-preserving reallocation ratio; 0.15 measured +0.8..+2.8 "
-                             "quality on six scenes but its module-B time effect is still "
-                             "under paired measurement, so the default stays off")
+    parser.add_argument("--realloc-frac", type=float, default=0.15, dest="realloc_frac",
+                        help="budget-preserving reallocation ratio; paired measurement "
+                             "(2 rounds per arm, same GPU) shows +1.7..+2.2 quality and "
+                             "equal-or-faster module-B time, so 15%% is the default")
     parser.add_argument("--b-iterations", type=int, default=5000, dest="b_iterations",
                         help="module-B optimizer steps (matched-LR recipe; measured sweet spot)")
     parser.add_argument("--b-fraction", type=float, default=0.5,
@@ -153,7 +153,12 @@ def main(argv=None):
     runner.run("resplat", runner.conda(
         "resplat", "-m", "research.resplat_variant", "--work", work,
         "--out", results / "resplat", "--checkpoint", args.checkpoint,
-        "--num_refine", args.num_refine, "--device", args.device), logs)
+        "--num_refine", args.num_refine, "--device", args.device,
+        # correctness fix: the pinned export fits its rotation on a first-order SH basis
+        # whose z column has the opposite sign to the FastGS evaluator (audit in
+        # research/advisory/SH_EXPORT_AUDIT_20261030.md). Measured +0.16 quality on
+        # hw/billboard; kept because it is simply the right basis.
+        "--fix-sh-basis"), logs)
 
     # ---- image cache (E0) ---------------------------------------------------
     # Module-B wall clock includes decoding the prepared PNGs (5-11 s of a ~30 s
