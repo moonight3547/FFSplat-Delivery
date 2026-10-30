@@ -115,6 +115,10 @@ def main(argv=None):
                         help="optimise only the SH/colour parameters (position, scale, "
                              "rotation and opacity frozen); tests how much of the 5k gain "
                              "is appearance rather than geometry")
+    parser.add_argument("--residual_weight", type=float, default=0.0,
+                        help="soft attention on hard pixels (iSplat-style region-aware "
+                             "enhancement): weight the term by an EMA of the per-pixel "
+                             "residual so ambiguous regions get more gradient")
     parser.add_argument("--max_sh_degree", type=int, default=3,
                         help="cap the ACTIVE SH degree (model keeps SH3 tensors, the "
                              "rasteriser evaluates fewer channels -> cheaper backward)")
@@ -328,6 +332,7 @@ def main(argv=None):
 
     state = dict(scale=None, stack=[], indices=[])
     ema_loss = 0.0
+    residual_map = None
 
     t_train0 = time.perf_counter()
     stop_reason = "iterations"
@@ -377,7 +382,20 @@ def main(argv=None):
             ssim_value = fast_ssim(image.unsqueeze(0), gt_image.unsqueeze(0))
         else:
             ssim_value = 1.0
-        loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim_value)
+        if args.residual_weight > 0.0:
+            # region-aware enhancement: keep an EMA of the per-pixel error and use it to
+            # up-weight the pixels the model is still getting wrong. Zero extra renders.
+            with torch.no_grad():
+                cur = (image.detach() - gt_image).abs().mean(0, keepdim=True)
+                if residual_map is None or tuple(residual_map.shape) != tuple(cur.shape):
+                    residual_map = cur.clone()
+                else:
+                    residual_map.mul_(0.9).add_(0.1 * cur)
+                w = 1.0 + args.residual_weight * (residual_map / (residual_map.mean() + 1e-6)).clamp(0, 3)
+            Ll1 = ((image - gt_image).abs() * w).mean() / w.mean()
+            loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim_value)
+        else:
+            loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim_value)
         if perceptual is not None and iteration % args.lpips_every == 0:
             render_p, gt_p = image.unsqueeze(0), gt_image.unsqueeze(0)
             if args.lpips_scale != 1.0:

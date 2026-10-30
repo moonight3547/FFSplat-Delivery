@@ -107,6 +107,7 @@ def main(argv=None):
                         help="one or more iterations, comma separated")
     parser.add_argument("--sh-degree", type=int, default=3, dest="sh_degree")
     parser.add_argument("--max-sh-degree", type=int, default=3, dest="max_sh_degree")
+    parser.add_argument("--residual-weight", type=float, default=0.0, dest="residual_weight")
     parser.add_argument("--fused-adam", action="store_true", dest="fused_adam")
     parser.add_argument("--legacy-sync", action="store_true", dest="legacy_sync")
     parser.add_argument("--freeze-geometry", action="store_true", dest="freeze_geometry")
@@ -173,6 +174,8 @@ def main(argv=None):
             train_argv.extend([flag, str(value)])
     if args.no_densify:
         train_argv.append("--no_densify")
+    if args.residual_weight > 0:
+        train_argv += ["--residual_weight", str(args.residual_weight)]
     if args.max_sh_degree < 3:
         train_argv += ["--max_sh_degree", str(args.max_sh_degree)]
     if args.fused_adam:
