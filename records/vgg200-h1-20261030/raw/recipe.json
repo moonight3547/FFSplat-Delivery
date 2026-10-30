@@ -1,0 +1,24 @@
+{
+  "recipe_name": "5K-D3500",
+  "commit": "5f616b3",
+  "note": "User-directed 5K-D3500: iterations 5000, densify_until 3500, interval 100, native grad_abs_thresh 0.0008 (29 events expected), realloc 0.15@1250 unchanged, M1/scene-cache OFF. VGG arms INSIDE the same 5000 steps, full-res (lpips_scale 1.0), weight 0.1.",
+  "base_flags": [
+    "--iterations", "5000",
+    "--position-lr-max-steps", "5000",
+    "--opacity-reset-interval", "0",
+    "--lambda-dssim", "0.6",
+    "--scaling-lr", "0.01",
+    "--densify-from", "500",
+    "--densify-until", "3500",
+    "--densify-interval", "100",
+    "--grad-abs-thresh", "0.0008",
+    "--realloc-frac", "0.15",
+    "--realloc-at", "1250",
+    "--mid-prune-keep", "1.0"
+  ],
+  "arms": {
+    "ctrl": [],
+    "vgg100": ["--lpips-weight", "0.1", "--lpips-scale", "1.0", "--lpips-start", "4901", "--lpips-end", "5000"],
+    "vgg200": ["--lpips-weight", "0.1", "--lpips-scale", "1.0", "--lpips-start", "4801", "--lpips-end", "5000"]
+  }
+}

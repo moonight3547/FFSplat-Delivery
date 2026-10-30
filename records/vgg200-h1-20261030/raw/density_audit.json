@@ -1,0 +1,332 @@
+{
+ "ctrl/dl3dv-0b5635d5": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 1106086,
+  "train_seconds": 41.444
+ },
+ "ctrl/dl3dv-0f622eaa": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 1237440,
+  "train_seconds": 46.092
+ },
+ "ctrl/dl3dv-3e4dbe41": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 968323,
+  "train_seconds": 40.152
+ },
+ "ctrl/mipnerf360-bicycle": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 1692092,
+  "train_seconds": 44.95
+ },
+ "ctrl/mipnerf360-counter": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 632859,
+  "train_seconds": 29.981
+ },
+ "vgg100/dl3dv-0b5635d5": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 1107208,
+  "train_seconds": 44.966
+ },
+ "vgg100/dl3dv-0f622eaa": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 1235693,
+  "train_seconds": 49.395
+ },
+ "vgg100/dl3dv-3e4dbe41": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 971720,
+  "train_seconds": 43.481
+ },
+ "vgg100/mipnerf360-bicycle": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 1695505,
+  "train_seconds": 49.129
+ },
+ "vgg100/mipnerf360-counter": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 631806,
+  "train_seconds": 33.63
+ },
+ "vgg200/dl3dv-0b5635d5": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 1117822,
+  "train_seconds": 49.867
+ },
+ "vgg200/dl3dv-0f622eaa": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 1232840,
+  "train_seconds": 52.439
+ },
+ "vgg200/dl3dv-3e4dbe41": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 975902,
+  "train_seconds": 46.786
+ },
+ "vgg200/mipnerf360-bicycle": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 1686724,
+  "train_seconds": 52.732
+ },
+ "vgg200/mipnerf360-counter": {
+  "events": 29,
+  "first_event_iteration": 600,
+  "last_event_iteration": 3400,
+  "event_keys": [
+   "actual_native_parameters",
+   "after",
+   "before",
+   "iteration"
+  ],
+  "native_params": {
+   "mult": 0.5,
+   "loss_thresh": 0.1,
+   "grad_abs_thresh": 0.0008,
+   "grad_thresh": 0.0002,
+   "dense": 0.001
+  },
+  "flags": [],
+  "stop_reason": "iterations",
+  "num_gaussians": 631479,
+  "train_seconds": 37.287
+ }
+}
