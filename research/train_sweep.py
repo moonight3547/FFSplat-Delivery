@@ -401,6 +401,9 @@ def main(argv=None):
                     new_dc = _t.zeros(n_new, 1, 3, device=xyz.device)
                     new_rest = _t.zeros(n_new, gaussians._features_rest.shape[1],
                                         gaussians._features_rest.shape[2], device=xyz.device)
+                    if not hasattr(gaussians, "tmp_radii"):
+                        gaussians.tmp_radii = _t.zeros(gaussians.get_xyz.shape[0],
+                                                       device=gaussians.get_xyz.device)
                     gaussians.densification_postfix(new_xyz, new_dc, new_rest, new_op,
                                                     new_scaling, quat,
                                                     _t.zeros(n_new, device=xyz.device))
