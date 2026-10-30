@@ -402,6 +402,10 @@ def main(argv=None):
                     low = _t.argsort(contrib)[:n_rel]
                     gaussians._opacity[low] = _inv(_t.full((n_rel, 1), 0.001,
                                                            device=contrib.device))
+                    if getattr(gaussians, "xyz_gradient_accum_abs", None) is None:
+                        n_all = gaussians.get_xyz.shape[0]
+                        gaussians.xyz_gradient_accum_abs = _t.zeros((n_all, 1), device=contrib.device)
+                        gaussians.denom = _t.zeros((n_all, 1), device=contrib.device)
                     grad = (gaussians.xyz_gradient_accum_abs / (gaussians.denom + 1e-8)).view(-1)
                     n_split = n_rel // 2
                     top = _t.argsort(grad, descending=True)[:n_split]
