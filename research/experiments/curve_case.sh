@@ -55,7 +55,7 @@ score_curve(){  # dir snapdir
   done
   [ -n "$args" ] && fastgs -m research.curve_metrics \
     --source "$d/work" --out "$dd/curve.json" $args > "$dd/metrics.log" 2>&1
-  rm -rf "$sd"/*.ply 2>/dev/null   # snapshots are ~100 MB each; the disk is small
+  if [ -f "$dd/curve.json" ]; then rm -rf "$sd"/*.ply 2>/dev/null; fi
 }
 run_fastgs(){
   [ -f "$d/fastgs/curve.json" ] && return; rm -rf "$d/fastgs"; mkdir -p "$d/fastgs/snaps"
