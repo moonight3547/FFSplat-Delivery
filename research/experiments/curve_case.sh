@@ -15,6 +15,11 @@ RESPLAT=${RESPLAT:-ffsplat-enhance}; FASTGS=${FASTGS:-organizer-fastgs}
 # The ReSplat env may live outside the conda root that $PY belongs to (copied node),
 # so allow a direct interpreter path: RESPLAT_PY=/path/to/env/bin/python
 if [ -n "${RESPLAT_PY:-}" ]; then
+  # copied conda envs need their own CUDA headers/nvcc on the path for the JIT build
+  _env_root="$(dirname "$(dirname "$RESPLAT_PY")")"
+  export CUDA_HOME="$_env_root" PATH="$_env_root/bin:$PATH"
+  export CPATH="$_env_root/targets/x86_64-linux/include"
+  export LIBRARY_PATH="$_env_root/targets/x86_64-linux/lib"
   resplat() { "$RESPLAT_PY" "$@"; }
 else
   resplat() { $PY run --no-capture-output -n "$RESPLAT" python "$@"; }
