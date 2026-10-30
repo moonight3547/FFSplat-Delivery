@@ -92,6 +92,12 @@ def main(argv=None):
                         help="sampled-view count needed to densify (upstream hardcodes 5)")
     parser.add_argument("--max_gaussians", type=int, default=None,
                         help="hard cap on Gaussian count, weakest pruned first")
+    parser.add_argument("--inject_holes", type=int, default=0,
+                        help="add N low-opacity Gaussians in empty voxels at --inject_at")
+    parser.add_argument("--inject_at", type=int, default=800,
+                        help="iteration at which the hole injection happens")
+    parser.add_argument("--inject_voxels", type=int, default=64,
+                        help="voxel grid resolution used to define empty space")
     parser.add_argument("--snap_seconds", type=str, default="",
                         help="comma list of train-seconds at which to dump a PLY (curve)")
     parser.add_argument("--opt_step_schedule", type=str, default="",
@@ -358,6 +364,48 @@ def main(argv=None):
         if args.time_breakdown:
             _sync()
             timing["optimizer"] += time.perf_counter() - _t
+
+        if args.inject_holes and iteration == args.inject_at:
+            # Mature hole-filling idea (Gaussian Frosting / PUP-3DGS): place fresh
+            # low-opacity Gaussians where the current model has no primitives, then let
+            # the normal opacity-based pruning delete the ones that earn no gradient.
+            import torch as _t
+            from utils.general_utils import inverse_sigmoid as _inv
+            with _t.no_grad():
+                xyz = gaussians.get_xyz.detach()
+                lo = _t.quantile(xyz, 0.01, dim=0)
+                hi = _t.quantile(xyz, 0.99, dim=0)
+                n_vox = int(args.inject_voxels)
+                cell = (hi - lo).clamp_min(1e-6) / n_vox
+                idx = ((xyz - lo) / cell).floor().clamp_(0, n_vox - 1).long()
+                flat = (idx[:, 0] * n_vox + idx[:, 1]) * n_vox + idx[:, 2]
+                occupied = _t.zeros(n_vox ** 3, dtype=_t.bool, device=xyz.device)
+                occupied[flat] = True
+                keep, tries = [], 0
+                while sum(k.numel() for k in keep) < args.inject_holes and tries < 20:
+                    cand = lo + _t.rand(args.inject_holes * 4, 3, device=xyz.device) * (hi - lo)
+                    cidx = ((cand - lo) / cell).floor().clamp_(0, n_vox - 1).long()
+                    cflat = (cidx[:, 0] * n_vox + cidx[:, 1]) * n_vox + cidx[:, 2]
+                    free = cand[~occupied[cflat]]
+                    if free.numel():
+                        keep.append(free)
+                    tries += 1
+                if keep:
+                    new_xyz = _t.cat(keep, 0)[: args.inject_holes]
+                    n_new = new_xyz.shape[0]
+                    scale_med = gaussians.get_scaling.detach().median(dim=0).values
+                    new_scaling = _t.log(scale_med * 0.5).unsqueeze(0).repeat(n_new, 1)
+                    quat = _t.zeros(n_new, 4, device=xyz.device)
+                    quat[:, 0] = 1.0
+                    new_op = _inv(_t.full((n_new, 1), 0.01, device=xyz.device))
+                    new_dc = _t.zeros(n_new, 1, 3, device=xyz.device)
+                    new_rest = _t.zeros(n_new, gaussians._features_rest.shape[1],
+                                        gaussians._features_rest.shape[2], device=xyz.device)
+                    gaussians.densification_postfix(new_xyz, new_dc, new_rest, new_op,
+                                                    new_scaling, quat,
+                                                    _t.zeros(n_new, device=xyz.device))
+                    print(f"[inject] added {n_new} hole Gaussians at step {iteration} "
+                          f"(total {gaussians.get_xyz.shape[0]})")
         if _snap_targets and time.perf_counter() - t_train0 >= _snap_targets[0]:
             _sec = time.perf_counter() - t_train0
             _p = os.path.join(args.snap_dir or dataset.model_path, f"snap_{int(_snap_targets[0]):04d}s.ply")
