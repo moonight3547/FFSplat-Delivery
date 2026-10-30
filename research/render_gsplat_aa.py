@@ -75,8 +75,8 @@ def main(argv=None):
                          device=device, dtype=torch.float32)
         with torch.no_grad():
             img, _, _ = rasterization(
-                means=params["means"], quats=params["quats"], scales=params["scales"].exp(),
-                opacities=params["opacities"].sigmoid(),
+                means=params["means"], quats=params["quats"] / params["quats"].norm(dim=-1, keepdim=True).clamp_min(1e-8), scales=params["scales"].exp(),
+                opacities=params["opacities"].sigmoid().squeeze(-1),
                 colors=torch.cat((params["sh0"], params["shN"]), dim=1),
                 viewmats=viewmat[None], Ks=K[None], width=w, height=h, sh_degree=3,
                 near_plane=0.01, far_plane=200.0, eps2d=args.eps2d,
