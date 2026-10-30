@@ -246,6 +246,6 @@ follow-up if the direction is pursued.
 ## 10. 部署指针（task-13）
 
 M1 已被封装为**部署级门控**：`research/prune_gate.py` 在模块 B 之前用 8 个训练视角的
-init-PLY LPIPS 判断是否启用 M1，阈值 τ=0.48（13 例中仅 bicycle 触发），
+init-PLY LPIPS 判断是否启用 M1，阈值 τ=0.48（13 例中仅 bicycle 触发；`Scene(shuffle=False)` 修复后确定，见 errata），
 `run_pipeline.py --mid-prune {off,auto}` 默认 off。预期 13 例增益 +0.065，A/B 验证、
 门控校准表与实现在 `records/M1-GATE-20261030.md`。

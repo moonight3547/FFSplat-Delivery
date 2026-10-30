@@ -1,148 +1,349 @@
 {
-  "gate": "research/prune_gate.py",
+  "gate_version": "fixed: Scene(shuffle=False), commit d0e83b9",
   "n_views": 8,
   "tau": 0.48,
   "keep": 0.6,
   "train_views_only": true,
+  "determinism": {
+    "shuffle": false,
+    "camera_order": "unshuffled",
+    "repeats": {
+      "0b5635": {
+        "values": [
+          0.4155,
+          0.4155
+        ],
+        "identical_camera_names": true
+      },
+      "bicycle": {
+        "values": [
+          0.5246,
+          0.5246
+        ],
+        "identical_camera_names": true
+      }
+    }
+  },
+  "spearman_fixed": 0.9121,
+  "spearman_p": 1.3975552674444554e-05,
   "projected_gain_13": 0.0646,
-  "repeats": {
-    "0b5635": {
-      "values": [
-        0.4108,
-        0.4319
-      ],
-      "mean": 0.4214,
-      "sd": 0.0106,
-      "n": 2
-    },
-    "bicycle": {
-      "values": [
-        0.5149,
-        0.531,
-        0.5246
-      ],
-      "mean": 0.5235,
-      "sd": 0.0066,
-      "n": 3
+  "invalidated_random_view_calibration": {
+    "reason": "prune_gate Scene(...) used shuffle=True before commit d0e83b9: the \"fixed\" indices picked different cameras every run; old values are INVALID.",
+    "old_values": {
+      "mipnerf360/bicycle": 0.525,
+      "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce": 0.4459,
+      "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e": 0.436,
+      "dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3": 0.4091,
+      "mipnerf360/counter": 0.3934,
+      "dl3dv/2dad2d298927ff9b2ed7daa6128244e81d331e8cf1abf6c8598f35276ad38b84": 0.3536,
+      "hw/car": 0.333,
+      "mipnerf360/bonsai": 0.3358,
+      "hw/billboard": 0.296,
+      "dl3dv/9a451604b8d2583d47b14662635d8f74710c419cc061705ac15b8cfc31ece446": 0.238,
+      "hw/trashbin": 0.2486,
+      "hw/basketball": 0.2541,
+      "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f": 0.2216
     }
   },
   "rows": [
     {
       "case": "mipnerf360/bicycle",
-      "train_lpips": 0.525,
-      "train_psnr": 17.129,
-      "train_ssim": 0.3801,
+      "train_lpips": 0.5246,
+      "train_psnr": 17.7113,
+      "train_ssim": 0.3857,
       "test_lpips": 0.303,
       "test_q": 9.760000000000007,
-      "test_total": 25.31011456233717
+      "test_total": 25.31011456233717,
+      "keep": 0.6,
+      "fire": true,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "_DSC8680",
+        "_DSC8707",
+        "_DSC8734",
+        "_DSC8763",
+        "_DSC8790",
+        "_DSC8818",
+        "_DSC8845",
+        "_DSC8873"
+      ],
+      "old_random_views": 0.525
     },
     {
       "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
-      "train_lpips": 0.4459,
-      "train_psnr": 18.8653,
-      "train_ssim": 0.4895,
+      "train_lpips": 0.4155,
+      "train_psnr": 19.458,
+      "train_ssim": 0.5598,
       "test_lpips": 0.2461,
       "test_q": 17.1608,
-      "test_total": 31.10574259810206
+      "test_total": 31.10574259810206,
+      "keep": 1.0,
+      "fire": false,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "frame_00002",
+        "frame_00055",
+        "frame_00110",
+        "frame_00164",
+        "frame_00219",
+        "frame_00272",
+        "frame_00327",
+        "frame_00381"
+      ],
+      "old_random_views": 0.4459
     },
     {
       "case": "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e",
-      "train_lpips": 0.436,
-      "train_psnr": 17.489,
-      "train_ssim": 0.4179,
+      "train_lpips": 0.3964,
+      "train_psnr": 18.5351,
+      "train_ssim": 0.4904,
       "test_lpips": 0.229,
       "test_q": 17.929600000000008,
-      "test_total": 31.552958455583433
+      "test_total": 31.552958455583433,
+      "keep": 1.0,
+      "fire": false,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "frame_00002",
+        "frame_00047",
+        "frame_00094",
+        "frame_00140",
+        "frame_00186",
+        "frame_00231",
+        "frame_00278",
+        "frame_00324"
+      ],
+      "old_random_views": 0.436
     },
     {
       "case": "dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3",
-      "train_lpips": 0.4091,
-      "train_psnr": 19.6767,
-      "train_ssim": 0.5206,
+      "train_lpips": 0.3961,
+      "train_psnr": 19.9322,
+      "train_ssim": 0.5564,
       "test_lpips": 0.2297,
       "test_q": 21.09280000000001,
-      "test_total": 35.03899809710881
+      "test_total": 35.03899809710881,
+      "keep": 1.0,
+      "fire": false,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "frame_00002",
+        "frame_00045",
+        "frame_00088",
+        "frame_00132",
+        "frame_00176",
+        "frame_00220",
+        "frame_00263",
+        "frame_00307"
+      ],
+      "old_random_views": 0.4091
     },
     {
       "case": "mipnerf360/counter",
-      "train_lpips": 0.3934,
-      "train_psnr": 21.5282,
-      "train_ssim": 0.6529,
+      "train_lpips": 0.3758,
+      "train_psnr": 21.3511,
+      "train_ssim": 0.6684,
       "test_lpips": 0.1808,
       "test_q": 40.2824,
-      "test_total": 55.17158984097854
+      "test_total": 55.17158984097854,
+      "keep": 1.0,
+      "fire": false,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "DSCF5858",
+        "DSCF5892",
+        "DSCF5926",
+        "DSCF5960",
+        "DSCF5994",
+        "DSCF6028",
+        "DSCF6062",
+        "DSCF6096"
+      ],
+      "old_random_views": 0.3934
     },
     {
       "case": "dl3dv/2dad2d298927ff9b2ed7daa6128244e81d331e8cf1abf6c8598f35276ad38b84",
-      "train_lpips": 0.3536,
-      "train_psnr": 20.5837,
-      "train_ssim": 0.5645,
+      "train_lpips": 0.3498,
+      "train_psnr": 20.7721,
+      "train_ssim": 0.5792,
       "test_lpips": 0.1755,
       "test_q": 35.3808,
-      "test_total": 49.75791395079112
-    },
-    {
-      "case": "mipnerf360/bonsai",
-      "train_lpips": 0.3358,
-      "train_psnr": 22.1856,
-      "train_ssim": 0.7284,
-      "test_lpips": 0.1602,
-      "test_q": 48.2672,
-      "test_total": 63.91858646481592
+      "test_total": 49.75791395079112,
+      "keep": 1.0,
+      "fire": false,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "frame_00002",
+        "frame_00045",
+        "frame_00088",
+        "frame_00132",
+        "frame_00174",
+        "frame_00218",
+        "frame_00261",
+        "frame_00304"
+      ],
+      "old_random_views": 0.3536
     },
     {
       "case": "hw/car",
-      "train_lpips": 0.333,
-      "train_psnr": 19.3588,
-      "train_ssim": 0.6401,
+      "train_lpips": 0.3183,
+      "train_psnr": 20.1407,
+      "train_ssim": 0.6784,
       "test_lpips": 0.1708,
       "test_q": 32.309599999999996,
-      "test_total": 48.53559196559025
+      "test_total": 48.53559196559025,
+      "keep": 1.0,
+      "fire": false,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "248541887207234",
+        "248545787599234",
+        "248549921348078",
+        "248555221880234",
+        "248559355628235",
+        "248564056101235",
+        "248567523115234",
+        "248572123577234"
+      ],
+      "old_random_views": 0.333
+    },
+    {
+      "case": "mipnerf360/bonsai",
+      "train_lpips": 0.3165,
+      "train_psnr": 23.3007,
+      "train_ssim": 0.7605,
+      "test_lpips": 0.1602,
+      "test_q": 48.2672,
+      "test_total": 63.91858646481592,
+      "keep": 1.0,
+      "fire": false,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "DSCF5566",
+        "DSCF5607",
+        "DSCF5649",
+        "DSCF5690",
+        "DSCF5731",
+        "DSCF5772",
+        "DSCF5815",
+        "DSCF5856"
+      ],
+      "old_random_views": 0.3358
     },
     {
       "case": "hw/billboard",
-      "train_lpips": 0.296,
-      "train_psnr": 19.5077,
-      "train_ssim": 0.6339,
+      "train_lpips": 0.2825,
+      "train_psnr": 20.2547,
+      "train_ssim": 0.6596,
       "test_lpips": 0.139,
       "test_q": 36.829600000000006,
-      "test_total": 53.67290926435828
-    },
-    {
-      "case": "hw/basketball",
-      "train_lpips": 0.2541,
-      "train_psnr": 23.641,
-      "train_ssim": 0.7828,
-      "test_lpips": 0.1216,
-      "test_q": 50.5072,
-      "test_total": 67.62046305098875
-    },
-    {
-      "case": "hw/trashbin",
-      "train_lpips": 0.2486,
-      "train_psnr": 23.9977,
-      "train_ssim": 0.8106,
-      "test_lpips": 0.1363,
-      "test_q": 48.0728,
-      "test_total": 64.97650419764423
+      "test_total": 53.67290926435828,
+      "keep": 1.0,
+      "fire": false,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "248756513556922",
+        "248760613969078",
+        "248765214431078",
+        "248769981577078",
+        "248773548601922",
+        "248777582340078",
+        "248781416059234",
+        "248786516571079"
+      ],
+      "old_random_views": 0.296
     },
     {
       "case": "dl3dv/9a451604b8d2583d47b14662635d8f74710c419cc061705ac15b8cfc31ece446",
-      "train_lpips": 0.238,
-      "train_psnr": 27.0028,
-      "train_ssim": 0.899,
+      "train_lpips": 0.2544,
+      "train_psnr": 26.5398,
+      "train_ssim": 0.8797,
       "test_lpips": 0.1936,
       "test_q": 44.27040000000001,
-      "test_total": 59.37744700699919
+      "test_total": 59.37744700699919,
+      "keep": 1.0,
+      "fire": false,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "frame_00002",
+        "frame_00051",
+        "frame_00101",
+        "frame_00150",
+        "frame_00199",
+        "frame_00248",
+        "frame_00299",
+        "frame_00348"
+      ],
+      "old_random_views": 0.238
+    },
+    {
+      "case": "hw/trashbin",
+      "train_lpips": 0.2459,
+      "train_psnr": 24.1034,
+      "train_ssim": 0.8188,
+      "test_lpips": 0.1363,
+      "test_q": 48.0728,
+      "test_total": 64.97650419764423,
+      "keep": 1.0,
+      "fire": false,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "245971989558391",
+        "245975756603078",
+        "245979456974078",
+        "245982723969078",
+        "245987391104922",
+        "245990924793079",
+        "245995458582078",
+        "246000959133922"
+      ],
+      "old_random_views": 0.2486
+    },
+    {
+      "case": "hw/basketball",
+      "train_lpips": 0.2409,
+      "train_psnr": 23.8304,
+      "train_ssim": 0.786,
+      "test_lpips": 0.1216,
+      "test_q": 50.5072,
+      "test_total": 67.62046305098875,
+      "keep": 1.0,
+      "fire": false,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "246324055271234",
+        "246327955663234",
+        "246331189321078",
+        "246335789783391",
+        "246339356808234",
+        "246343490557078",
+        "246348491059078",
+        "246353991611234"
+      ],
+      "old_random_views": 0.2541
     },
     {
       "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
-      "train_lpips": 0.2216,
-      "train_psnr": 27.0269,
-      "train_ssim": 0.8631,
+      "train_lpips": 0.2161,
+      "train_psnr": 27.3615,
+      "train_ssim": 0.8771,
       "test_lpips": 0.1055,
       "test_q": 64.4576,
-      "test_total": 78.94231991986493
+      "test_total": 78.94231991986493,
+      "keep": 1.0,
+      "fire": false,
+      "camera_order": "unshuffled",
+      "camera_names": [
+        "frame_00002",
+        "frame_00048",
+        "frame_00095",
+        "frame_00142",
+        "frame_00189",
+        "frame_00236",
+        "frame_00283",
+        "frame_00330"
+      ],
+      "old_random_views": 0.2216
     }
   ]
 }

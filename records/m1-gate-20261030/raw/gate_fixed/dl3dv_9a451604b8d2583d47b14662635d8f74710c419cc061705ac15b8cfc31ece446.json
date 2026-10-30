@@ -1,0 +1,32 @@
+{
+  "train_lpips": 0.2544,
+  "train_psnr": 26.5398,
+  "train_ssim": 0.8797,
+  "keep": 1.0,
+  "tau": 0.48,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/inputs13/dl3dv-9a451604/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/inputs13/dl3dv-9a451604/work",
+  "view_indices": [
+    0,
+    43,
+    87,
+    130,
+    173,
+    216,
+    260,
+    303
+  ],
+  "view_names": [
+    "frame_00002",
+    "frame_00051",
+    "frame_00101",
+    "frame_00150",
+    "frame_00199",
+    "frame_00248",
+    "frame_00299",
+    "frame_00348"
+  ],
+  "camera_order": "unshuffled"
+}

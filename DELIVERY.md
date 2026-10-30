@@ -150,12 +150,15 @@ B 时间漂移，无法复现；并发还会把 B 墙钟抬 60~80%。因此交�
 --mid_prune_keep 0.6`（M1 中途按"训练视角 2D 梯度范数重要性"物理剪枝 40%，再以同一日程
 跑完 5000 步）；否则不加任何参数、与当前交付配方完全一致。
 
-**预期增益**：13 例校准中只有 `mipnerf360/bicycle` 触发（train-init LPIPS 0.524 vs 次高
-0.446）。bicycle 上 M1 keep=0.6 实测 **Δtotal +0.84**，因此 13 例平均
-**+0.84/13 ≈ +0.065** —— 小但确定为正。Spearman(train-init LPIPS, delivered test LPIPS)
-= **0.973**（p<1e-4），门控的代理关系有数据支撑。
+**预期增益**：13 例校准中只有 `mipnerf360/bicycle` 触发（train-init LPIPS **0.5246**，次高
+`dl3dv/0b5635` **0.4155**；τ=0.48 位于该间隙内）。bicycle 上 M1 keep=0.6 实测
+**Δtotal +0.84**，因此 13 例平均 **+0.84/13 ≈ +0.065** —— 小但确定为正。
+Spearman(train-init LPIPS, delivered test LPIPS) = **0.912**（p=1.4e-5）。
+门控在 `Scene(shuffle=False)` 修复（commit `d0e83b9`）后**完全确定**：同机重跑数值与所选
+相机名逐位一致（旧版随机视角的校准数字已作废，勿引用）。
 
 **怎么开**：`python run_pipeline.py --scene ... --output ... --mid-prune auto`
+（门控 JSON 会记录 `camera_names` 与 `camera_order="unshuffled"`，可审计选中的训练视角）
 （可调 `--mid-prune-tau` / `--mid-prune-keep`）。门控 JSON 与耗时写入 `report.json`
 （`mid_prune`、`stage_seconds.prune_gate`；门控在 B 计时之外，因此是"免费"的）。
 

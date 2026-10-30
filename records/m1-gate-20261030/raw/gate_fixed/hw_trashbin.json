@@ -1,0 +1,32 @@
+{
+  "train_lpips": 0.2459,
+  "train_psnr": 24.1034,
+  "train_ssim": 0.8188,
+  "keep": 1.0,
+  "tau": 0.48,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/inputs13/hw-trashbin/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/inputs13/hw-trashbin/work",
+  "view_indices": [
+    0,
+    9,
+    18,
+    27,
+    37,
+    46,
+    55,
+    64
+  ],
+  "view_names": [
+    "245971989558391",
+    "245975756603078",
+    "245979456974078",
+    "245982723969078",
+    "245987391104922",
+    "245990924793079",
+    "245995458582078",
+    "246000959133922"
+  ],
+  "camera_order": "unshuffled"
+}

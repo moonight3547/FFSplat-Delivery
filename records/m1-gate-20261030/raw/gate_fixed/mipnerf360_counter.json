@@ -1,0 +1,32 @@
+{
+  "train_lpips": 0.3758,
+  "train_psnr": 21.3511,
+  "train_ssim": 0.6684,
+  "keep": 1.0,
+  "tau": 0.48,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/O0-20261030/work/mipnerf360/counter",
+  "view_indices": [
+    0,
+    30,
+    60,
+    90,
+    119,
+    149,
+    179,
+    209
+  ],
+  "view_names": [
+    "DSCF5858",
+    "DSCF5892",
+    "DSCF5926",
+    "DSCF5960",
+    "DSCF5994",
+    "DSCF6028",
+    "DSCF6062",
+    "DSCF6096"
+  ],
+  "camera_order": "unshuffled"
+}
