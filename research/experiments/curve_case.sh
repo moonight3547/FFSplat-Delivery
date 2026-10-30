@@ -24,6 +24,11 @@ if [ -n "${RESPLAT_PY:-}" ]; then
 else
   resplat() { $PY run --no-capture-output -n "$RESPLAT" python "$@"; }
 fi
+if [ -n "${FASTGS_PY:-}" ]; then
+  fastgs() { "$FASTGS_PY" "$@"; }
+else
+  fastgs() { $PY run --no-capture-output -n "$FASTGS" python "$@"; }
+fi
 CKPT=${CKPT:-/workspace/organizer-assets/resplat-base-dl3dv-540x960-view16-a72dc6d0.pth}
 DATA=${DATA:-/workspace/organizer-assets/datasets}
 OUT=${OUT:-outputs/curve}; SNAP=${SNAP:-6,15,30}; BUDGET=${BUDGET:-42}
@@ -40,7 +45,7 @@ if [ ! -f "$d/resplat/resplat_world.ply" ]; then
     --out "$d/resplat" --checkpoint "$CKPT" --num_refine 2 --device cuda:0 > "$d/r.log" 2>&1
 fi
 [ -f "$d/resplat/resplat_world.ply" ] || { echo "RESPLAT_FAIL $CASE"; exit 1; }
-$PY run --no-capture-output -n "$FASTGS" python -m research.image_cache --work "$d/work" --out "$d/cache" >/dev/null 2>&1
+fastgs -m research.image_cache --work "$d/work" --out "$d/cache" >/dev/null 2>&1
 
 score_curve(){  # dir snapdir
   local dd="$1" sd="$2" args=""
@@ -48,13 +53,13 @@ score_curve(){  # dir snapdir
     n=$(basename "$p" .ply | sed 's/snap_//; s/s$//')
     args="$args --ply $p --name $n"
   done
-  [ -n "$args" ] && $PY run --no-capture-output -n "$FASTGS" python -m research.curve_metrics \
+  [ -n "$args" ] && fastgs -m research.curve_metrics \
     --source "$d/work" --out "$dd/curve.json" $args > "$dd/metrics.log" 2>&1
   rm -rf "$sd"/*.ply 2>/dev/null   # snapshots are ~100 MB each; the disk is small
 }
 run_fastgs(){
   [ -f "$d/fastgs/curve.json" ] && return; rm -rf "$d/fastgs"; mkdir -p "$d/fastgs/snaps"
-  $PY run --no-capture-output -n "$FASTGS" python -m research.train_sweep \
+  fastgs -m research.train_sweep \
     --source "$d/work" --model_path "$d/fastgs/model" --eval -r 1 --sh_degree 3 --quiet \
     --init_ply "$d/resplat/resplat_world.ply" --iterations 100000 --snapshots "" \
     --snap_dir "$d/fastgs/snaps" --snap_seconds "$SNAP" --limit_seconds "$BUDGET" --limit_reserve 1.0 \
@@ -64,7 +69,7 @@ run_fastgs(){
 }
 run_mcmc(){
   [ -f "$d/mcmc/curve.json" ] && return; rm -rf "$d/mcmc"; mkdir -p "$d/mcmc"
-  TORCH_CUDA_ARCH_LIST=8.9 $PY run --no-capture-output -n "$FASTGS" python -m research.mcmc_budget \
+  TORCH_CUDA_ARCH_LIST=8.9 fastgs -m research.mcmc_budget \
     --work "$d/work" --init "$d/resplat/resplat_world.ply" --out "$d/mcmc/model" \
     --budget-seconds "$BUDGET" --budget-fraction 0.98 --device cuda:0 \
     --res-scales 0.5,0.75,1.0 --res-untils 0.4,0.7 --cap-mult 3.0 --refine-every 50 \
@@ -73,7 +78,7 @@ run_mcmc(){
 }
 run_inject(){
   [ -f "$d/inject/curve.json" ] && return; rm -rf "$d/inject"; mkdir -p "$d/inject/snaps"
-  $PY run --no-capture-output -n "$FASTGS" python -m research.train_sweep \
+  fastgs -m research.train_sweep \
     --source "$d/work" --model_path "$d/inject/model" --eval -r 1 --sh_degree 3 --quiet \
     --init_ply "$d/resplat/resplat_world.ply" --iterations 100000 --snapshots "" \
     --snap_dir "$d/inject/snaps" --snap_seconds "$SNAP" --limit_seconds "$BUDGET" --limit_reserve 1.0 \
