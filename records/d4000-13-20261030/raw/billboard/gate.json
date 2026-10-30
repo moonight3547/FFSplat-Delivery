@@ -1,0 +1,32 @@
+{
+  "train_lpips": 0.2825,
+  "train_psnr": 20.2547,
+  "train_ssim": 0.6596,
+  "keep": 1.0,
+  "tau": 0.48,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/O0-20261030/results/hw/billboard/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/O0-20261030/work/hw/billboard",
+  "view_indices": [
+    0,
+    8,
+    16,
+    24,
+    31,
+    39,
+    47,
+    55
+  ],
+  "view_names": [
+    "248756513556922",
+    "248760613969078",
+    "248765214431078",
+    "248769981577078",
+    "248773548601922",
+    "248777582340078",
+    "248781416059234",
+    "248786516571079"
+  ],
+  "camera_order": "unshuffled"
+}

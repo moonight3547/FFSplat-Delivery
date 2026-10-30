@@ -1,0 +1,32 @@
+{
+  "train_lpips": 0.3165,
+  "train_psnr": 23.3007,
+  "train_ssim": 0.7605,
+  "keep": 1.0,
+  "tau": 0.48,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/inputs13/mipnerf360-bonsai/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/inputs13/mipnerf360-bonsai/work",
+  "view_indices": [
+    0,
+    36,
+    73,
+    109,
+    145,
+    181,
+    218,
+    254
+  ],
+  "view_names": [
+    "DSCF5566",
+    "DSCF5607",
+    "DSCF5649",
+    "DSCF5690",
+    "DSCF5731",
+    "DSCF5772",
+    "DSCF5815",
+    "DSCF5856"
+  ],
+  "camera_order": "unshuffled"
+}

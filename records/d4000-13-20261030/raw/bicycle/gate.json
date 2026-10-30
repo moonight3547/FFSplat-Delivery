@@ -1,0 +1,32 @@
+{
+  "train_lpips": 0.5246,
+  "train_psnr": 17.7113,
+  "train_ssim": 0.3857,
+  "keep": 0.6,
+  "tau": 0.48,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/work",
+  "view_indices": [
+    0,
+    24,
+    48,
+    72,
+    96,
+    120,
+    144,
+    168
+  ],
+  "view_names": [
+    "_DSC8680",
+    "_DSC8707",
+    "_DSC8734",
+    "_DSC8763",
+    "_DSC8790",
+    "_DSC8818",
+    "_DSC8845",
+    "_DSC8873"
+  ],
+  "camera_order": "unshuffled"
+}

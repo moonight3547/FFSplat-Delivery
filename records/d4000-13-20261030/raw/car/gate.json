@@ -1,0 +1,32 @@
+{
+  "train_lpips": 0.3183,
+  "train_psnr": 20.1407,
+  "train_ssim": 0.6784,
+  "keep": 1.0,
+  "tau": 0.48,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/inputs13/hw-car/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/inputs13/hw-car/work",
+  "view_indices": [
+    0,
+    9,
+    17,
+    26,
+    34,
+    43,
+    51,
+    60
+  ],
+  "view_names": [
+    "248541887207234",
+    "248545787599234",
+    "248549921348078",
+    "248555221880234",
+    "248559355628235",
+    "248564056101235",
+    "248567523115234",
+    "248572123577234"
+  ],
+  "camera_order": "unshuffled"
+}

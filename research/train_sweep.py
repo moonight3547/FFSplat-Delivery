@@ -71,7 +71,25 @@ def quick_test_psnr(scene, gaussians, pipe, background):
     return float(np.mean(psnrs)) if psnrs else None
 
 
+def _maybe_patch_official_adam():
+    """Task-22 compatibility pilot: official Faster-GS CUDA Adam (FasterGSCudaBackend).
+
+    Opt-in via FFSPLAT_OFFICIAL_ADAM=1 only; the delivery path never touches this.
+    The official FusedAdam replaces torch.optim.Adam process-wide before
+    GaussianModel.training_setup builds the two 3DGS optimizers.  Each 3DGS param
+    group holds exactly one tensor, which is the official class's contract.
+    """
+    if os.environ.get("FFSPLAT_OFFICIAL_ADAM") != "1":
+        return
+    from FasterGSCudaBackend.torch_bindings.adam import FusedAdam
+    import inspect
+    torch.optim.Adam = FusedAdam
+    print("[sweep] official Faster-GS FusedAdam patched: %s (%s)"
+          % (FusedAdam, inspect.getfile(FusedAdam)))
+
+
 def main(argv=None):
+    _maybe_patch_official_adam()
     parser = ArgumentParser(description=__doc__)
     lp = ModelParams(parser)
     op = OptimizationParams(parser)
