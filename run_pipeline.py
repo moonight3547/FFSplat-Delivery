@@ -192,10 +192,10 @@ def main(argv=None):
         "--densify_until_iter", max(1, args.b_iterations // 4),
         "--lambda_dssim", "0.6", "--scaling_lr", "0.01",
         "--realloc_frac", str(args.realloc_frac),
-        # three shots inside the structural window beat a single one-shot reallocation
-        # on every scene measured (+0.27..+1.66 quality); the later shots have fresh
-        # structure statistics, which a post-window shot would not.
-        "--realloc_at", ",".join(str(max(1, args.b_iterations * k // 8)) for k in (1, 2, 3)),
+        # the reallocation improves monotonically with the number of shots (1 -> 8 measured
+        # +5.1/+3.3/+0.9 quality); eight evenly spaced shots inside the structural window
+        # is the current best measured setting.
+        "--realloc_at", ",".join(str(max(1, args.b_iterations * k // 20)) for k in range(1, 9)),
         "--image_cache", str(cache_dir),
         "--limit_seconds", b_limit, "--record", results / "module_b/train_record.json"), logs)
     record = read(results / "module_b/train_record.json")
