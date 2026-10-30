@@ -1,0 +1,24 @@
+{
+  "source": "research/depth_cost_probe.py (bicycle delivery PLY, 993,861 Gaussians, 576x960, 3 views x 15 reps after warmup)",
+  "gsplat_rgb_forward_ms": 1.953,
+  "gsplat_rgb_forward_backward_ms": 7.47,
+  "gsplat_rgb_ed_forward_ms": 1.986,
+  "gsplat_rgb_ed_forward_backward_ms": 7.652,
+  "extra_depth_channel_forward_ms": 0.033,
+  "extra_depth_channel_forward_backward_ms": 0.182,
+  "fastgs_1cam_step_forward_backward_ms": 4.84,
+  "per_application_ms": 7.652,
+  "applications_4000_5000_every10": 100,
+  "applications_4000_5000_every5": 200,
+  "added_b_seconds_every10": 0.765,
+  "added_b_seconds_every5": 1.53,
+  "time_points_bicycle_budget95": {
+    "every10": -0.179,
+    "every5": -0.358
+  },
+  "time_points_dl3dv_budget94_29": {
+    "every10": -0.18,
+    "every5": -0.361
+  },
+  "note": "one gsplat RGB+ED pass carries BOTH the depth (ED channel) and the normal map (colors = smallest-scale axis), so this is a single extra pass per regularized step"
+}

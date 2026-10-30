@@ -101,6 +101,16 @@ DEFAULT_ARMS = {
                         planar_weight=1.0, normal_weight=0.0),
     "pgsr_normal": dict(kind="train", trainer="standard", stage2_iters=0, stage3=0,
                         planar_weight=0.0, normal_weight=1.0),
+    # ---- PGSR late-window depth-geometry regularizer (task-15)
+    "pgsr_sv10": dict(kind="train", trainer="standard", stage2_iters=0, stage3=0,
+                      depth_reg_weight=0.2, depth_reg_every=10,
+                      depth_reg_from=4000, depth_reg_until=5000),
+    "pgsr_sv5": dict(kind="train", trainer="standard", stage2_iters=0, stage3=0,
+                     depth_reg_weight=0.2, depth_reg_every=5,
+                     depth_reg_from=4000, depth_reg_until=5000),
+    "pgsr_sv10_w1": dict(kind="train", trainer="standard", stage2_iters=0, stage3=0,
+                         depth_reg_weight=1.0, depth_reg_every=10,
+                         depth_reg_from=4000, depth_reg_until=5000),
     "ctrl": dict(kind="train", trainer="standard", stage2_iters=0, stage3=0),
     # +100 VGG-LPIPS steps directly on top of the delivery recipe (no phase 2):
     # the Lead's priority-2 arm because the MCMC pilot was already negative.
@@ -375,6 +385,11 @@ def cell_train(root, entry, arm, spec, lane, timeout, stage3_iters=None,
     if spec.get("normal_weight") is not None:
         flags["--normal-weight"] = spec["normal_weight"]
         flags["--normal-from"] = spec.get("normal_from", 1250)
+    if spec.get("depth_reg_weight") is not None:
+        flags["--depth-reg-weight"] = spec["depth_reg_weight"]
+        flags["--depth-reg-every"] = spec.get("depth_reg_every", 10)
+        flags["--depth-reg-from"] = spec.get("depth_reg_from", 4000)
+        flags["--depth-reg-until"] = spec.get("depth_reg_until", 5000)
     # run_sweep refuses a non-empty --out dir, so the trainer output lives in
     # its own subdir (cell.json/rows.json stay in the cell dir)
     sweep = cell / "sweep"

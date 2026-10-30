@@ -1,0 +1,21 @@
+{
+  "train_lpips": 0.4108,
+  "train_psnr": 19.8557,
+  "train_ssim": 0.5535,
+  "keep": 1.0,
+  "tau": 0.48,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "outputs/curve/dl3dv-0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce/resplat/resplat_world.ply",
+  "work": "outputs/curve/dl3dv-0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce/work",
+  "view_indices": [
+    0,
+    47,
+    95,
+    142,
+    190,
+    237,
+    285,
+    332
+  ]
+}

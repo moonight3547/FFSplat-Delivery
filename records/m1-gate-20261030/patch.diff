@@ -1,0 +1,81 @@
+--- a/run_pipeline.py
++++ b/run_pipeline.py
+@@ -106,6 +106,21 @@
+     parser.add_argument("--num-refine", type=int, default=2)
+     parser.add_argument("--context-policy", default="uniform", choices=["uniform"],
+                         help="16-view policy; uniform is the organizer baseline")
++    # ---- optional M1 mid-training prune, gated pre-module-B on TRAIN views only.
++    # See records/M1-GATE-20261030.md.  Default off so the measured 51.153
++    # delivery recipe stays the default and reproducible.
++    parser.add_argument("--mid-prune", choices=["off", "auto"], default="off",
++                        dest="mid_prune",
++                        help="off (default, measured delivery) or auto (run the "
++                             "train-view LPIPS gate before module B and prune at "
++                             "iteration //4 when the gate fires)")
++    parser.add_argument("--mid-prune-tau", type=float, default=0.48,
++                        dest="mid_prune_tau",
++                        help="gate threshold on the init-PLY train-view LPIPS; the 13-case "
++                             "calibration chose 0.48 (fires only on bicycle-like scenes)")
++    parser.add_argument("--mid-prune-keep", type=float, default=0.6,
++                        dest="mid_prune_keep",
++                        help="kept Gaussian fraction when the gate fires")
+     args = parser.parse_args(argv)
+ 
+     if not args.scene.is_dir():
+@@ -128,6 +143,8 @@
+                     num_refine=args.num_refine, b_iterations=args.b_iterations,
+                     b_fraction=args.b_fraction,
+                     context_policy=args.context_policy,
++                    mid_prune=args.mid_prune, mid_prune_tau=args.mid_prune_tau,
++                    mid_prune_keep=args.mid_prune_keep,
+                     git_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO,
+                                                        text=True).strip())
+     start_all = time.perf_counter()
+@@ -174,6 +191,27 @@
+     # beats the opacity-sharpened variant on the mean (61.1 vs 60.2), so no init
+     # transform is applied.
+     b_init_ply = results / "resplat/resplat_world.ply"
++
++    # ---- optional M1 gate (pre-module-B, TRAIN views only) ------------------
++    # Runs BEFORE the module-B timer starts, so the gate cost is outside the
++    # scored B time.  Rule: if the init-PLY train-view LPIPS is above --mid-prune-tau
++    # (a monotone proxy for "delivered test LPIPS is past the 0.25 scoring cliff",
++    # Spearman 0.973 over the 13 cases), prune the least-important Gaussians at
++    # iteration//4 and continue the same run.  Default off: delivery is unchanged.
++    mid_prune = dict(mode=args.mid_prune, tau=args.mid_prune_tau,
++                     keep_default=args.mid_prune_keep, fired=False, keep=1.0,
++                     gate_record=None)
++    if args.mid_prune == "auto":
++        gate_record = results / "gate.json"
++        runner.run("prune_gate", runner.conda(
++            "fastgs", "-m", "research.prune_gate", "--work", work,
++            "--ply", b_init_ply, "--tau", str(args.mid_prune_tau),
++            "--keep", str(args.mid_prune_keep), "--record", gate_record), logs)
++        gate = read(gate_record)
++        mid_prune.update(fired=bool(gate["keep"] < 1.0), keep=float(gate["keep"]),
++                         gate_record=gate)
++        print(f"[mid_prune] train_lpips={gate['train_lpips']:.4f} tau={gate['tau']} "
++              f"-> keep={gate['keep']}", flush=True)
+ 
+     # ---- module B -----------------------------------------------------------
+     # Recipe measured on this class of GPU (see docs/RESEARCH-20261030.md): a short
+@@ -204,7 +242,10 @@
+         # research/advisory/HANDOFF_MULTISHOT_REALLOC_20261030.md.
+         "--realloc_at", str(max(1, args.b_iterations // 4)),
+         "--image_cache", str(cache_dir),
+-        "--limit_seconds", b_limit, "--record", results / "module_b/train_record.json"), logs)
++        "--limit_seconds", b_limit, "--record", results / "module_b/train_record.json")
++        + (["--mid_prune_at", str(max(1, args.b_iterations // 4)),
++            "--mid_prune_keep", str(mid_prune["keep"])]
++           if mid_prune["fired"] else []), logs)
+     record = read(results / "module_b/train_record.json")
+     iterations = record["completed_iterations"]
+ 
+@@ -221,6 +262,7 @@
+     b_seconds = record["total_seconds"]
+     score = proxy(metrics["psnr"], metrics["ssim"], metrics["lpips"], b_seconds, budget)
+     report = dict(identity=identity, metrics=metrics, budget_seconds=budget,
++                  mid_prune=mid_prune,
+                   budget_source=budget_source, b_seconds=b_seconds,
+                   b_iterations=iterations, b_stop_reason=record["stop_reason"],
+                   b_gaussians=record["num_final_gaussians"],

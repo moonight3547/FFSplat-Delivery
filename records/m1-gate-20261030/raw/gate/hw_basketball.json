@@ -1,0 +1,21 @@
+{
+  "train_lpips": 0.2541,
+  "train_psnr": 23.641,
+  "train_ssim": 0.7828,
+  "keep": 0.6,
+  "tau": 0.25,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/inputs13/hw-basketball/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/inputs13/hw-basketball/work",
+  "view_indices": [
+    0,
+    10,
+    19,
+    29,
+    39,
+    49,
+    58,
+    68
+  ]
+}

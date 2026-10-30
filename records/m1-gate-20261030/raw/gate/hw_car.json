@@ -1,0 +1,21 @@
+{
+  "train_lpips": 0.333,
+  "train_psnr": 19.3588,
+  "train_ssim": 0.6401,
+  "keep": 0.6,
+  "tau": 0.25,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/inputs13/hw-car/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/inputs13/hw-car/work",
+  "view_indices": [
+    0,
+    9,
+    17,
+    26,
+    34,
+    43,
+    51,
+    60
+  ]
+}

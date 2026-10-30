@@ -206,6 +206,16 @@ def main(argv=None):
     parser.add_argument("--shape_stats_every", type=int, default=0,
                         help="log Gaussian shape statistics every N iterations "
                              "(0 = off; forced on when a PGSR weight is set)")
+    # ---- PGSR depth-geometry regularizer (task-15): late-window, low frequency.
+    # One extra gsplat RGB+ED pass per regularized step (~7.7 ms); defaults off.
+    parser.add_argument("--depth_reg_weight", type=float, default=0.0,
+                        help="weight of the single-view normal-depth consistency loss")
+    parser.add_argument("--depth_reg_every", type=int, default=10,
+                        help="apply the depth regularizer every N iterations")
+    parser.add_argument("--depth_reg_from", type=int, default=4000,
+                        help="first iteration of the depth-regularized window")
+    parser.add_argument("--depth_reg_until", type=int, default=5000,
+                        help="last iteration of the depth-regularized window")
     parser.add_argument("--res_scales", type=str, default="",
                         help="coarse-to-fine training resolutions, e.g. 0.5,0.75,1.0")
     parser.add_argument("--res_until", type=str, default="",
@@ -514,6 +524,7 @@ def main(argv=None):
     if (args.shape_stats_every > 0 or args.planar_weight > 0.0
             or args.normal_weight > 0.0):
         shape_stats.append(_shape_stats(0))
+    depth_reg_events = []
 
     state = dict(scale=None, stack=[], indices=[])
     ema_loss = 0.0
@@ -594,6 +605,19 @@ def main(argv=None):
                 gt_p = torch.nn.functional.interpolate(gt_p, size=size, mode="area")
             perceptual_loss = perceptual(render_p * 2.0 - 1.0, gt_p * 2.0 - 1.0).mean()
             loss = loss + args.lpips_weight * perceptual_loss
+        if (args.depth_reg_weight > 0.0
+                and args.depth_reg_from <= iteration <= args.depth_reg_until
+                and iteration % args.depth_reg_every == 0):
+            from .gsplat_depth_loss import depth_normal_consistency
+            _t_dr = time.perf_counter()
+            _dloss, _dst = depth_normal_consistency(
+                gaussians, viewpoint_cam, scene.cameras_extent)
+            if _dloss is not None:
+                loss = loss + args.depth_reg_weight * _dloss
+                depth_reg_events.append(dict(
+                    iteration=iteration,
+                    seconds=round(time.perf_counter() - _t_dr, 4),
+                    **{k: v for k, v in _dst.items() if k != "ok"}))
         loss = _pgsr_terms(loss)
         if args.time_breakdown:
             _sync()
@@ -1057,6 +1081,9 @@ def main(argv=None):
         prune_keep=args.prune_keep, prune_views=args.prune_views,
         pgsr=dict(pgsr, shape_stats=shape_stats,
                   shape_stats_every=args.shape_stats_every),
+        depth_reg=dict(weight=args.depth_reg_weight, every=args.depth_reg_every,
+                       from_iter=args.depth_reg_from, until_iter=args.depth_reg_until,
+                       events=depth_reg_events),
         mid_prune_at=args.mid_prune_at, mid_prune_keep=args.mid_prune_keep,
         prune_events=prune_events,
         timing_breakdown=(timing if args.time_breakdown else None),

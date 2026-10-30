@@ -141,3 +141,24 @@ B 时间漂移，无法复现；并发还会把 B 墙钟抬 60~80%。因此交�
 - **步数不是当前杠杆**（E2 结论）：13 例 × S∈{500..8000} 扫描里 best uniform S 仍是 5000
   （+0.000），per-scene oracle 上限 +0.66（全串行实测）/ +0.79（raw）；见
   `docs/PARETO-STEPS-20261030.md` §6/§10。
+
+## 7. 可选 M1 门控（默认关闭，2026-10-31 用户批准接入）
+
+**做什么**：在模块 B **之前**，用 `research/prune_gate.py` 从 `resplat_world.ply` 渲染
+**8 个固定训练视角**、算与训练 GT 的 VGG-LPIPS（不碰测试图）。若该 train-LPIPS >
+`--mid-prune-tau`（校准值 **0.48**），则给模块 B 追加 `--mid_prune_at iterations//4
+--mid_prune_keep 0.6`（M1 中途按"训练视角 2D 梯度范数重要性"物理剪枝 40%，再以同一日程
+跑完 5000 步）；否则不加任何参数、与当前交付配方完全一致。
+
+**预期增益**：13 例校准中只有 `mipnerf360/bicycle` 触发（train-init LPIPS 0.524 vs 次高
+0.446）。bicycle 上 M1 keep=0.6 实测 **Δtotal +0.84**，因此 13 例平均
+**+0.84/13 ≈ +0.065** —— 小但确定为正。Spearman(train-init LPIPS, delivered test LPIPS)
+= **0.973**（p<1e-4），门控的代理关系有数据支撑。
+
+**怎么开**：`python run_pipeline.py --scene ... --output ... --mid-prune auto`
+（可调 `--mid-prune-tau` / `--mid-prune-keep`）。门控 JSON 与耗时写入 `report.json`
+（`mid_prune`、`stage_seconds.prune_gate`；门控在 B 计时之外，因此是"免费"的）。
+
+**为什么默认 off**：① 收益只由 bicycle 单场景承载（13 例平均 +0.065 与 B 的 ±0.5 s
+run-to-run 噪声同量级）；② 若评测集出现 train-init LPIPS >0.48 但交付 LPIPS 仍 <0.25 的
+场景，误触发会损失约 1–2 分；③ 默认 off 保证已测定的 51.153 交付配方与复现命令不变。

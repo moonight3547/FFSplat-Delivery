@@ -1,0 +1,21 @@
+{
+  "train_lpips": 0.436,
+  "train_psnr": 17.489,
+  "train_ssim": 0.4179,
+  "keep": 0.6,
+  "tau": 0.25,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/curve/dl3dv-0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/curve/dl3dv-0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e/work",
+  "view_indices": [
+    0,
+    40,
+    81,
+    121,
+    161,
+    201,
+    242,
+    282
+  ]
+}

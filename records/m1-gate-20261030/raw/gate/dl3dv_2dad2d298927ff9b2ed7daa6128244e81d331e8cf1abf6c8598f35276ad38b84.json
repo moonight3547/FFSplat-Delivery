@@ -1,0 +1,21 @@
+{
+  "train_lpips": 0.3536,
+  "train_psnr": 20.5837,
+  "train_ssim": 0.5645,
+  "keep": 0.6,
+  "tau": 0.25,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/inputs13/dl3dv-2dad2d29/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/inputs13/dl3dv-2dad2d29/work",
+  "view_indices": [
+    0,
+    38,
+    76,
+    114,
+    151,
+    189,
+    227,
+    265
+  ]
+}

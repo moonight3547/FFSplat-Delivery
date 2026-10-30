@@ -1,0 +1,21 @@
+{
+  "train_lpips": 0.3358,
+  "train_psnr": 22.1856,
+  "train_ssim": 0.7284,
+  "keep": 0.6,
+  "tau": 0.25,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/inputs13/mipnerf360-bonsai/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/inputs13/mipnerf360-bonsai/work",
+  "view_indices": [
+    0,
+    36,
+    73,
+    109,
+    145,
+    181,
+    218,
+    254
+  ]
+}

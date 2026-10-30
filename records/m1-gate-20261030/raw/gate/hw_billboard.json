@@ -1,0 +1,21 @@
+{
+  "train_lpips": 0.296,
+  "train_psnr": 19.5077,
+  "train_ssim": 0.6339,
+  "keep": 0.6,
+  "tau": 0.25,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/O0-20261030/results/hw/billboard/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/O0-20261030/work/hw/billboard",
+  "view_indices": [
+    0,
+    8,
+    16,
+    24,
+    31,
+    39,
+    47,
+    55
+  ]
+}

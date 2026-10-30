@@ -1,0 +1,21 @@
+{
+  "train_lpips": 0.525,
+  "train_psnr": 17.129,
+  "train_ssim": 0.3801,
+  "keep": 0.6,
+  "tau": 0.25,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/prep/mipnerf360/bicycle/work",
+  "view_indices": [
+    0,
+    24,
+    48,
+    72,
+    96,
+    120,
+    144,
+    168
+  ]
+}

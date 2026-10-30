@@ -1,0 +1,21 @@
+{
+  "train_lpips": 0.5246,
+  "train_psnr": 18.7314,
+  "train_ssim": 0.3766,
+  "keep": 0.6,
+  "tau": 0.48,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "outputs/prep/mipnerf360/bicycle/resplat/resplat_world.ply",
+  "work": "outputs/prep/mipnerf360/bicycle/work",
+  "view_indices": [
+    0,
+    24,
+    48,
+    72,
+    96,
+    120,
+    144,
+    168
+  ]
+}

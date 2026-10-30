@@ -1,0 +1,21 @@
+{
+  "train_lpips": 0.3934,
+  "train_psnr": 21.5282,
+  "train_ssim": 0.6529,
+  "keep": 0.6,
+  "tau": 0.25,
+  "n_views": 8,
+  "train_views_only": true,
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/O0-20261030/work/mipnerf360/counter",
+  "view_indices": [
+    0,
+    30,
+    60,
+    90,
+    119,
+    149,
+    179,
+    209
+  ]
+}

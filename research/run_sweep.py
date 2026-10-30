@@ -145,6 +145,14 @@ def main(argv=None):
     parser.add_argument("--normal-from", type=int, default=None, dest="normal_from")
     parser.add_argument("--shape-stats-every", type=int, default=None,
                         dest="shape_stats_every")
+    parser.add_argument("--depth-reg-weight", type=float, default=None,
+                        dest="depth_reg_weight")
+    parser.add_argument("--depth-reg-every", type=int, default=None,
+                        dest="depth_reg_every")
+    parser.add_argument("--depth-reg-from", type=int, default=None,
+                        dest="depth_reg_from")
+    parser.add_argument("--depth-reg-until", type=int, default=None,
+                        dest="depth_reg_until")
     args = parser.parse_args(argv)
 
     profile = read(args.profile)
@@ -216,6 +224,10 @@ def main(argv=None):
         "--normal_weight": args.normal_weight,
         "--normal_from": args.normal_from,
         "--shape_stats_every": args.shape_stats_every,
+        "--depth_reg_weight": args.depth_reg_weight,
+        "--depth_reg_every": args.depth_reg_every,
+        "--depth_reg_from": args.depth_reg_from,
+        "--depth_reg_until": args.depth_reg_until,
     }
     for flag, value in optional.items():
         if value is not None:
