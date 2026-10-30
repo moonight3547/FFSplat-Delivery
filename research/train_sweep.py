@@ -114,6 +114,8 @@ def main(argv=None):
                         help="optimise only the SH/colour parameters (position, scale, "
                              "rotation and opacity frozen); tests how much of the 5k gain "
                              "is appearance rather than geometry")
+    parser.add_argument("--legacy_sync", action="store_true",
+                        help="restore the per-step loss.item() sync (for the P0-2 A/B)")
     parser.add_argument("--no_quick_test", action="store_true",
                         help="skip the diagnostic PSNR pass (the official eval follows)")
     parser.add_argument("--image_cache", type=str, default=None,
@@ -339,7 +341,7 @@ def main(argv=None):
 
         with torch.no_grad():
             # loss.item() forces a device sync; only pay it when something prints
-            if (not args.quiet and iteration % 100 == 0) or args.time_breakdown:
+            if args.legacy_sync or (not args.quiet and iteration % 100 == 0) or args.time_breakdown:
                 ema_loss = 0.4 * loss.item() + 0.6 * ema_loss
             if not args.quiet and iteration % 100 == 0:
                 progress.set_postfix({"loss": f"{ema_loss:.5f}",
