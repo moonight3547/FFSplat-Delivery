@@ -105,6 +105,10 @@ def main(argv=None):
                              "iteration; the LR is scaled by N so the step size is kept")
     parser.add_argument("--time_breakdown", action="store_true",
                         help="accumulate per-section wall clock (render/backward/optimizer)")
+    parser.add_argument("--freeze_geometry", action="store_true",
+                        help="optimise only the SH/colour parameters (position, scale, "
+                             "rotation and opacity frozen); tests how much of the 5k gain "
+                             "is appearance rather than geometry")
     parser.add_argument("--no_quick_test", action="store_true",
                         help="skip the diagnostic PSNR pass (the official eval follows)")
     parser.add_argument("--image_cache", type=str, default=None,
@@ -215,6 +219,14 @@ def main(argv=None):
     else:
         raise SystemExit("either --init_ply or --init_random is required")
     n_init = int(gaussians.get_xyz.shape[0])
+    if args.freeze_geometry:
+        frozen = []
+        for name in ("_xyz", "_scaling", "_rotation", "_opacity"):
+            tensor = getattr(gaussians, name, None)
+            if tensor is not None:
+                tensor.requires_grad_(False)
+                frozen.append(name)
+        print(f"[sweep] geometry frozen: {', '.join(frozen)}")
     gaussians.spatial_lr_scale = scene.cameras_extent
     gaussians.training_setup(opt)
     gaussians.max_radii2D = torch.zeros((gaussians.get_xyz.shape[0]), device="cuda")
