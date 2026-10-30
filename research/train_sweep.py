@@ -92,6 +92,8 @@ def main(argv=None):
                         help="sampled-view count needed to densify (upstream hardcodes 5)")
     parser.add_argument("--max_gaussians", type=int, default=None,
                         help="hard cap on Gaussian count, weakest pruned first")
+    parser.add_argument("--snap_seconds", type=str, default="",
+                        help="comma list of train-seconds at which to dump a PLY (curve)")
     parser.add_argument("--opt_step_schedule", type=str, default="",
                         help="e.g. '2500:2,3750:4' = dense Adam every N steps after that "
                              "iteration; the LR is scaled by N so the step size is kept")
@@ -246,6 +248,7 @@ def main(argv=None):
     stop_reason = "iterations"
     progress = tqdm(range(1, iterations + 1), desc="FastGS", disable=args.quiet,
                     file=sys.stdout, mininterval=1.0)
+    _snap_targets = sorted(float(x) for x in args.snap_seconds.split(",") if x.strip())
     timing = {"render": 0.0, "backward": 0.0, "optimizer": 0.0, "grad_to_step": 0.0}
     _sync = torch.cuda.synchronize if torch.cuda.is_available() else (lambda *a, **k: None)
     for iteration in range(1, iterations + 1):
@@ -355,6 +358,15 @@ def main(argv=None):
         if args.time_breakdown:
             _sync()
             timing["optimizer"] += time.perf_counter() - _t
+        if _snap_targets and time.perf_counter() - t_train0 >= _snap_targets[0]:
+            _sec = time.perf_counter() - t_train0
+            _p = os.path.join(args.snap_dir or dataset.model_path, f"snap_{int(_snap_targets[0]):04d}s.ply")
+            os.makedirs(os.path.dirname(_p), exist_ok=True)
+            gaussians.save_ply(_p)
+            snaps.append(dict(seconds=round(_sec, 3), iteration=iteration, ply=_p,
+                              num_gaussians=int(gaussians.get_xyz.shape[0])))
+            print(f"[curve] snapshot at {_sec:.2f}s -> {_p}")
+            _snap_targets.pop(0)
         if iteration in trigger:
             elapsed = time.perf_counter() - t_train0
             n_now = int(gaussians.get_xyz.shape[0])

@@ -319,6 +319,8 @@ def build_parser():
                         help="multiplier on the observed step-time prediction")
     parser.add_argument("--topology-stop-fraction", type=float, default=0.8,
                         help="stop MCMC relocate/add after this fraction of the allowance")
+    parser.add_argument("--snap-seconds", default="",
+                        help="comma list of train-seconds at which to dump a PLY (curve)")
     parser.add_argument("--max-steps", type=int, default=200000)
     parser.add_argument("--self-check", action="store_true",
                         help="run CPU-only checks of parsing/allocation math/PLY round-trip")
@@ -485,6 +487,7 @@ def _run(args):
     steps = 0
     stop_reason = None
     train_start = time.perf_counter()
+    snap_targets = sorted(float(x) for x in str(getattr(args, "snap_seconds", "") or "").split(",") if x.strip())
     while True:
         total_elapsed = time.perf_counter() - start
         progress = args.budget.progress(total_elapsed, setup_s)
@@ -544,6 +547,18 @@ def _run(args):
         stage_steps[factor] += 1
         stage_seconds[factor] += step_s
         stage_gaussians[factor] = after_count
+
+        while snap_targets and time.perf_counter() - train_start >= snap_targets[0]:
+            _secs = time.perf_counter() - train_start
+            _arrs = [params[k].detach().cpu().numpy()
+                     for k in ("means", "scales", "quats", "dc", "rest", "opacities")]
+            _arrs[4] = pad_rest_for_export(_arrs[4])
+            _sp = out / "snaps" / f"snap_{int(snap_targets[0]):04d}s.ply"
+            _sp.parent.mkdir(parents=True, exist_ok=True)
+            _t0 = time.perf_counter()
+            export_ply(_sp, _arrs, center, scene_scale)
+            print(f"[curve] snapshot {snap_targets[0]:.0f}s (true {_secs:.2f}s, write {time.perf_counter()-_t0:.2f}s) -> {_sp}")
+            snap_targets.pop(0)
 
         # Progress trace: first step, every 100 steps, and every stage change.
         if steps == 1 or steps % 100 == 0 or stage_steps[factor] == 1:
