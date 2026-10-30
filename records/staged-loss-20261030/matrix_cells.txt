@@ -1,0 +1,12 @@
+# case arm lane   (lanes 0/2 = GPUs 0/2; GPU 1 was hosting a foreign tenant)
+mipnerf360/bicycle vgg 0
+mipnerf360/bicycle absgrad 2
+mipnerf360/bicycle absgrad_vgg 0
+mipnerf360/bicycle standard 2
+mipnerf360/bicycle mcmc 0
+dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce vgg 2
+dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce absgrad 2
+dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e vgg 0
+dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e absgrad 2
+dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3 vgg 2
+dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3 absgrad 0

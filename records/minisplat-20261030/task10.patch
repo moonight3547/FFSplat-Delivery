@@ -1,0 +1,130 @@
+--- a/research/train_sweep.py
++++ b/research/train_sweep.py
+@@ -153,7 +153,7 @@
+                         help="post-S continuation steps (phase 2); 0 = disabled")
+     parser.add_argument("--stage2_cams", type=int, default=1,
+                         help="training cameras per phase-2/3 step (1 = standard 3DGS)")
+-    parser.add_argument("--stage2_trainer", choices=("standard", "absgrad"),
++    parser.add_argument("--stage2_trainer", choices=("standard", "absgrad", "prune"),
+                         default="standard",
+                         help="phase-2 optimiser: standard = 1-cam L1+DSSIM with no "
+                              "topology ops; absgrad = same loss but periodic net-zero "
+@@ -178,6 +178,20 @@
+     parser.add_argument("--stage3_lpips_weight", type=float, default=0.0,
+                         help="VGG-LPIPS weight during phase 3 (reuses --lpips_every and "
+                              "--lpips_scale, which default to every step / half res)")
++    # ---- Mini-Splatting-style density control (pruning half).  Defaults off ->
++    # phase 1 stays byte-identical.  Importance = sum over train views of
++    # ||d loss / d mu_2d|| (research/ply_importance.py), i.e. rendered evidence.
++    parser.add_argument("--prune_keep", type=float, default=1.0,
++                        help="trainer=prune: fraction of Gaussians kept after phase 1")
++    parser.add_argument("--prune_views", type=int, default=24,
++                        help="train views used to accumulate the importance score")
++    parser.add_argument("--mid_prune_at", type=int, default=0,
++                        help="Mini-Splatting M1: prune at this phase-1 iteration "
++                             "(0 = off); the run then continues at the reduced count")
++    parser.add_argument("--mid_prune_keep", type=float, default=1.0,
++                        help="M1: kept fraction at --mid_prune_at")
++    parser.add_argument("--mid_prune_views", type=int, default=24,
++                        help="M1: train views used for the importance score")
+     parser.add_argument("--res_scales", type=str, default="",
+                         help="coarse-to-fine training resolutions, e.g. 0.5,0.75,1.0")
+     parser.add_argument("--res_until", type=str, default="",
+@@ -369,10 +383,26 @@
+             if fraction < cut:
+                 return scale
+         return scales[-1]
++
++    def _importance_prune(views, keep, n_views, label):
++        """Mini-Splatting pruning: score train-view evidence, drop the lowest."""
++        from .ply_importance import score_importance, prune_gaussians
++        t0p = time.perf_counter()
++        score, vis = score_importance(gaussians, views, pipe, background, opt,
++                                      n_views)
++        stats = prune_gaussians(gaussians, keep, score)
++        stats["seconds"] = round(time.perf_counter() - t0p, 3)
++        stats["views"] = min(int(n_views), len(views))
++        stats["label"] = label
++        print(f"[prune:{label}] N {stats['n_before']} -> {stats['n_after']} "
++              f"(keep {keep}) over {stats['views']} train views in "
++              f"{stats['seconds']:.2f}s")
++        return stats
+ 
+     state = dict(scale=None, stack=[], indices=[])
+     ema_loss = 0.0
+     residual_map = None
++    prune_events = []
+ 
+     t_train0 = time.perf_counter()
+     stop_reason = "iterations"
+@@ -641,6 +671,11 @@
+                                                     _t.zeros(n_new, device=xyz.device))
+                     print(f"[inject] added {n_new} hole Gaussians at step {iteration} "
+                           f"(total {gaussians.get_xyz.shape[0]})")
++        if (args.mid_prune_at and iteration == args.mid_prune_at
++                and args.mid_prune_keep < 1.0):
++            prune_events.append(_importance_prune(
++                cams_by_scale[scales[-1]], args.mid_prune_keep,
++                args.mid_prune_views, "mid%d" % iteration))
+         if _snap_targets and time.perf_counter() - t_train0 >= _snap_targets[0]:
+             _sec = time.perf_counter() - t_train0
+             _p = os.path.join(args.snap_dir or dataset.model_path, f"snap_{int(_snap_targets[0]):04d}s.ply")
+@@ -765,6 +800,10 @@
+                 gaussians.xyz_gradient_accum.zero_()
+                 gaussians.denom.zero_()
+             t_stage = time.perf_counter()
++            prune_stats = None
++            if name == "stage2" and args.stage2_trainer == "prune":
++                prune_stats = _importance_prune(
++                    _stage_pool, args.prune_keep, args.prune_views, "stage2")
+             bar = tqdm(range(1, n_steps + 1), desc=name, disable=args.quiet,
+                        file=sys.stdout, mininterval=1.0)
+             for _k in range(1, n_steps + 1):
+@@ -833,6 +872,8 @@
+                          train_seconds=_stage_train_base + _stage_train_acc,
+                          num_gaussians=int(gaussians.get_xyz.shape[0]),
+                          stage=name, stage_seconds=round(elapsed, 3))
++            if prune_stats is not None:
++                entry["prune"] = prune_stats
+             ply_dir = args.snap_dir or dataset.model_path
+             os.makedirs(ply_dir, exist_ok=True)
+             ply = os.path.join(ply_dir, f"iter{_abs_iter:05d}.ply")
+@@ -887,6 +928,9 @@
+         total_iterations=_abs_iter, stage2_trainer=args.stage2_trainer,
+         stage2_cams=args.stage2_cams, stage2_lr_from=lr_from,
+         stage2_lr_final=lr_to, stage3_lpips_weight=args.stage3_lpips_weight,
++        prune_keep=args.prune_keep, prune_views=args.prune_views,
++        mid_prune_at=args.mid_prune_at, mid_prune_keep=args.mid_prune_keep,
++        prune_events=prune_events,
+         timing_breakdown=(timing if args.time_breakdown else None),
+         iterations_per_second=round(_abs_iter / train_s, 2) if train_s else None,
+         quick_test_psnr=round(final_psnr, 4) if final_psnr is not None else None,
+--- a/research/run_sweep.py
++++ b/research/run_sweep.py
+@@ -131,6 +131,14 @@
+     parser.add_argument("--stage3-iters", type=int, default=None, dest="stage3_iters")
+     parser.add_argument("--stage3-lpips-weight", type=float, default=None,
+                         dest="stage3_lpips_weight")
++    # ---- Mini-Splatting density control (passed through to research.train_sweep)
++    parser.add_argument("--prune-keep", type=float, default=None, dest="prune_keep")
++    parser.add_argument("--prune-views", type=int, default=None, dest="prune_views")
++    parser.add_argument("--mid-prune-at", type=int, default=None, dest="mid_prune_at")
++    parser.add_argument("--mid-prune-keep", type=float, default=None,
++                        dest="mid_prune_keep")
++    parser.add_argument("--mid-prune-views", type=int, default=None,
++                        dest="mid_prune_views")
+     args = parser.parse_args(argv)
+ 
+     profile = read(args.profile)
+@@ -193,6 +201,11 @@
+         "--stage2_split_frac": args.stage2_split_frac,
+         "--stage3_iters": args.stage3_iters,
+         "--stage3_lpips_weight": args.stage3_lpips_weight,
++        "--prune_keep": args.prune_keep,
++        "--prune_views": args.prune_views,
++        "--mid_prune_at": args.mid_prune_at,
++        "--mid_prune_keep": args.mid_prune_keep,
++        "--mid_prune_views": args.mid_prune_views,
+     }
+     for flag, value in optional.items():
+         if value is not None:

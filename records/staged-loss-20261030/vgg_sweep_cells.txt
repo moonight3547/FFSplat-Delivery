@@ -1,0 +1,8 @@
+# VGG-stage step sweep first (bicycle, serial), then the absgrad step/LR sweep
+mipnerf360/bicycle vgg_200 0
+mipnerf360/bicycle vgg_400 0
+mipnerf360/bicycle vgg_800 0
+mipnerf360/bicycle absgrad_1000 0
+mipnerf360/bicycle absgrad_2000 0
+mipnerf360/bicycle absgrad_5000 0
+mipnerf360/bicycle absgrad_2000_lr10 0

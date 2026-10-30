@@ -1,0 +1,26 @@
+10 cells -> /root/gpufree-data/outputs/bicycle-grow-20261030/results.jsonl
+
+per-arm means over all scenes in the sweep (parallel runs; B inflated vs serial)
+
+SERIAL anchors (single card, other GPUs idle -> clean B/TIME)
+  mip-bicycle    control    q  10.05 B   27.1s TIME 15.89 total  25.94
+  mip-bicycle    control    q  10.04 B   27.2s TIME 15.86 total  25.90  dq -0.01  dB +0.1s  dTIME -0.03  dtotal -0.04
+  mip-bicycle    g10_errgrow q  10.06 B   29.4s TIME 15.34 total  25.40  dq +0.01  dB +2.3s  dTIME -0.55  dtotal -0.54
+  mip-bicycle    g10_errgrow q  10.11 B   29.4s TIME 15.34 total  25.45  dq +0.06  dB +2.4s  dTIME -0.55  dtotal -0.49
+  mip-bicycle    g10b_errgrow q  10.05 B   28.9s TIME 15.46 total  25.51  dq +0.00  dB +1.9s  dTIME -0.44  dtotal -0.43
+  mip-bicycle    g10c_errgrow q  10.08 B   29.1s TIME 15.41 total  25.50  dq +0.04  dB +2.0s  dTIME -0.48  dtotal -0.44
+  mip-bicycle    g10d_errgrow q  10.18 B   30.2s TIME 15.16 total  25.34  dq +0.13  dB +3.1s  dTIME -0.73  dtotal -0.60
+  mip-bicycle    g1_hard05  q  10.01 B   28.9s TIME 15.45 total  25.46  dq -0.04  dB +1.9s  dTIME -0.44  dtotal -0.48
+  mip-bicycle    g2_ramp2   q  10.07 B   30.0s TIME 15.21 total  25.28  dq +0.02  dB +2.9s  dTIME -0.68  dtotal -0.66
+  mip-bicycle    g8_inner   q  10.11 B   28.8s TIME 15.49 total  25.60  dq +0.07  dB +1.7s  dTIME -0.41  dtotal -0.34
+
+per-scene table (parallel unless tag ends in __serial)
+scene          arm            n_in  pruned    n_out  n_train c>0.5R c>0.75R   PSNR   SSIM  LPIPS      q      B  TIME    tot
+mip-bicycle    control                               1003368                 24.55  0.730  0.297  10.05   27.1 15.89  25.94
+mip-bicycle    g10_errgrow   520980    0.0%   625176  1120918   0.38    0.06  24.54  0.730  0.296  10.06   29.4 15.34  25.40
+mip-bicycle    g10b_errgrow   520980    0.0%   625176  1115059   0.37    0.06  24.55  0.730  0.297  10.05   28.9 15.46  25.51
+mip-bicycle    g10c_errgrow   520980    0.0%   625176  1126418   0.37    0.06  24.57  0.730  0.296  10.08   29.1 15.41  25.50
+mip-bicycle    g10d_errgrow   520980    0.0%   625176  1111155   0.11    0.02  24.58  0.732  0.294  10.18   30.2 15.16  25.34
+mip-bicycle    g1_hard05    520980    0.0%   625176  1120338   0.62    0.10  24.58  0.729  0.298  10.01   28.9 15.45  25.46
+mip-bicycle    g2_ramp2     520980    0.0%   625176  1119285   0.51    0.10  24.55  0.730  0.298  10.07   30.0 15.21  25.28
+mip-bicycle    g8_inner     520980    0.0%   625176  1131527   0.00    0.00  24.55  0.731  0.295  10.11   28.8 15.49  25.60

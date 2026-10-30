@@ -1,0 +1,42 @@
+27 cells -> /root/gpufree-data/outputs/texvox-20261030/results.jsonl
+
+per-arm means over the 4 scenes (parallel 3-lane runs; B inflated vs serial)
+  control      n=4  q  26.19  B   31.8s  TIME 14.79  total  40.98  n  769.1k
+  td_flat      n=4  q  25.67  B   28.8s  TIME 15.49  total  41.16  n  775.5k
+  tdm_flat     n=4  q  25.77  B   28.7s  TIME 15.52  total  41.29  n  787.5k
+  do_flat      n=4  q  25.66  B   28.1s  TIME 15.66  total  41.32  n  776.9k
+  prune_only   n=2  q  12.95  B   27.6s  TIME 15.74  total  28.69  n  853.3k
+  td_flat64    n=1  q   9.45  B   26.7s  TIME 15.97  total  25.42  n 1003.4k
+  td_plus20    n=2  q  14.12  B   34.4s  TIME 14.14  total  28.26  n 1030.1k
+
+SERIAL anchors (single card, other GPUs idle -> clean B/TIME)
+  mip-bicycle    control    q   9.98 B   27.2s TIME 15.85 total  25.83
+  mip-bicycle    td_plus20  q   9.91 B   28.4s TIME 15.57 total  25.48  dq -0.07  dB +1.2s  dTIME -0.28  dtotal -0.35
+  mip-bicycle    tdm_flat   q   9.60 B   26.8s TIME 15.96 total  25.56  dq -0.38  dB -0.5s  dTIME +0.11  dtotal -0.28
+  dl-0f622ea     control    q  17.95 B   32.9s TIME 14.48 total  32.43
+  dl-0f622ea     td_plus20  q  18.47 B   34.4s TIME 14.13 total  32.59  dq +0.52  dB +1.5s  dTIME -0.35  dtotal +0.17
+  dl-0f622ea     tdm_flat   q  17.07 B   32.7s TIME 14.51 total  31.58  dq -0.88  dB -0.1s  dTIME +0.03  dtotal -0.85
+
+per-scene table (parallel unless tag ends in __serial)
+scene          arm            n_in  pruned    n_out  n_train   PSNR   SSIM  LPIPS      q      B  TIME    tot
+mip-bicycle    control                               1001646  24.54  0.730  0.298  10.01   32.1 14.70  24.71
+mip-bicycle    do_flat      520980   16.7%   520980   996984  24.39  0.722  0.309   9.28   27.4 15.82  25.11
+mip-bicycle    prune_only   520980   16.7%   434150   893423  24.41  0.723  0.308   9.37   23.9 16.63  26.00
+mip-bicycle    td_flat      520980   16.7%   520980   996498  24.38  0.722  0.309   9.27   27.5 15.79  25.06
+mip-bicycle    td_flat64    520980   16.7%   520980  1003360  24.44  0.724  0.307   9.45   26.7 15.97  25.42
+mip-bicycle    td_plus20    520980    3.3%   604639  1103398  24.50  0.728  0.300   9.85   30.4 15.12  24.97
+mip-bicycle    tdm_flat     520980   16.7%   520980  1028564  24.47  0.727  0.304   9.69   27.7 15.75  25.44
+dl-0f622ea     control                                880387  22.57  0.795  0.230  17.76   38.4 13.18  30.93
+dl-0f622ea     do_flat      476635   16.7%   476635   887516  22.44  0.792  0.232  16.98   31.6 14.78  31.76
+dl-0f622ea     prune_only   476635   16.7%   397196   813201  22.40  0.791  0.233  16.53   31.2 14.86  31.39
+dl-0f622ea     td_flat      476635   16.7%   476635   884045  22.41  0.792  0.232  16.98   35.6 13.84  30.81
+dl-0f622ea     td_plus20    476635    3.8%   550152   956763  22.56  0.797  0.227  18.38   38.4 13.17  31.55
+dl-0f622ea     tdm_flat     476635   16.7%   476635   891181  22.46  0.793  0.232  16.94   35.5 13.85  30.79
+hw-billboard   control                                574269  22.72  0.807  0.140  36.76   28.0 15.97  52.73
+hw-billboard   do_flat      387019   16.7%   387019   575468  22.71  0.807  0.140  36.72   23.2 17.03  53.75
+hw-billboard   td_flat      387019   16.7%   387019   573892  22.72  0.807  0.139  36.89   23.9 16.88  53.77
+hw-billboard   tdm_flat     387019   16.7%   387019   580253  22.69  0.807  0.139  36.81   23.9 16.88  53.69
+mip-counter    control                                619995  27.89  0.901  0.181  40.24   28.8 15.32  55.55
+mip-counter    do_flat      488831   16.7%   488831   647437  27.70  0.901  0.183  39.65   30.0 15.01  54.66
+mip-counter    td_flat      488831   16.7%   488831   647414  27.62  0.900  0.183  39.55   28.2 15.45  55.00
+mip-counter    tdm_flat     488831   16.7%   488831   650099  27.83  0.900  0.183  39.62   27.5 15.62  55.25

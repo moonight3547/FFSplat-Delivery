@@ -1,0 +1,7 @@
+# user-requested grid, bicycle, serial one GPU (vgg_200/400 resume-skipped)
+mipnerf360/bicycle vgg_500 0
+mipnerf360/bicycle vgg_1000 0
+mipnerf360/bicycle absgrad_1000 0
+mipnerf360/bicycle absgrad_2000 0
+mipnerf360/bicycle absgrad_3000 0
+mipnerf360/bicycle absgrad_5000 0

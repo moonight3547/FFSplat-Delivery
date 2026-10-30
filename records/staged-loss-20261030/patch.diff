@@ -1,0 +1,348 @@
+--- a/research/train_sweep.py
++++ b/research/train_sweep.py
+@@ -146,6 +146,38 @@
+                         help="apply the perceptual term every N iterations")
+     parser.add_argument("--lpips_scale", type=float, default=0.5,
+                         help="downscale factor for the perceptual term (1.0 = full res)")
++    # ---- optional staged continuation after the phase-1 delivery run (~S=5000).
++    # Defaults keep phase 1 byte-identical to the delivery recipe; the stages only
++    # run when the caller opts in.  See records/STAGED-LOSS-20261030.md.
++    parser.add_argument("--stage2_iters", type=int, default=0,
++                        help="post-S continuation steps (phase 2); 0 = disabled")
++    parser.add_argument("--stage2_cams", type=int, default=1,
++                        help="training cameras per phase-2/3 step (1 = standard 3DGS)")
++    parser.add_argument("--stage2_trainer", choices=("standard", "absgrad"),
++                        default="standard",
++                        help="phase-2 optimiser: standard = 1-cam L1+DSSIM with no "
++                             "topology ops; absgrad = same loss but periodic net-zero "
++                             "relocation driven by the 2D-projected gradient norm "
++                             "(AbsGrad/improved-GS densification criterion, single view)")
++    parser.add_argument("--stage2_lr_final", type=float, default=None,
++                        help="xyz LR reached at the END of phase 2+3 (default: 0.1x the "
++                             "phase-1 LR at S); phase 1's own schedule is untouched")
++    parser.add_argument("--stage2_lr_from_ratio", type=float, default=None,
++                        help="override the continuation start LR as a ratio of "
++                             "position_lr_init (used when phase 2/3 warm-starts a fresh "
++                             "process from a PLY; e.g. 0.01 = position_lr_final/init)")
++    parser.add_argument("--stage2_absgrad_every", type=int, default=200,
++                        help="absgrad trainer: relocation window in steps")
++    parser.add_argument("--stage2_split_frac", type=float, default=0.01,
++                        help="absgrad trainer: fraction of Gaussians relocated per window "
++                             "(net-zero: highest 2D-grad norm are split into the slots of "
++                             "the lowest, so the primitive budget is unchanged)")
++    parser.add_argument("--stage3_iters", type=int, default=0,
++                        help="phase-3 steps after phase 2 (100 = the user's proposal); "
++                             "adds the VGG-LPIPS term to the same loss")
++    parser.add_argument("--stage3_lpips_weight", type=float, default=0.0,
++                        help="VGG-LPIPS weight during phase 3 (reuses --lpips_every and "
++                             "--lpips_scale, which default to every step / half res)")
+     parser.add_argument("--res_scales", type=str, default="",
+                         help="coarse-to-fine training resolutions, e.g. 0.5,0.75,1.0")
+     parser.add_argument("--res_until", type=str, default="",
+@@ -308,13 +340,15 @@
+     init_s = time.perf_counter() - t0
+ 
+     perceptual = None
+-    if args.lpips_weight > 0:
++    _need_perceptual = args.lpips_weight > 0 or (args.stage3_iters > 0
++                                                 and args.stage3_lpips_weight > 0)
++    if _need_perceptual:
+         import lpips as lpips_pkg
+         perceptual = lpips_pkg.LPIPS(net="vgg", verbose=False).cuda().eval()
+         for parameter in perceptual.parameters():
+             parameter.requires_grad_(False)
+         print(f"[sweep] LPIPS loss weight={args.lpips_weight} every={args.lpips_every} "
+-              f"scale={args.lpips_scale}")
++              f"scale={args.lpips_scale} (phase3 weight={args.stage3_lpips_weight})")
+ 
+     bg_color = [1, 1, 1] if dataset.white_background else [0, 0, 0]
+     background = torch.tensor(bg_color, dtype=torch.float32, device="cuda")
+@@ -342,6 +376,9 @@
+ 
+     t_train0 = time.perf_counter()
+     stop_reason = "iterations"
++    # stays 0 when --iterations 0 (a warm-start stage-only invocation, e.g. the
++    # phase-3 VGG run of the chained MCMC experiment)
++    iteration = 0
+     progress = tqdm(range(1, iterations + 1), desc="FastGS", disable=args.quiet,
+                     file=sys.stdout, mininterval=1.0)
+     _snap_targets = sorted(float(x) for x in args.snap_seconds.split(",") if x.strip())
+@@ -623,11 +660,201 @@
+                 entry["ply"] = path
+             snaps.append(entry)
+ 
++    # ------------------------------------------------------------------
++    # Optional staged continuation (phases 2/3).  With the defaults
++    # (--stage2_iters 0 / --stage3_iters 0) nothing below executes and the
++    # phase-1 delivery run stays byte-identical.
++    #
++    # phase 2 (--stage2_trainer):
++    #   standard : 1-cam (--stage2_cams) L1 + lambda_dssim, no densify/prune/realloc
++    #   absgrad  : same loss, plus a net-zero relocation every --stage2_absgrad_every
++    #              steps: clone the Gaussians with the largest accumulated
++    #              2D-projected gradient norm (|d loss / d mu_2d|, the AbsGrad /
++    #              improved-GS densification criterion) into the slots of the
++    #              lowest-scoring ones, so the primitive budget is unchanged.
++    # phase 3: same loop with the VGG-LPIPS term added (reuses --lpips_every /
++    #          --lpips_scale and the phase-3 weight).
++    # The xyz LR continues decaying from the phase-1 schedule value at S down to
++    # --stage2_lr_final over the whole extension; phase 1's own schedule is
++    # untouched.  Every stage end dumps a snapshot PLY at the cumulative step
++    # count so research.run_sweep evaluates it with a cumulative B time.
++    stage1_s = time.perf_counter() - t_train0
++    stage2_s = 0.0
++    stage3_s = 0.0
++    stage2_done = 0
++    stage3_done = 0
++    lr_from = None
++    lr_to = None
++    _abs_iter = iteration
++    _n_stage2 = max(0, int(args.stage2_iters))
++    _n_stage3 = max(0, int(args.stage3_iters))
++    if (_n_stage2 or _n_stage3) and stop_reason == "iterations":
++        _extension = _n_stage2 + _n_stage3
++        if args.stage2_lr_from_ratio is not None:
++            lr_from = (float(args.stage2_lr_from_ratio) * opt.position_lr_init
++                       * gaussians.spatial_lr_scale)
++        else:
++            lr_from = float(gaussians.xyz_scheduler_args(iterations))
++        lr_to = (args.stage2_lr_final if args.stage2_lr_final is not None
++                 else 0.1 * lr_from)
++        _stage_pool = list(cams_by_scale[scales[-1]])
++        # Cumulative train_seconds for the stage rows must use the SAME export
++        # convention as research.run_sweep's phase-1 snapshot: the snapshot PLY
++        # write is not part of B (the +0.5 in run_sweep is the flat export
++        # allowance), so the phase-1 snapshot's own elapsed time -- recorded
++        # before its PLY write -- is the base, and only the stage LOOP seconds
++        # are added.  Otherwise every stage row would silently carry the ~6 s
++        # phase-1 PLY write and its B delta would be inflated.
++        _stage_train_base = float(snaps[-1]["train_seconds"]) if snaps else 0.0
++        _stage_train_acc = 0.0
++
++        def _set_xyz_lr(ext_step):
++            if lr_from <= 0.0:
++                return 0.0
++            frac = min(1.0, ext_step / float(_extension))
++            if lr_to > 0.0:
++                lr = lr_from * (lr_to / lr_from) ** frac
++            else:
++                lr = lr_from * (1.0 - frac)
++            for group in gaussians.optimizer.param_groups:
++                if group["name"] == "xyz":
++                    group["lr"] = lr
++            return lr
++
++        def _absgrad_relocate():
++            """Net-zero clone relocation driven by the 2D gradient norm."""
++            import torch as _t
++            with _t.no_grad():
++                n = gaussians.get_xyz.shape[0]
++                n_ops = min(int(args.stage2_split_frac * n), n // 4)
++                if n_ops < 2:
++                    return 0
++                score = (gaussians.xyz_gradient_accum.view(-1)
++                         / (gaussians.denom.view(-1) + 1e-8))
++                score[score.isnan()] = 0.0
++                retired = _t.topk(score, n_ops, largest=False).indices
++                parents = _t.topk(score, n_ops, largest=True).indices
++                gaussians._xyz.data[retired] = (
++                    gaussians._xyz.data[parents]
++                    + _t.randn_like(gaussians._xyz.data[parents])
++                    * gaussians.get_scaling.data[parents] * 0.3)
++                gaussians._scaling.data[retired] = gaussians._scaling.data[parents] - 0.4700036
++                gaussians._rotation.data[retired] = gaussians._rotation.data[parents]
++                gaussians._opacity.data[retired] = gaussians._opacity.data[parents]
++                gaussians._features_dc.data[retired] = gaussians._features_dc.data[parents]
++                gaussians._features_rest.data[retired] = gaussians._features_rest.data[parents]
++                for _opt in (getattr(gaussians, "optimizer", None),
++                             getattr(gaussians, "shoptimizer", None)):
++                    if _opt is None:
++                        continue
++                    for _g in _opt.param_groups:
++                        _st = _opt.state.get(_g["params"][0])
++                        if _st and _st.get("exp_avg") is not None:
++                            _st["exp_avg"][retired] = 0.0
++                            _st["exp_avg_sq"][retired] = 0.0
++                gaussians.xyz_gradient_accum.zero_()
++                gaussians.denom.zero_()
++            return n_ops
++
++        def _run_stage(name, n_steps, lpips_weight):
++            nonlocal _abs_iter, _stage_train_acc
++            if n_steps <= 0:
++                return 0.0, 0
++            if name == "stage2" and args.stage2_trainer == "absgrad":
++                # start the window clean: the phase-1 accumulators are stale
++                gaussians.xyz_gradient_accum.zero_()
++                gaussians.denom.zero_()
++            t_stage = time.perf_counter()
++            bar = tqdm(range(1, n_steps + 1), desc=name, disable=args.quiet,
++                       file=sys.stdout, mininterval=1.0)
++            for _k in range(1, n_steps + 1):
++                _abs_iter += 1
++                _lr = _set_xyz_lr(_abs_iter - iterations)
++                pool = _stage_pool.copy()
++                cams = []
++                for _ in range(min(max(1, int(args.stage2_cams)), len(pool))):
++                    cams.append(pool.pop(random.randint(0, len(pool) - 1)))
++                loss_view = None
++                viewspace = []
++                for cam in cams:
++                    render_pkg = render_fastgs(cam, gaussians, pipe, background,
++                                               opt.mult, 1.0)
++                    image = render_pkg["render"]
++                    gt_image = cam.original_image.cuda()
++                    Ll1 = l1_loss(image, gt_image)
++                    if FUSED_SSIM_AVAILABLE:
++                        ssim_value = fast_ssim(image.unsqueeze(0), gt_image.unsqueeze(0))
++                    else:
++                        ssim_value = 1.0
++                    view_loss = ((1.0 - opt.lambda_dssim) * Ll1
++                                 + opt.lambda_dssim * (1.0 - ssim_value))
++                    if (lpips_weight > 0.0 and perceptual is not None
++                            and _abs_iter % args.lpips_every == 0):
++                        render_p, gt_p = image.unsqueeze(0), gt_image.unsqueeze(0)
++                        if args.lpips_scale != 1.0:
++                            size = (max(32, int(round(render_p.shape[2] * args.lpips_scale))),
++                                    max(32, int(round(render_p.shape[3] * args.lpips_scale))))
++                            render_p = torch.nn.functional.interpolate(
++                                render_p, size=size, mode="area")
++                            gt_p = torch.nn.functional.interpolate(
++                                gt_p, size=size, mode="area")
++                        perceptual_loss = perceptual(render_p * 2.0 - 1.0,
++                                                     gt_p * 2.0 - 1.0).mean()
++                        view_loss = view_loss + lpips_weight * perceptual_loss
++                    loss_view = view_loss if loss_view is None else loss_view + view_loss
++                    viewspace.append(render_pkg["viewspace_points"])
++                (loss_view / len(cams)).backward()
++                with torch.no_grad():
++                    if (name == "stage2" and args.stage2_trainer == "absgrad"
++                            and viewspace):
++                        for _vp in viewspace:
++                            if _vp.grad is None:
++                                continue
++                            gaussians.xyz_gradient_accum += _vp.grad[:, :2].norm(
++                                dim=-1, keepdim=True)
++                            gaussians.denom += 1.0
++                        if _abs_iter % args.stage2_absgrad_every == 0:
++                            _moved = _absgrad_relocate()
++                            if not args.quiet and _moved:
++                                print(f"[absgrad] step {_abs_iter}: relocated {_moved} "
++                                      f"slots (net-zero)")
++                    if not args.quiet and _k % 100 == 0:
++                        bar.set_postfix({"it": _abs_iter, "lr": f"{_lr:.2e}"})
++                        bar.update(100)
++                    gaussians.optimizer_step(_abs_iter)
++            bar.close()
++            # record BEFORE the PLY save, exactly like the phase-1 snapshot
++            # trigger: research.run_sweep's B convention is
++            # scene_load + init + snapshot train_seconds + 0.5 (the flat 0.5 is
++            # the export allowance), so the export write is not charged twice.
++            elapsed = time.perf_counter() - t_stage
++            _stage_train_acc += elapsed
++            entry = dict(iteration=_abs_iter,
++                         train_seconds=_stage_train_base + _stage_train_acc,
++                         num_gaussians=int(gaussians.get_xyz.shape[0]),
++                         stage=name, stage_seconds=round(elapsed, 3))
++            ply_dir = args.snap_dir or dataset.model_path
++            os.makedirs(ply_dir, exist_ok=True)
++            ply = os.path.join(ply_dir, f"iter{_abs_iter:05d}.ply")
++            gaussians.save_ply(ply)
++            entry["ply"] = ply
++            snaps.append(entry)
++            print(f"[stage] {name}: {n_steps} steps in {elapsed:.2f}s -> {ply}")
++            return elapsed, n_steps
++
++        print(f"[stage] S={iterations} -> +{_n_stage2} steps ({args.stage2_trainer}, "
++              f"{args.stage2_cams} cam/step) then +{_n_stage3} VGG-LPIPS steps "
++              f"(w={args.stage3_lpips_weight}); xyz LR {lr_from:.3e} -> {lr_to:.3e} "
++              f"over {_extension} steps")
++        stage2_s, stage2_done = _run_stage("stage2", _n_stage2, 0.0)
++        stage3_s, stage3_done = _run_stage("stage3", _n_stage3, args.stage3_lpips_weight)
++    elif _n_stage2 or _n_stage3:
++        print(f"[stage] skipped: phase 1 stopped early ({stop_reason})")
+     train_s = time.perf_counter() - t_train0
+     if args.time_breakdown:
+         timing = {k: round(v, 3) for k, v in timing.items()}
+         timing["train_seconds"] = round(train_s, 3)
+-        timing["iterations"] = iterations
++        timing["iterations"] = _abs_iter
+     # standard 3DGS layout so the organizer's render_test.py can load this model
+     final_ply = None
+     if not args.no_save_final:
+@@ -648,13 +875,20 @@
+     record = dict(
+         init_ply=str(args.init_ply), init_mode=init_mode,
+         num_init_gaussians=n_init, num_final_gaussians=int(gaussians.get_xyz.shape[0]),
+-        iterations=iterations, completed_iterations=iteration, stop_reason=stop_reason,
++        iterations=iterations, completed_iterations=_abs_iter, stop_reason=stop_reason,
+         final_ply=final_ply,
+         limit_seconds=args.limit_seconds, snapshots=snaps,
+         scene_load_seconds=round(scene_load_s, 3), init_seconds=round(init_s, 3),
+         train_seconds=round(train_s, 3), total_seconds=round(total_s, 3),
++        # staged continuation bookkeeping (all zero with the default flags)
++        stage1_seconds=round(stage1_s, 3), stage2_seconds=round(stage2_s, 3),
++        stage3_seconds=round(stage3_s, 3), stage1_iterations=iterations,
++        stage2_iterations=stage2_done, stage3_iterations=stage3_done,
++        total_iterations=_abs_iter, stage2_trainer=args.stage2_trainer,
++        stage2_cams=args.stage2_cams, stage2_lr_from=lr_from,
++        stage2_lr_final=lr_to, stage3_lpips_weight=args.stage3_lpips_weight,
+         timing_breakdown=(timing if args.time_breakdown else None),
+-        iterations_per_second=round(iteration / train_s, 2) if train_s else None,
++        iterations_per_second=round(_abs_iter / train_s, 2) if train_s else None,
+         quick_test_psnr=round(final_psnr, 4) if final_psnr is not None else None,
+         num_train_views=len(cams_by_scale[scales[-1]]),
+         num_test_views=len(scene.getTestCameras()), res_scales=scales, res_until=cuts,
+@@ -672,6 +906,13 @@
+                       res_scales=scales, res_until=cuts,
+                       lpips_weight=args.lpips_weight, lpips_every=args.lpips_every,
+                       lpips_scale=args.lpips_scale,
++                      stage2_iters=args.stage2_iters, stage2_cams=args.stage2_cams,
++                      stage2_trainer=args.stage2_trainer,
++                      stage2_absgrad_every=args.stage2_absgrad_every,
++                      stage2_split_frac=args.stage2_split_frac,
++                      stage2_lr_final=args.stage2_lr_final,
++                      stage3_iters=args.stage3_iters,
++                      stage3_lpips_weight=args.stage3_lpips_weight,
+                       densify_count_thresh=args.densify_count_thresh,
+                       max_gaussians=args.max_gaussians),
+     )
+--- a/research/run_sweep.py
++++ b/research/run_sweep.py
+@@ -117,6 +117,20 @@
+     parser.add_argument("--image-cache", default=None, dest="image_cache",
+                         help="pre-decoded uint8 image cache dir (module-A artifact)")
+     parser.add_argument("--no-densify", action="store_true", dest="no_densify")
++    # ---- staged post-S continuation pass-through (optional; see train_sweep.py)
++    parser.add_argument("--stage2-iters", type=int, default=None, dest="stage2_iters")
++    parser.add_argument("--stage2-cams", type=int, default=None, dest="stage2_cams")
++    parser.add_argument("--stage2-trainer", type=str, default=None, dest="stage2_trainer")
++    parser.add_argument("--stage2-lr-final", type=float, default=None, dest="stage2_lr_final")
++    parser.add_argument("--stage2-lr-from-ratio", type=float, default=None,
++                        dest="stage2_lr_from_ratio")
++    parser.add_argument("--stage2-absgrad-every", type=int, default=None,
++                        dest="stage2_absgrad_every")
++    parser.add_argument("--stage2-split-frac", type=float, default=None,
++                        dest="stage2_split_frac")
++    parser.add_argument("--stage3-iters", type=int, default=None, dest="stage3_iters")
++    parser.add_argument("--stage3-lpips-weight", type=float, default=None,
++                        dest="stage3_lpips_weight")
+     args = parser.parse_args(argv)
+ 
+     profile = read(args.profile)
+@@ -170,6 +184,15 @@
+         "--opt_step_schedule": args.opt_step_schedule,
+         "--inject_holes": args.inject_holes,
+         "--inject_at": args.inject_at,
++        "--stage2_iters": args.stage2_iters,
++        "--stage2_cams": args.stage2_cams,
++        "--stage2_trainer": args.stage2_trainer,
++        "--stage2_lr_final": args.stage2_lr_final,
++        "--stage2_lr_from_ratio": args.stage2_lr_from_ratio,
++        "--stage2_absgrad_every": args.stage2_absgrad_every,
++        "--stage2_split_frac": args.stage2_split_frac,
++        "--stage3_iters": args.stage3_iters,
++        "--stage3_lpips_weight": args.stage3_lpips_weight,
+     }
+     for flag, value in optional.items():
+         if value is not None:

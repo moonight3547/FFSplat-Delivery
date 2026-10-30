@@ -1,0 +1,111 @@
+{
+  "case": "mipnerf360/counter",
+  "work": "/root/projects/FFSplat-Hackathon/outputs/O0-20261030/work/mipnerf360/counter",
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+  "budget_seconds": 92.57,
+  "train_record": {
+    "init_ply": "/root/projects/FFSplat-Hackathon/outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+    "init_mode": "ply:resplat_world.ply",
+    "num_init_gaussians": 488831,
+    "num_final_gaussians": 433425,
+    "iterations": 5000,
+    "completed_iterations": 5000,
+    "stop_reason": "iterations",
+    "final_ply": "/root/gpufree-data/outputs/minisplat-20261030/matrix/mipnerf360-counter/m1_1250_70/sweep/model/point_cloud/iteration_5000/point_cloud.ply",
+    "limit_seconds": null,
+    "scene_load_seconds": 2.703,
+    "init_seconds": 0.694,
+    "train_seconds": 23.998,
+    "total_seconds": 30.115,
+    "stage1_seconds": 23.997,
+    "stage2_seconds": 0.0,
+    "stage3_seconds": 0.0,
+    "stage1_iterations": 5000,
+    "stage2_iterations": 0,
+    "stage3_iterations": 0,
+    "total_iterations": 5000,
+    "stage2_trainer": "standard",
+    "stage2_cams": 1,
+    "stage2_lr_from": null,
+    "stage2_lr_final": null,
+    "stage3_lpips_weight": 0.0,
+    "prune_keep": 1.0,
+    "prune_views": 24,
+    "mid_prune_at": 1250,
+    "mid_prune_keep": 0.7,
+    "prune_events": [
+      {
+        "n_before": 619179,
+        "n_after": 433425,
+        "keep_requested": 0.7,
+        "keep_actual": 0.6999995154874439,
+        "seconds": 0.09,
+        "views": 24,
+        "label": "mid1250"
+      }
+    ],
+    "timing_breakdown": null,
+    "iterations_per_second": 208.35,
+    "quick_test_psnr": null,
+    "num_train_views": 210,
+    "num_test_views": 30,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "settings": {
+      "position_lr_max_steps": 5000,
+      "position_lr_init": 0.00016,
+      "position_lr_final": 1.6e-06,
+      "densify_from_iter": 500,
+      "densify_until_iter": 1250,
+      "densification_interval": 100,
+      "opacity_reset_interval": 5001,
+      "mult": 0.5,
+      "lambda_dssim": 0.6,
+      "scaling_lr": 0.01,
+      "opacity_lr": 0.025,
+      "position_lr_delay_mult": 0.01,
+      "no_densify": false,
+      "seed": 20261015,
+      "res_scales": [
+        1.0
+      ],
+      "res_until": [],
+      "lpips_weight": 0.0,
+      "lpips_every": 1,
+      "lpips_scale": 0.5,
+      "stage2_iters": 0,
+      "stage2_cams": 1,
+      "stage2_trainer": "standard",
+      "stage2_absgrad_every": 200,
+      "stage2_split_frac": 0.01,
+      "stage2_lr_final": null,
+      "stage3_iters": 0,
+      "stage3_lpips_weight": 0.0,
+      "densify_count_thresh": null,
+      "max_gaussians": null
+    }
+  },
+  "results": [
+    {
+      "iteration": 5000,
+      "num_gaussians": 433425,
+      "train_seconds": 21.05,
+      "b_seconds_estimate": 24.95,
+      "psnr": 27.561,
+      "ssim": 0.8981,
+      "lpips": 0.1889,
+      "score": {
+        "psnr_points": 10.0488,
+        "ssim_points": 15.848000000000004,
+        "lpips_points": 12.219999999999997,
+        "time_points": 16.23338297132343,
+        "quality_points": 38.1168,
+        "total_points": 54.35018297132343,
+        "budget_ratio": 0.26949776629044553,
+        "valid": true
+      }
+    }
+  ]
+}

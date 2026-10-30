@@ -1,0 +1,18 @@
+# Mini-Splatting density-control matrix (serial, one GPU = lane 2 / GPU2)
+# controls (delivery recipe, S=5000)
+mipnerf360/bicycle ctrl 2
+mipnerf360/counter ctrl 2
+dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce ctrl 2
+# M2: post-5000 importance prune to <keep> + 400 standard refine steps
+mipnerf360/bicycle m2_50 2
+mipnerf360/bicycle m2_70 2
+mipnerf360/bicycle m2_90 2
+mipnerf360/counter m2_70 2
+# M1: prune inside phase 1 at iteration 1250, continue to 5000 at the smaller count
+mipnerf360/bicycle m1_1250_80 2
+mipnerf360/bicycle m1_1250_70 2
+mipnerf360/bicycle m1_1250_60 2
+mipnerf360/bicycle m1_1250_50 2
+mipnerf360/bicycle m1_1250_40 2
+mipnerf360/counter m1_1250_70 2
+dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce m1_1250_70 2

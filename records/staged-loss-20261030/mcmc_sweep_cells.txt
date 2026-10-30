@@ -1,0 +1,5 @@
+# absgrad step-count / LR sweep, bicycle, SERIAL one GPU
+mipnerf360/bicycle absgrad_1000 0
+mipnerf360/bicycle absgrad_2000 0
+mipnerf360/bicycle absgrad_5000 0
+mipnerf360/bicycle absgrad_2000_lr10 0

@@ -1,0 +1,185 @@
+{
+  "_meta": {
+    "purpose": "module-A COLMAP determinism for the exact artifacts scored in clean13-20261030",
+    "method": "compare run1 vs independent run2: split hashes; PINHOLE intrinsics; gauge-corrected pose residuals after Kabsch alignment of camera centres (removes a global frame rotation/translation; raw per-image relative angles conflate the gauge)",
+    "reg_cmd": "preprocess.py --num_context 16 --llffhold 8 --max_resolution 960 (COLMAP feature_extractor GPU->CPU fallback, exhaustive_matcher, mapper)"
+  },
+  "car": {
+    "scene": "car",
+    "first_work": "/workspace/organizer-projects/FFSplat-Hackathon/outputs/clean13-20261030/A/hw/car/work",
+    "rep_work": "/workspace/organizer-projects/FFSplat-Hackathon/outputs/clean13-20261030/A/hw/car_rep2",
+    "rep_exists": true,
+    "sha_split_json": {
+      "first": "f29a052c271451c452beb802371c698f2a233912b9b992acd400e22e38d55685",
+      "rep": "f29a052c271451c452beb802371c698f2a233912b9b992acd400e22e38d55685",
+      "equal": true
+    },
+    "sha_sparse_0_images_txt": {
+      "first": "e3a1a2cd640a4fe550e3f9954cd6bba58e57f0e0609e25151dc83e4a0ad4c514",
+      "rep": "064af759e849fcd4aa812749465cd4ee96d426c9eec6ff2d498ef59698d11c7d",
+      "equal": false
+    },
+    "sha_sparse_0_cameras_txt": {
+      "first": "246325c988f03518fddc1532dd2f9438ecc429518e6085f7c8415e9f1784a223",
+      "rep": "ee1e7b10af2c983c46242141a9cd0b8abab8ee7670c3480f1730a493ce0fb4ef",
+      "equal": false
+    },
+    "sha_module_a_json": {
+      "first": "b47ae723dd06aeba7cb156799150f74356ea9f3c3e3c60c69b942bfcee2ee423",
+      "rep": "108b2686c8d005f3a04668232aa1ff25cbba3e93c5aef90a28d249d761bd1d6f",
+      "equal": false
+    },
+    "split": {
+      "num_images": [
+        70,
+        70
+      ],
+      "resolution": [
+        [
+          768,
+          576
+        ],
+        [
+          768,
+          576
+        ]
+      ],
+      "images_list_equal": true,
+      "context_equal": true,
+      "train_test_equal": true
+    },
+    "intrinsics": {
+      "first": {
+        "w": 576,
+        "h": 768,
+        "fx": 549.7609723,
+        "fy": 547.2706392,
+        "cx": 288.0,
+        "cy": 384.0
+      },
+      "rep": {
+        "w": 576,
+        "h": 768,
+        "fx": 549.5195633,
+        "fy": 546.9579158,
+        "cx": 288.0,
+        "cy": 384.0
+      },
+      "rel_diff_pct": {
+        "fx": 0.0439,
+        "fy": 0.0571,
+        "cx": 0.0,
+        "cy": 0.0
+      },
+      "dims": [
+        [
+          576,
+          768
+        ],
+        [
+          576,
+          768
+        ]
+      ]
+    },
+    "poses": {
+      "common_images": 70,
+      "gauge_rot_deg": 0.5734275131611026,
+      "gauge_translation_norm": 0.004448435782687427,
+      "centre_rms": 0.0035291803842600485,
+      "centre_max": 0.005878628208899596,
+      "rot_residual_deg_max": 0.043431214504436835,
+      "rot_residual_deg_mean": 0.021777224256983793,
+      "rot_residual_deg_median": 0.020346427194953443
+    }
+  },
+  "trashbin": {
+    "scene": "trashbin",
+    "first_work": "/workspace/organizer-projects/FFSplat-Hackathon/outputs/clean13-20261030/A/hw/trashbin/work",
+    "rep_work": "/workspace/organizer-projects/FFSplat-Hackathon/outputs/clean13-20261030/A/hw/trashbin_rep2",
+    "rep_exists": true,
+    "sha_split_json": {
+      "first": "4d618e368f24c0dda54e36741dae6e13ab7435df2cbf649b4425bc63bf59ac4a",
+      "rep": "4d618e368f24c0dda54e36741dae6e13ab7435df2cbf649b4425bc63bf59ac4a",
+      "equal": true
+    },
+    "sha_sparse_0_images_txt": {
+      "first": "6e7122dca27e3cb389aaf06f62878a6256484b6d62f89c64973c7c0b3682c62f",
+      "rep": "5bebe1d68dd7bb4cc28a8bf23cc1287b678ccf854f899787c8fb0e50286496e2",
+      "equal": false
+    },
+    "sha_sparse_0_cameras_txt": {
+      "first": "af6d37fe3fbba99bc5a38dcb3f68e8fed605f057dca80aafc1831a443952e47f",
+      "rep": "07d87d7baccaf7aded8821ba43d9ec6b068cf2137bba71dfcb70fb382a8b9687",
+      "equal": false
+    },
+    "sha_module_a_json": {
+      "first": "8eb330d1196e84728e8a1b9c4bfcdfb6a639bd849073597f19756434011ddbd7",
+      "rep": "2e5485f671eab7062d80c49a3f90de9f0d234c3eca8c4e1d215afcadc08bd3ef",
+      "equal": false
+    },
+    "split": {
+      "num_images": [
+        75,
+        75
+      ],
+      "resolution": [
+        [
+          768,
+          576
+        ],
+        [
+          768,
+          576
+        ]
+      ],
+      "images_list_equal": true,
+      "context_equal": true,
+      "train_test_equal": true
+    },
+    "intrinsics": {
+      "first": {
+        "w": 576,
+        "h": 768,
+        "fx": 553.7395305,
+        "fy": 548.1794424,
+        "cx": 288.0,
+        "cy": 384.0
+      },
+      "rep": {
+        "w": 576,
+        "h": 768,
+        "fx": 553.5929394,
+        "fy": 547.910175,
+        "cx": 288.0,
+        "cy": 384.0
+      },
+      "rel_diff_pct": {
+        "fx": 0.0265,
+        "fy": 0.0491,
+        "cx": 0.0,
+        "cy": 0.0
+      },
+      "dims": [
+        [
+          576,
+          768
+        ],
+        [
+          576,
+          768
+        ]
+      ]
+    },
+    "poses": {
+      "common_images": 75,
+      "gauge_rot_deg": 2.0907175686023205,
+      "gauge_translation_norm": 0.0010532436848960888,
+      "centre_rms": 0.008400472500687017,
+      "centre_max": 0.011876904546340635,
+      "rot_residual_deg_max": 0.11246508722239076,
+      "rot_residual_deg_mean": 0.02759968591473065,
+      "rot_residual_deg_median": 0.02522549267531253
+    }
+  }
+}

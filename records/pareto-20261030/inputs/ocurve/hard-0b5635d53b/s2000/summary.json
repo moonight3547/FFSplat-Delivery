@@ -1,0 +1,76 @@
+{
+  "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+  "work": "outputs/ocurve/hard-0b5635d53b/work",
+  "init_ply": "outputs/ocurve/hard-0b5635d53b/resplat/resplat_world.ply",
+  "budget_seconds": 94.29,
+  "train_record": {
+    "init_ply": "outputs/ocurve/hard-0b5635d53b/resplat/resplat_world.ply",
+    "init_mode": "ply:resplat_world.ply",
+    "num_init_gaussians": 450206,
+    "num_final_gaussians": 517736,
+    "iterations": 2000,
+    "completed_iterations": 2000,
+    "stop_reason": "iterations",
+    "final_ply": "outputs/ocurve/hard-0b5635d53b/s2000/model/point_cloud/iteration_2000/point_cloud.ply",
+    "limit_seconds": null,
+    "scene_load_seconds": 8.892,
+    "init_seconds": 0.39,
+    "train_seconds": 12.101,
+    "total_seconds": 24.773,
+    "timing_breakdown": null,
+    "iterations_per_second": 165.27,
+    "quick_test_psnr": 22.7505,
+    "num_train_views": 333,
+    "num_test_views": 48,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "settings": {
+      "position_lr_max_steps": 2000,
+      "position_lr_init": 0.00016,
+      "position_lr_final": 1.6e-06,
+      "densify_from_iter": 500,
+      "densify_until_iter": 500,
+      "densification_interval": 100,
+      "opacity_reset_interval": 2001,
+      "mult": 0.5,
+      "lambda_dssim": 0.6,
+      "scaling_lr": 0.01,
+      "opacity_lr": 0.025,
+      "position_lr_delay_mult": 0.01,
+      "no_densify": false,
+      "seed": 20261015,
+      "res_scales": [
+        1.0
+      ],
+      "res_until": [],
+      "lpips_weight": 0.0,
+      "lpips_every": 1,
+      "lpips_scale": 0.5,
+      "densify_count_thresh": null,
+      "max_gaussians": null
+    }
+  },
+  "results": [
+    {
+      "iteration": 2000,
+      "num_gaussians": 517736,
+      "train_seconds": 8.71,
+      "b_seconds_estimate": 18.49,
+      "psnr": 22.749,
+      "ssim": 0.7559,
+      "lpips": 0.3159,
+      "score": {
+        "psnr_points": 6.199199999999999,
+        "ssim_points": 4.472000000000005,
+        "lpips_points": 0.0,
+        "time_points": 17.86431702172247,
+        "quality_points": 10.671200000000004,
+        "total_points": 28.535517021722477,
+        "budget_ratio": 0.19610573402248888,
+        "valid": true
+      }
+    }
+  ]
+}

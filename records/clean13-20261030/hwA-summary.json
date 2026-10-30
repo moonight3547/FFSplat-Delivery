@@ -1,0 +1,252 @@
+{
+  "_meta": {
+    "generated": "2026-10-30T16:46:19",
+    "repo": "/workspace/organizer-projects/FFSplat-Hackathon",
+    "batch": "outputs/clean13-20261030/A/hw",
+    "cmd": "preprocess.py --num_context 16 --llffhold 8 --max_resolution 960"
+  },
+  "billboard": {
+    "tag": "billboard",
+    "work": "outputs/clean13-20261030/A/hw/billboard/work",
+    "exists": true,
+    "split_sha256": "af6bc44a9c2321a16bb566183cd246e6d0679a1365c60d16116cd006bd423e55",
+    "images_txt_sha256": "550603e69fb0f541be7063ab1ef3973a54eaef17f1bcf103f69120b1ca92668b",
+    "cameras_txt_sha256": "af63973b6bca609ea625659675e87b923e05ba1ab837c40459c068b015f44907",
+    "num_images": 64,
+    "resolution": [
+      768,
+      512
+    ],
+    "context_len": 16,
+    "module_a": {
+      "num_images": 64,
+      "num_train": 56,
+      "num_test": 8,
+      "num_context": 16,
+      "resolution": [
+        768,
+        512
+      ],
+      "pose_source": "colmap_run",
+      "resize_seconds": 9.895244836807251,
+      "total_seconds": 387.5068554878235
+    },
+    "images_dir_count": 64,
+    "colmap_registered": 64,
+    "done_num_images": 64,
+    "done_res": [
+      768,
+      512
+    ],
+    "used_gpu_sift": false,
+    "log_tail": [
+      "  $ colmap exhaustive_matcher --database_path outputs/clean13-20261030/A/hw/billboard_colmap_tmp/database.db --SiftMatching.use_gpu 0",
+      "  $ colmap mapper --database_path outputs/clean13-20261030/A/hw/billboard_colmap_tmp/database.db --image_path outputs/clean13-20261030/A/hw/billboard_colmap_tmp/input_images --output_path outputs/clean13-20261030/A/hw/billboard_colmap_tmp/sparse",
+      "  COLMAP registered 64 images",
+      "  $ colmap image_undistorter --image_path outputs/clean13-20261030/A/hw/billboard_colmap_tmp/input_images --input_path outputs/clean13-20261030/A/hw/billboard_colmap_tmp/sparse/0 --output_path outputs/clean13-20261030/A/hw/billboard_colmap_tmp/undist",
+      "[A] COLMAP done in 377.5s",
+      "[A] done: 64 imgs (56 train / 8 test), 16 context, res=[768, 512], 387.5s"
+    ]
+  },
+  "basketball": {
+    "tag": "basketball",
+    "work": "outputs/clean13-20261030/A/hw/basketball/work",
+    "exists": true,
+    "split_sha256": "636e1770050927029c967630ec65cd287ad701719c0cd303b83df43f40287fd7",
+    "images_txt_sha256": "88d574f407d0b410fd5e61e41f4bc7a2817ca9fdeb1d5d0a5995dc7301ca86ff",
+    "cameras_txt_sha256": "46f33de693bf70e1de7e90d7bc94103b75d11c21481ef89531e80d14cc39433b",
+    "num_images": 79,
+    "resolution": [
+      768,
+      512
+    ],
+    "context_len": 16,
+    "module_a": {
+      "num_images": 79,
+      "num_train": 69,
+      "num_test": 10,
+      "num_context": 16,
+      "resolution": [
+        768,
+        512
+      ],
+      "pose_source": "colmap_run",
+      "resize_seconds": 11.453575849533081,
+      "total_seconds": 460.66445231437683
+    },
+    "images_dir_count": 79,
+    "colmap_registered": 79,
+    "done_num_images": 79,
+    "done_res": [
+      768,
+      512
+    ],
+    "used_gpu_sift": false,
+    "log_tail": [
+      "  $ colmap exhaustive_matcher --database_path outputs/clean13-20261030/A/hw/basketball_colmap_tmp/database.db --SiftMatching.use_gpu 0",
+      "  $ colmap mapper --database_path outputs/clean13-20261030/A/hw/basketball_colmap_tmp/database.db --image_path outputs/clean13-20261030/A/hw/basketball_colmap_tmp/input_images --output_path outputs/clean13-20261030/A/hw/basketball_colmap_tmp/sparse",
+      "  COLMAP registered 79 images",
+      "  $ colmap image_undistorter --image_path outputs/clean13-20261030/A/hw/basketball_colmap_tmp/input_images --input_path outputs/clean13-20261030/A/hw/basketball_colmap_tmp/sparse/0 --output_path outputs/clean13-20261030/A/hw/basketball_colmap_tmp/undist",
+      "[A] COLMAP done in 449.1s",
+      "[A] done: 79 imgs (69 train / 10 test), 16 context, res=[768, 512], 460.7s"
+    ]
+  },
+  "car": {
+    "tag": "car",
+    "work": "outputs/clean13-20261030/A/hw/car/work",
+    "exists": true,
+    "split_sha256": "f29a052c271451c452beb802371c698f2a233912b9b992acd400e22e38d55685",
+    "images_txt_sha256": "e3a1a2cd640a4fe550e3f9954cd6bba58e57f0e0609e25151dc83e4a0ad4c514",
+    "cameras_txt_sha256": "246325c988f03518fddc1532dd2f9438ecc429518e6085f7c8415e9f1784a223",
+    "num_images": 70,
+    "resolution": [
+      768,
+      576
+    ],
+    "context_len": 16,
+    "module_a": {
+      "num_images": 70,
+      "num_train": 61,
+      "num_test": 9,
+      "num_context": 16,
+      "resolution": [
+        768,
+        576
+      ],
+      "pose_source": "colmap_run",
+      "resize_seconds": 12.644596576690674,
+      "total_seconds": 259.86302042007446
+    },
+    "images_dir_count": 70,
+    "colmap_registered": 70,
+    "done_num_images": 70,
+    "done_res": [
+      768,
+      576
+    ],
+    "used_gpu_sift": false,
+    "log_tail": [
+      "  $ colmap exhaustive_matcher --database_path outputs/clean13-20261030/A/hw/car_colmap_tmp/database.db --SiftMatching.use_gpu 0",
+      "  $ colmap mapper --database_path outputs/clean13-20261030/A/hw/car_colmap_tmp/database.db --image_path outputs/clean13-20261030/A/hw/car_colmap_tmp/input_images --output_path outputs/clean13-20261030/A/hw/car_colmap_tmp/sparse",
+      "  COLMAP registered 70 images",
+      "  $ colmap image_undistorter --image_path outputs/clean13-20261030/A/hw/car_colmap_tmp/input_images --input_path outputs/clean13-20261030/A/hw/car_colmap_tmp/sparse/0 --output_path outputs/clean13-20261030/A/hw/car_colmap_tmp/undist",
+      "[A] COLMAP done in 247.1s",
+      "[A] done: 70 imgs (61 train / 9 test), 16 context, res=[768, 576], 259.9s"
+    ]
+  },
+  "trashbin": {
+    "tag": "trashbin",
+    "work": "outputs/clean13-20261030/A/hw/trashbin/work",
+    "exists": true,
+    "split_sha256": "4d618e368f24c0dda54e36741dae6e13ab7435df2cbf649b4425bc63bf59ac4a",
+    "images_txt_sha256": "6e7122dca27e3cb389aaf06f62878a6256484b6d62f89c64973c7c0b3682c62f",
+    "cameras_txt_sha256": "af6d37fe3fbba99bc5a38dcb3f68e8fed605f057dca80aafc1831a443952e47f",
+    "num_images": 75,
+    "resolution": [
+      768,
+      576
+    ],
+    "context_len": 16,
+    "module_a": {
+      "num_images": 75,
+      "num_train": 65,
+      "num_test": 10,
+      "num_context": 16,
+      "resolution": [
+        768,
+        576
+      ],
+      "pose_source": "colmap_run",
+      "resize_seconds": 13.966825246810913,
+      "total_seconds": 395.2159399986267
+    },
+    "images_dir_count": 75,
+    "colmap_registered": 75,
+    "done_num_images": 75,
+    "done_res": [
+      768,
+      576
+    ],
+    "used_gpu_sift": false,
+    "log_tail": [
+      "  $ colmap exhaustive_matcher --database_path outputs/clean13-20261030/A/hw/trashbin_colmap_tmp/database.db --SiftMatching.use_gpu 0",
+      "  $ colmap mapper --database_path outputs/clean13-20261030/A/hw/trashbin_colmap_tmp/database.db --image_path outputs/clean13-20261030/A/hw/trashbin_colmap_tmp/input_images --output_path outputs/clean13-20261030/A/hw/trashbin_colmap_tmp/sparse",
+      "  COLMAP registered 75 images",
+      "  $ colmap image_undistorter --image_path outputs/clean13-20261030/A/hw/trashbin_colmap_tmp/input_images --input_path outputs/clean13-20261030/A/hw/trashbin_colmap_tmp/sparse/0 --output_path outputs/clean13-20261030/A/hw/trashbin_colmap_tmp/undist",
+      "[A] COLMAP done in 381.1s",
+      "[A] done: 75 imgs (65 train / 10 test), 16 context, res=[768, 576], 395.2s"
+    ]
+  },
+  "car_rep2": {
+    "tag": "car_rep2",
+    "work": "outputs/clean13-20261030/A/hw/car_rep2/work",
+    "exists": false,
+    "split_sha256": null,
+    "images_txt_sha256": null,
+    "cameras_txt_sha256": null,
+    "split_error": "[Errno 2] No such file or directory: 'outputs/clean13-20261030/A/hw/car_rep2/work/split.json'",
+    "module_a_error": "[Errno 2] No such file or directory: 'outputs/clean13-20261030/A/hw/car_rep2/work/module_a.json'",
+    "images_dir_count": null,
+    "colmap_registered": 70,
+    "done_num_images": 70,
+    "done_res": [
+      768,
+      576
+    ],
+    "used_gpu_sift": false,
+    "log_tail": [
+      "  $ colmap exhaustive_matcher --database_path outputs/clean13-20261030/A/hw/car_rep2_colmap_tmp/database.db --SiftMatching.use_gpu 0",
+      "  $ colmap mapper --database_path outputs/clean13-20261030/A/hw/car_rep2_colmap_tmp/database.db --image_path outputs/clean13-20261030/A/hw/car_rep2_colmap_tmp/input_images --output_path outputs/clean13-20261030/A/hw/car_rep2_colmap_tmp/sparse",
+      "  COLMAP registered 70 images",
+      "  $ colmap image_undistorter --image_path outputs/clean13-20261030/A/hw/car_rep2_colmap_tmp/input_images --input_path outputs/clean13-20261030/A/hw/car_rep2_colmap_tmp/sparse/0 --output_path outputs/clean13-20261030/A/hw/car_rep2_colmap_tmp/undist",
+      "[A] COLMAP done in 236.5s",
+      "[A] done: 70 imgs (61 train / 9 test), 16 context, res=[768, 576], 249.1s"
+    ]
+  },
+  "trashbin_rep2": {
+    "tag": "trashbin_rep2",
+    "work": "outputs/clean13-20261030/A/hw/trashbin_rep2/work",
+    "exists": false,
+    "split_sha256": null,
+    "images_txt_sha256": null,
+    "cameras_txt_sha256": null,
+    "split_error": "[Errno 2] No such file or directory: 'outputs/clean13-20261030/A/hw/trashbin_rep2/work/split.json'",
+    "module_a_error": "[Errno 2] No such file or directory: 'outputs/clean13-20261030/A/hw/trashbin_rep2/work/module_a.json'",
+    "images_dir_count": null,
+    "colmap_registered": 75,
+    "done_num_images": 75,
+    "done_res": [
+      768,
+      576
+    ],
+    "used_gpu_sift": false,
+    "log_tail": [
+      "  $ colmap exhaustive_matcher --database_path outputs/clean13-20261030/A/hw/trashbin_rep2_colmap_tmp/database.db --SiftMatching.use_gpu 0",
+      "  $ colmap mapper --database_path outputs/clean13-20261030/A/hw/trashbin_rep2_colmap_tmp/database.db --image_path outputs/clean13-20261030/A/hw/trashbin_rep2_colmap_tmp/input_images --output_path outputs/clean13-20261030/A/hw/trashbin_rep2_colmap_tmp/sparse",
+      "  COLMAP registered 75 images",
+      "  $ colmap image_undistorter --image_path outputs/clean13-20261030/A/hw/trashbin_rep2_colmap_tmp/input_images --input_path outputs/clean13-20261030/A/hw/trashbin_rep2_colmap_tmp/sparse/0 --output_path outputs/clean13-20261030/A/hw/trashbin_rep2_colmap_tmp/undist",
+      "[A] COLMAP done in 365.5s",
+      "[A] done: 75 imgs (65 train / 10 test), 16 context, res=[768, 576], 379.4s"
+    ]
+  },
+  "_determinism": {
+    "car_vs_car_rep2": {
+      "split_sha_equal": false,
+      "images_txt_sha_equal": false,
+      "cameras_txt_sha_equal": false,
+      "context_equal": false,
+      "res_equal": false,
+      "images_count_equal": false,
+      "rot_diff_error": "No module named 'numpy'"
+    },
+    "trashbin_vs_trashbin_rep2": {
+      "split_sha_equal": false,
+      "images_txt_sha_equal": false,
+      "cameras_txt_sha_equal": false,
+      "context_equal": false,
+      "res_equal": false,
+      "images_count_equal": false,
+      "rot_diff_error": "No module named 'numpy'"
+    }
+  }
+}

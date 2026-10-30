@@ -1,0 +1,80 @@
+[
+  {
+    "case": "hw/billboard",
+    "work": "outputs/O0-20261030/work/hw/billboard",
+    "init": "outputs/O0-20261030/results/hw/billboard/resplat/resplat_world.ply",
+    "budget_seconds": 99.49
+  },
+  {
+    "case": "mipnerf360/counter",
+    "work": "outputs/O0-20261030/work/mipnerf360/counter",
+    "init": "outputs/O0-20261030/results/mipnerf360/counter/resplat/resplat_world.ply",
+    "budget_seconds": 92.57
+  },
+  {
+    "case": "dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "work": "outputs/prep/dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f/work",
+    "init": "outputs/prep/dl3dv/001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f/resplat/resplat_world.ply",
+    "budget_seconds": 94.29
+  },
+  {
+    "case": "mipnerf360/bicycle",
+    "work": "outputs/prep/mipnerf360/bicycle/work",
+    "init": "outputs/prep/mipnerf360/bicycle/resplat/resplat_world.ply",
+    "budget_seconds": 95.0
+  },
+  {
+    "case": "dl3dv/0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce",
+    "work": "outputs/curve/dl3dv-0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce/work",
+    "init": "outputs/curve/dl3dv-0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce/resplat/resplat_world.ply",
+    "budget_seconds": 94.29
+  },
+  {
+    "case": "dl3dv/3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3",
+    "work": "outputs/curve/dl3dv-3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3/work",
+    "init": "outputs/curve/dl3dv-3e4dbe4135ad3ba14c9d7c89732eb0951e237e652a65007357b2d978c80cdae3/resplat/resplat_world.ply",
+    "budget_seconds": 94.29
+  },
+  {
+    "case": "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e",
+    "work": "outputs/curve/dl3dv-0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e/work",
+    "init": "outputs/curve/dl3dv-0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e/resplat/resplat_world.ply",
+    "budget_seconds": 94.29
+  },
+  {
+    "case": "dl3dv/2dad2d298927ff9b2ed7daa6128244e81d331e8cf1abf6c8598f35276ad38b84",
+    "work": "outputs/inputs13/dl3dv-2dad2d29/work",
+    "init": "outputs/inputs13/dl3dv-2dad2d29/resplat/resplat_world.ply",
+    "budget_seconds": 94.29
+  },
+  {
+    "case": "dl3dv/9a451604b8d2583d47b14662635d8f74710c419cc061705ac15b8cfc31ece446",
+    "work": "outputs/inputs13/dl3dv-9a451604/work",
+    "init": "outputs/inputs13/dl3dv-9a451604/resplat/resplat_world.ply",
+    "budget_seconds": 94.29
+  },
+  {
+    "case": "hw/basketball",
+    "work": "outputs/inputs13/hw-basketball/work",
+    "init": "outputs/inputs13/hw-basketball/resplat/resplat_world.ply",
+    "budget_seconds": 95.0
+  },
+  {
+    "case": "hw/car",
+    "work": "outputs/inputs13/hw-car/work",
+    "init": "outputs/inputs13/hw-car/resplat/resplat_world.ply",
+    "budget_seconds": 95.0
+  },
+  {
+    "case": "hw/trashbin",
+    "work": "outputs/inputs13/hw-trashbin/work",
+    "init": "outputs/inputs13/hw-trashbin/resplat/resplat_world.ply",
+    "budget_seconds": 95.0
+  },
+  {
+    "case": "mipnerf360/bonsai",
+    "work": "outputs/inputs13/mipnerf360-bonsai/work",
+    "init": "outputs/inputs13/mipnerf360-bonsai/resplat/resplat_world.ply",
+    "budget_seconds": 95.0
+  }
+]

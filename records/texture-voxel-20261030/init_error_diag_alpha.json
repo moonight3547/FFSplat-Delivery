@@ -1,0 +1,142 @@
+{
+ "ply": "outputs/prep/mipnerf360/bicycle/resplat/resplat_world.ply",
+ "views": [
+  0,
+  33,
+  67,
+  100,
+  134,
+  168
+ ],
+ "n_train": 169,
+ "renderer": "fastgs",
+ "coverage": "alpha from white/black dual render",
+ "depth": "per-pixel nearest-centre z-buffer + EDT fill",
+ "scene_center": [
+  -0.41223907470703125,
+  -8.463773727416992,
+  12.525583267211914
+ ],
+ "scene_radius": 65.0379867553711,
+ "bins": [
+  0.0,
+  0.25,
+  0.5,
+  0.75,
+  1.0,
+  Infinity
+ ],
+ "gauss_share": [
+  0.5048773465392146,
+  0.40767591846136125,
+  0.06824062344043917,
+  0.012353641214633958,
+  0.006852470344351031
+ ],
+ "error_share_covered": [
+  0.48601426391862107,
+  0.44875094951129546,
+  0.05513158203020754,
+  0.007515120490751673,
+  0.002588084049124224
+ ],
+ "pixel_share_covered": [
+  0.4629656756365741,
+  0.4220073181905864,
+  0.09919162326388889,
+  0.012921670042438271,
+  0.0029137128665123455
+ ],
+ "mean_sq_error_per_pixel": [
+  0.027791999137519802,
+  0.02815172191948506,
+  0.014714483528072527,
+  0.015397026836322922,
+  0.02351533608216096
+ ],
+ "gauss_share_gt_half": 0.08744673499942417,
+ "error_share_gt_half": 0.06523478657008344,
+ "pixel_share_gt_half": 0.11502700617283951,
+ "alpha_mean": 0.996447225411733,
+ "hole_pixel_frac": 0.0,
+ "hole_error_share": 0.0,
+ "sky_pixel_frac": 0.0,
+ "sky_error_share": 0.0,
+ "alpha_lt_0_5_pixel_frac": 0.0,
+ "alpha_lt_0_5_error_share": 0.0,
+ "alpha_lt_0_1_pixel_frac": 0.0,
+ "alpha_lt_0_1_error_share": 0.0,
+ "train_views_only": true,
+ "split_source": "outputs/prep/mipnerf360/bicycle/work/split.json",
+ "camera_names": [
+  "_DSC8815",
+  "_DSC8690",
+  "_DSC8855",
+  "_DSC8835",
+  "_DSC8869",
+  "_DSC8793"
+ ],
+ "hole_meta": {
+  "alpha_threshold": 0.5,
+  "max_hole_px": 48.0,
+  "views": [
+   "_DSC8815",
+   "_DSC8690",
+   "_DSC8855",
+   "_DSC8835",
+   "_DSC8869",
+   "_DSC8793"
+  ],
+  "train_views_only": true,
+  "sky_exclusion": "pixels whose nearest alpha>=threshold pixel is farther than max_hole_px are counted as sky and are NOT emitted into the hole cloud"
+ },
+ "psnr": 15.771755384398299,
+ "per_view": [
+  {
+   "view": 0,
+   "alpha_mean": 0.9961712956428528,
+   "hole_px_frac": 0.0,
+   "sky_px_frac": 0.0,
+   "hole_err_frac": 0.0
+  },
+  {
+   "view": 33,
+   "alpha_mean": 0.9901444315910339,
+   "hole_px_frac": 0.0,
+   "sky_px_frac": 0.0,
+   "hole_err_frac": 0.0
+  },
+  {
+   "view": 67,
+   "alpha_mean": 0.9944923520088196,
+   "hole_px_frac": 0.0,
+   "sky_px_frac": 0.0,
+   "hole_err_frac": 0.0
+  },
+  {
+   "view": 100,
+   "alpha_mean": 0.9985237121582031,
+   "hole_px_frac": 0.0,
+   "sky_px_frac": 0.0,
+   "hole_err_frac": 0.0
+  },
+  {
+   "view": 134,
+   "alpha_mean": 0.9997862577438354,
+   "hole_px_frac": 0.0,
+   "sky_px_frac": 0.0,
+   "hole_err_frac": 0.0
+  },
+  {
+   "view": 168,
+   "alpha_mean": 0.9995653033256531,
+   "hole_px_frac": 0.0,
+   "sky_px_frac": 0.0,
+   "hole_err_frac": 0.0
+  }
+ ],
+ "error_to_gauss_ratio_gt_half": 0.7459945367944614,
+ "n_error_points": 3317760,
+ "error_points": "/root/gpufree-data/outputs/bicycle-grow-20261030/error_points_bicycle.npy",
+ "n_hole_points": 0
+}

@@ -95,9 +95,10 @@ def main(argv=None):
     parser.add_argument("--budget-seconds", type=float, default=None,
                         help="skip the 30K reference and use this budget (grading-machine value)")
     parser.add_argument("--realloc-frac", type=float, default=0.15, dest="realloc_frac",
-                        help="budget-preserving reallocation ratio; paired measurement "
-                             "(2 rounds per arm, same GPU) shows +1.7..+2.2 quality and "
-                             "equal-or-faster module-B time, so 15%% is the default")
+                        help="budget-preserving reallocation ratio (one shot at the end of the "
+                             "structural window, iterations//4); the 13-case serial delivery "
+                             "table (H1 outputs/scene13r15/results.jsonl, mean 49.599) was "
+                             "measured with 0.15 single-shot, so 15%% is the default")
     parser.add_argument("--b-iterations", type=int, default=5000, dest="b_iterations",
                         help="module-B optimizer steps (matched-LR recipe; measured sweet spot)")
     parser.add_argument("--b-fraction", type=float, default=0.5,
@@ -187,15 +188,21 @@ def main(argv=None):
         "--iterations", args.b_iterations,
         "--position_lr_max_steps", args.b_iterations,
         "--opacity_reset_interval", "0",
-        # structural ops only in the first quarter of the run: measured best on all
-        # three cases (see records/SUMMARY.md, campaign P)
+        # Step-matched structural schedule, identical to the 13-scene Pareto sweep
+        # (records/pareto-20261030/run_sweep_pareto.py): densify starts at S//10 and
+        # stops, like realloc, at S//4. At the 5000-step default this is exactly the
+        # measured delivery recipe (500 -> 1250, realloc at 1250).
+        "--densify_from_iter", max(20, args.b_iterations // 10),
         "--densify_until_iter", max(1, args.b_iterations // 4),
         "--lambda_dssim", "0.6", "--scaling_lr", "0.01",
         "--realloc_frac", str(args.realloc_frac),
-        # the reallocation improves monotonically with the number of shots (1 -> 8 measured
-        # +5.1/+3.3/+0.9 quality); eight evenly spaced shots inside the structural window
-        # is the current best measured setting.
-        "--realloc_at", ",".join(str(max(1, args.b_iterations * k // 20)) for k in range(1, 9)),
+        # ONE shot at the end of the structural window (module-B steps // 4). This is the
+        # recipe of the measured 13-case serial delivery table (scene13r15/results.jsonl,
+        # 41.371 -> 49.599; DELIVERY.md 2.1 has the exact command). Multi-shot (8 shots at
+        # iterations*k/20) was retracted: same-config runs differed by 4.3 quality points
+        # (6.55 vs 10.86 on mip/bicycle) with +15.7 s B-time spread, see
+        # research/advisory/HANDOFF_MULTISHOT_REALLOC_20261030.md.
+        "--realloc_at", str(max(1, args.b_iterations // 4)),
         "--image_cache", str(cache_dir),
         "--limit_seconds", b_limit, "--record", results / "module_b/train_record.json"), logs)
     record = read(results / "module_b/train_record.json")

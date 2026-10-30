@@ -1,0 +1,76 @@
+{
+  "case": "dl3dv/0f622eaabc6dce5039205fc8828455202f40c6adab371ab707bd1e89a2f86a2e",
+  "work": "outputs/ocurve/hard-0f622eaabc/work",
+  "init_ply": "outputs/ocurve/hard-0f622eaabc/resplat/resplat_world.ply",
+  "budget_seconds": 94.29,
+  "train_record": {
+    "init_ply": "outputs/ocurve/hard-0f622eaabc/resplat/resplat_world.ply",
+    "init_mode": "ply:resplat_world.ply",
+    "num_init_gaussians": 476635,
+    "num_final_gaussians": 548129,
+    "iterations": 500,
+    "completed_iterations": 500,
+    "stop_reason": "iterations",
+    "final_ply": "outputs/ocurve/hard-0f622eaabc/s500/model/point_cloud/iteration_500/point_cloud.ply",
+    "limit_seconds": null,
+    "scene_load_seconds": 6.958,
+    "init_seconds": 0.38,
+    "train_seconds": 6.163,
+    "total_seconds": 17.37,
+    "timing_breakdown": null,
+    "iterations_per_second": 81.12,
+    "quick_test_psnr": 19.7398,
+    "num_train_views": 283,
+    "num_test_views": 41,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "settings": {
+      "position_lr_max_steps": 500,
+      "position_lr_init": 0.00016,
+      "position_lr_final": 1.6e-06,
+      "densify_from_iter": 500,
+      "densify_until_iter": 125,
+      "densification_interval": 100,
+      "opacity_reset_interval": 501,
+      "mult": 0.5,
+      "lambda_dssim": 0.6,
+      "scaling_lr": 0.01,
+      "opacity_lr": 0.025,
+      "position_lr_delay_mult": 0.01,
+      "no_densify": false,
+      "seed": 20261015,
+      "res_scales": [
+        1.0
+      ],
+      "res_until": [],
+      "lpips_weight": 0.0,
+      "lpips_every": 1,
+      "lpips_scale": 0.5,
+      "densify_count_thresh": null,
+      "max_gaussians": null
+    }
+  },
+  "results": [
+    {
+      "iteration": 500,
+      "num_gaussians": 548129,
+      "train_seconds": 2.49,
+      "b_seconds_estimate": 10.33,
+      "psnr": 19.73,
+      "ssim": 0.6314,
+      "lpips": 0.36,
+      "score": {
+        "psnr_points": 3.7840000000000003,
+        "ssim_points": 0.0,
+        "lpips_points": 0.0,
+        "time_points": 19.787203752003023,
+        "quality_points": 3.7840000000000003,
+        "total_points": 23.571203752003022,
+        "budget_ratio": 0.10957583115986397,
+        "valid": true
+      }
+    }
+  ]
+}

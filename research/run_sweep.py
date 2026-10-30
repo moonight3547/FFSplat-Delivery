@@ -117,6 +117,28 @@ def main(argv=None):
     parser.add_argument("--image-cache", default=None, dest="image_cache",
                         help="pre-decoded uint8 image cache dir (module-A artifact)")
     parser.add_argument("--no-densify", action="store_true", dest="no_densify")
+    # ---- staged post-S continuation pass-through (optional; see train_sweep.py)
+    parser.add_argument("--stage2-iters", type=int, default=None, dest="stage2_iters")
+    parser.add_argument("--stage2-cams", type=int, default=None, dest="stage2_cams")
+    parser.add_argument("--stage2-trainer", type=str, default=None, dest="stage2_trainer")
+    parser.add_argument("--stage2-lr-final", type=float, default=None, dest="stage2_lr_final")
+    parser.add_argument("--stage2-lr-from-ratio", type=float, default=None,
+                        dest="stage2_lr_from_ratio")
+    parser.add_argument("--stage2-absgrad-every", type=int, default=None,
+                        dest="stage2_absgrad_every")
+    parser.add_argument("--stage2-split-frac", type=float, default=None,
+                        dest="stage2_split_frac")
+    parser.add_argument("--stage3-iters", type=int, default=None, dest="stage3_iters")
+    parser.add_argument("--stage3-lpips-weight", type=float, default=None,
+                        dest="stage3_lpips_weight")
+    # ---- Mini-Splatting density control (passed through to research.train_sweep)
+    parser.add_argument("--prune-keep", type=float, default=None, dest="prune_keep")
+    parser.add_argument("--prune-views", type=int, default=None, dest="prune_views")
+    parser.add_argument("--mid-prune-at", type=int, default=None, dest="mid_prune_at")
+    parser.add_argument("--mid-prune-keep", type=float, default=None,
+                        dest="mid_prune_keep")
+    parser.add_argument("--mid-prune-views", type=int, default=None,
+                        dest="mid_prune_views")
     args = parser.parse_args(argv)
 
     profile = read(args.profile)
@@ -170,6 +192,20 @@ def main(argv=None):
         "--opt_step_schedule": args.opt_step_schedule,
         "--inject_holes": args.inject_holes,
         "--inject_at": args.inject_at,
+        "--stage2_iters": args.stage2_iters,
+        "--stage2_cams": args.stage2_cams,
+        "--stage2_trainer": args.stage2_trainer,
+        "--stage2_lr_final": args.stage2_lr_final,
+        "--stage2_lr_from_ratio": args.stage2_lr_from_ratio,
+        "--stage2_absgrad_every": args.stage2_absgrad_every,
+        "--stage2_split_frac": args.stage2_split_frac,
+        "--stage3_iters": args.stage3_iters,
+        "--stage3_lpips_weight": args.stage3_lpips_weight,
+        "--prune_keep": args.prune_keep,
+        "--prune_views": args.prune_views,
+        "--mid_prune_at": args.mid_prune_at,
+        "--mid_prune_keep": args.mid_prune_keep,
+        "--mid_prune_views": args.mid_prune_views,
     }
     for flag, value in optional.items():
         if value is not None:

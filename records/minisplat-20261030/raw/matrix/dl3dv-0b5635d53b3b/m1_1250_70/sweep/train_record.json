@@ -1,0 +1,92 @@
+{
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/curve/dl3dv-0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce/resplat/resplat_world.ply",
+  "init_mode": "ply:resplat_world.ply",
+  "num_init_gaussians": 450206,
+  "num_final_gaussians": 559037,
+  "iterations": 5000,
+  "completed_iterations": 5000,
+  "stop_reason": "iterations",
+  "final_ply": "/root/gpufree-data/outputs/minisplat-20261030/matrix/dl3dv-0b5635d53b3b/m1_1250_70/sweep/model/point_cloud/iteration_5000/point_cloud.ply",
+  "limit_seconds": null,
+  "snapshots": [
+    {
+      "iteration": 5000,
+      "train_seconds": 22.58070571348071,
+      "num_gaussians": 559037,
+      "ply": "/root/gpufree-data/outputs/minisplat-20261030/matrix/dl3dv-0b5635d53b3b/m1_1250_70/sweep/snaps/iter05000.ply"
+    }
+  ],
+  "scene_load_seconds": 3.752,
+  "init_seconds": 0.613,
+  "train_seconds": 26.889,
+  "total_seconds": 34.789,
+  "stage1_seconds": 26.889,
+  "stage2_seconds": 0.0,
+  "stage3_seconds": 0.0,
+  "stage1_iterations": 5000,
+  "stage2_iterations": 0,
+  "stage3_iterations": 0,
+  "total_iterations": 5000,
+  "stage2_trainer": "standard",
+  "stage2_cams": 1,
+  "stage2_lr_from": null,
+  "stage2_lr_final": null,
+  "stage3_lpips_weight": 0.0,
+  "prune_keep": 1.0,
+  "prune_views": 24,
+  "mid_prune_at": 1250,
+  "mid_prune_keep": 0.7,
+  "prune_events": [
+    {
+      "n_before": 798624,
+      "n_after": 559037,
+      "keep_requested": 0.7,
+      "keep_actual": 0.7000002504307409,
+      "seconds": 0.105,
+      "views": 24,
+      "label": "mid1250"
+    }
+  ],
+  "timing_breakdown": null,
+  "iterations_per_second": 185.95,
+  "quick_test_psnr": null,
+  "num_train_views": 333,
+  "num_test_views": 48,
+  "res_scales": [
+    1.0
+  ],
+  "res_until": [],
+  "settings": {
+    "position_lr_max_steps": 5000,
+    "position_lr_init": 0.00016,
+    "position_lr_final": 1.6e-06,
+    "densify_from_iter": 500,
+    "densify_until_iter": 1250,
+    "densification_interval": 100,
+    "opacity_reset_interval": 5001,
+    "mult": 0.5,
+    "lambda_dssim": 0.6,
+    "scaling_lr": 0.01,
+    "opacity_lr": 0.025,
+    "position_lr_delay_mult": 0.01,
+    "no_densify": false,
+    "seed": 20261015,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "lpips_weight": 0.0,
+    "lpips_every": 1,
+    "lpips_scale": 0.5,
+    "stage2_iters": 0,
+    "stage2_cams": 1,
+    "stage2_trainer": "standard",
+    "stage2_absgrad_every": 200,
+    "stage2_split_frac": 0.01,
+    "stage2_lr_final": null,
+    "stage3_iters": 0,
+    "stage3_lpips_weight": 0.0,
+    "densify_count_thresh": null,
+    "max_gaussians": null
+  }
+}
