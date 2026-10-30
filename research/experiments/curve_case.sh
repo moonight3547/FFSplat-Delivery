@@ -14,7 +14,7 @@ PY=${PY:-/opt/conda/bin/conda}
 RESPLAT=${RESPLAT:-ffsplat-enhance}; FASTGS=${FASTGS:-organizer-fastgs}
 CKPT=${CKPT:-/workspace/organizer-assets/resplat-base-dl3dv-540x960-view16-a72dc6d0.pth}
 DATA=${DATA:-/workspace/organizer-assets/datasets}
-OUT=${OUT:-outputs/curve}; SNAP=${SNAP:-5,10,15,20,30,40}; BUDGET=${BUDGET:-42}
+OUT=${OUT:-outputs/curve}; SNAP=${SNAP:-6,15,30}; BUDGET=${BUDGET:-42}
 GPU=${GPU:-0}
 CASE=${CASE:?case required, e.g. mipnerf360/bicycle}
 g=${CASE%%/*}; s=${CASE#*/}
@@ -38,6 +38,7 @@ score_curve(){  # dir snapdir
   done
   [ -n "$args" ] && $PY run --no-capture-output -n "$FASTGS" python -m research.curve_metrics \
     --source "$d/work" --out "$dd/curve.json" $args > "$dd/metrics.log" 2>&1
+  rm -rf "$sd"/*.ply 2>/dev/null   # snapshots are ~100 MB each; the disk is small
 }
 run_fastgs(){
   [ -f "$d/fastgs/curve.json" ] && return; rm -rf "$d/fastgs"; mkdir -p "$d/fastgs/snaps"
