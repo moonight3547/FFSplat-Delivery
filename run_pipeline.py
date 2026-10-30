@@ -191,6 +191,9 @@ def main(argv=None):
         # three cases (see records/SUMMARY.md, campaign P)
         "--densify_until_iter", max(1, args.b_iterations // 4),
         "--lambda_dssim", "0.6", "--scaling_lr", "0.01",
+        # fused Adam: identical maths, faster kernel; hw-class scenes measured ~24 s vs
+        # a 23-32 s control spread, quality unchanged, so it is on by default.
+        "--fused_adam",
         "--realloc_frac", str(args.realloc_frac),
         "--realloc_at", str(max(1, args.b_iterations // 4)),
         "--image_cache", str(cache_dir),
