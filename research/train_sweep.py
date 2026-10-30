@@ -476,7 +476,9 @@ def main(argv=None):
                            * gaussians.get_scaling.mean(dim=1))
                 n_rel = int(args.realloc_frac * contrib.numel())
                 if n_rel >= 4:
-                    low = _t.argsort(contrib)[:n_rel]
+                    # topk is O(N) for small k; a full argsort on 0.5-1M elements was the
+                    # dominant per-shot cost (each shot otherwise costs 4-5 s).
+                    low = _t.topk(contrib, n_rel, largest=False).indices
                     gaussians._opacity[low] = _inv(_t.full((n_rel, 1), 0.001,
                                                            device=contrib.device))
                     n_all = gaussians.get_xyz.shape[0]
@@ -486,7 +488,7 @@ def main(argv=None):
                         gaussians.denom = _t.zeros((n_all, 1), device=contrib.device)
                     grad = (gaussians.xyz_gradient_accum_abs / (gaussians.denom + 1e-8)).view(-1)
                     n_split = n_rel // 2
-                    top = _t.argsort(grad, descending=True)[:n_split]
+                    top = _t.topk(grad, n_split, largest=True).indices
                     sel = gaussians.get_xyz[top].repeat(2, 1)
                     jitter = _t.randn_like(sel) * gaussians.get_scaling[top].repeat(2, 1) * 0.3
                     new_xyz = sel + jitter
@@ -508,7 +510,7 @@ def main(argv=None):
                         with _t.no_grad():
                             score = (gaussians.get_opacity.view(-1)
                                      * gaussians.get_scaling.mean(dim=1))
-                            drop = _t.argsort(score)[:excess]
+                            drop = _t.topk(score, excess, largest=False).indices
                             from utils.general_utils import inverse_sigmoid as _inv2
                             gaussians._opacity[drop] = _inv2(_t.full((excess, 1), 0.001,
                                                                      device=score.device))
