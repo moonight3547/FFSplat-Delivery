@@ -138,6 +138,10 @@ def main(argv=None):
     ap.add_argument("--out-root", default="outputs/exact13-gate-20261030")
     ap.add_argument("--tau", type=float, default=0.48)
     ap.add_argument("--keep", type=float, default=0.6)
+    ap.add_argument("--recipe", choices=("delivery", "bigd2500", "bigd3500"),
+                    default="delivery")
+    ap.add_argument("--vgg-tail", type=int, choices=(0, 100, 200), default=0)
+    ap.add_argument("--scene-cache", action="store_true")
     ap.add_argument("--quiet-wait", type=int, default=3600)
     ap.add_argument("--only", default=None, help="comma-separated tags subset")
     args = ap.parse_args(argv)
@@ -175,13 +179,31 @@ def main(argv=None):
             keep = float(gate["keep"])
             print(f"[gate] {tag}: train_lpips={gate['train_lpips']} keep={keep}", flush=True)
 
+            if args.recipe == "delivery":
+                recipe_flags = ["--densify-until", "1250"]
+            else:
+                recipe_flags = ["--densify-until",
+                                "2500" if args.recipe == "bigd2500" else "3500",
+                                "--densify-interval", "100",
+                                "--grad-abs-thresh", "0.0008"]
+            if args.vgg_tail:
+                recipe_flags += ["--lpips-weight", "0.1", "--lpips-scale", "1.0",
+                                 "--lpips-start", str(5001 - args.vgg_tail),
+                                 "--lpips-end", "5000"]
+            if args.scene_cache:
+                cache_dir = REPO / work / "scene_tensor_cache"
+                if not (cache_dir / "meta.json").exists():
+                    run(conda_cmd(profile, "fastgs", "-m", "research.scene_cache",
+                                  "build", "--work", work, "--out", str(cache_dir)), log)
+                recipe_flags += ["--scene-cache", str(cache_dir)]
+
             argv_sweep = ["-m", "research.run_sweep", "--profile", str(PROFILE),
                           "--case", case, "--work", work, "--init-ply", init,
                           "--out", str(cell / "sweep"), "--budget", str(budget),
                           "--iterations", "5000", "--position-lr-max-steps", "5000",
                           "--opacity-reset-interval", "0", "--lambda-dssim", "0.6",
                           "--scaling-lr", "0.01", "--densify-from", "500",
-                          "--densify-until", "1250", "--realloc-frac", "0.15",
+                          *recipe_flags, "--realloc-frac", "0.15",
                           "--realloc-at", "1250", "--image-cache", f"{work}/image_cache",
                           "--snapshots", "", "--seed", "20261015",
                           "--mid-prune-at", "1250", "--mid-prune-keep", str(keep)]
@@ -191,6 +213,8 @@ def main(argv=None):
             row = summary["results"][-1]
             score = row["score"]
             rec = dict(tag=tag, case=case, budget=budget,
+                       recipe=args.recipe, vgg_tail=args.vgg_tail,
+                       scene_cache=bool(args.scene_cache),
                        gate=gate, keep=keep,
                        num_gaussians=row.get("num_gaussians"),
                        psnr=row.get("psnr"), ssim=row.get("ssim"),
@@ -212,7 +236,9 @@ def main(argv=None):
     if rows:
         mean_total = sum(r["total_points"] for r in rows) / len(rows)
         mean_clean = sum(r["clean13_total"] for r in rows) / len(rows)
-        payload = dict(n=len(rows), mean_total=mean_total, mean_clean13=mean_clean,
+        payload = dict(n=len(rows), recipe=args.recipe, vgg_tail=args.vgg_tail,
+                       scene_cache=bool(args.scene_cache),
+                       mean_total=mean_total, mean_clean13=mean_clean,
                        delta=mean_total - mean_clean,
                        per_case={r["tag"]: r for r in rows})
         (out_root / "aggregate.json").write_text(json.dumps(payload, indent=2))
