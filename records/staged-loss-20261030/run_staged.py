@@ -111,6 +111,9 @@ DEFAULT_ARMS = {
     "pgsr_sv10_w1": dict(kind="train", trainer="standard", stage2_iters=0, stage3=0,
                          depth_reg_weight=1.0, depth_reg_every=10,
                          depth_reg_from=4000, depth_reg_until=5000),
+    "pgsr_sv10_w002": dict(kind="train", trainer="standard", stage2_iters=0, stage3=0,
+                           depth_reg_weight=0.02, depth_reg_every=10,
+                           depth_reg_from=4000, depth_reg_until=5000),
     "ctrl": dict(kind="train", trainer="standard", stage2_iters=0, stage3=0),
     # +100 VGG-LPIPS steps directly on top of the delivery recipe (no phase 2):
     # the Lead's priority-2 arm because the MCMC pilot was already negative.
