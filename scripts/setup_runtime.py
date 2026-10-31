@@ -93,6 +93,14 @@ def toolkit_version(home):
     return match.group(1) if match else None
 
 
+def runtime_header_paths(prefix, cuda_home):
+    # Minimal nvcc installations do not include cublas/cusparse/cusolver
+    # headers. The matching Torch NVIDIA wheels already provide those headers;
+    # expose them to the compiler without installing a second library runtime.
+    base = Path(prefix) / "lib/python3.12/site-packages/nvidia"
+    return os.pathsep.join(map(str, [Path(cuda_home) / "include", *sorted(base.glob("*/include"))]))
+
+
 def find_toolkit(version, explicit=None):
     if explicit:
         home = Path(explicit).resolve()
@@ -266,6 +274,9 @@ class Installer:
                                      "--index-url", spec["index_url"]], env=environment)
         self.run(runtime + "-build-tools", [*pip, "-r", REPO / "requirements/build.txt"], env=environment)
         self.run(runtime + "-requirements", [*pip, "-r", REPO / f"requirements/{runtime}.txt"], env=environment)
+        environment["CPATH"] = runtime_header_paths(prefix, home)
+        self.plan["profile"]["environment_by_runtime"][runtime]["CPATH"] = environment["CPATH"]
+        self.manifest["build_environment"][runtime]["CPATH"] = environment["CPATH"]
         if runtime == "resplat":
             sources = [("pointops", REPO / "resplat/src/model/encoder/pointops"), ("gsplat", self.source("gsplat"))]
         else:
