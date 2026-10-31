@@ -139,6 +139,13 @@ def build_plan(args):
                "device": "cuda:0", "conda": conda, "environments": {k: str(v) for k, v in prefixes.items()},
                "environment": {"OMP_NUM_THREADS": "8", "OPENBLAS_NUM_THREADS": "8", "MAX_JOBS": str(args.jobs),
                                "NVIDIA_TF32_OVERRIDE": "0", "QT_QPA_PLATFORM": "offscreen"}}
+    profile["official_adam_manifest"] = str(root / "official-adam-manifest.json")
+    profile["environment_by_runtime"] = {}
+    for runtime in ("resplat", "fastgs"):
+        home = toolkits[runtime] or str(prefixes[runtime])
+        profile["environment_by_runtime"][runtime] = {
+            "CUDA_HOME": home, "PATH": str(Path(home) / "bin") + os.pathsep + os.environ.get("PATH", ""),
+            "CPATH": str(Path(home) / "include")}
     # Conservative installed sizes plus one serial pip/build working set.
     # This is a reservation estimate, not a measured package-size guarantee.
     reservations = [(prefixes["resplat"], 10 * GIB), (prefixes["fastgs"], 6 * GIB), (root, 4 * GIB)]
@@ -185,6 +192,9 @@ class Installer:
         previous = self.manifest["steps"].get(name)
         if previous and previous["status"] == "complete":
             return
+        for location in (self.root, *map(Path, self.plan["prefixes"].values())):
+            if shutil.disk_usage(existing_parent(location)).free < 2 * GIB:
+                raise RuntimeError(f"Filesystem buffer below 2GiB before {name}: {location}; preserve partial install")
         log = self.root / "logs" / f"{name}.log"
         record = {"argv": list(map(str, argv)), "cwd": str(cwd or REPO), "status": "running", "started_unix": time.time()}
         self.manifest["steps"][name] = record
@@ -246,6 +256,8 @@ class Installer:
         self.manifest["toolkits"][runtime] = {"home": home, "version": toolkit_version(home)}
         environment = self.env.copy()
         environment.update(CUDA_HOME=home, PATH=str(Path(home) / "bin") + os.pathsep + environment.get("PATH", ""))
+        self.manifest.setdefault("build_environment", {})[runtime] = {
+            key: environment.get(key) for key in ("CUDA_HOME", "TORCH_CUDA_ARCH_LIST", "MAX_JOBS", "NVIDIA_TF32_OVERRIDE")}
         python = conda_python(conda, prefix)
         constraint = self.root / f"{runtime}-constraints.txt"
         constraint.write_text(f"torch=={spec['torch']}\ntorchvision=={spec['torchvision']}\nnumpy==1.26.4\n")
@@ -323,6 +335,23 @@ def verify_runtime(runtime, prefix, output):
                    "cuda": torch.version.cuda, "modules": modules, "gpu": torch.cuda.get_device_name(0),
                    "cxx11_abi": torch._C._GLIBCXX_USE_CXX11_ABI,
                    "scope": "Imports plus Torch CUDA forward/backward; renderer and full-dataset acceptance are separate."})
+    if runtime == "fastgs":
+        source = output.parent / "sources/official_adam"
+        source_class = source / "FasterGSCudaBackend/FasterGSCudaBackend/torch_bindings/adam.py"
+        source_cuda = source / "FasterGSCudaBackend/FasterGSCudaBackend/adam/src/adam.cu"
+        installed_class = Path(modules["FasterGSCudaBackend.torch_bindings.adam"]["file"])
+        extension = Path(modules["FasterGSCudaBackend._C"]["file"])
+        if digest(source_class) != digest(installed_class):
+            raise RuntimeError("Installed official Adam Python class differs from pinned source")
+        write(output.parent / "official-adam-manifest.json", {
+            "official_source": str(source), "official_commit": lock["sources"]["official_adam"]["commit"],
+            "isolated_site": str(extension.parents[1]), "Torch": torch.__version__, "CUDA": torch.version.cuda,
+            "ABI": bool(torch._C._GLIBCXX_USE_CXX11_ABI), "Python": f"{sys.version_info.major}.{sys.version_info.minor}",
+            "class_file": str(installed_class), "class_SHA": digest(installed_class),
+            "extension_file": str(extension), "extension_SHA": digest(extension), "CUDA_source_SHA": digest(source_cuda),
+            "build_flags": {"cxx": ["-std=c++17", "-O3"], "nvcc": ["-std=c++17", "-O3", "-use_fast_math"],
+                            "TORCH_CUDA_ARCH_LIST": os.environ["TORCH_CUDA_ARCH_LIST"], "MAX_JOBS": os.environ["MAX_JOBS"]},
+            "scope": "Official optimizer component installed; full training quality/timing acceptance is separate."})
 
 
 def main(argv=None):
