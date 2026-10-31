@@ -159,6 +159,7 @@ def build_plan(args):
     reservations = [(prefixes["resplat"], 10 * GIB), (prefixes["fastgs"], 6 * GIB), (root, 4 * GIB)]
     return {"root": str(root), "prefixes": {k: str(v) for k, v in prefixes.items()},
             "conda": conda, "toolkits": toolkits, "lock": lock, "source_sha256": source_identity(),
+            "github_mirror": getattr(args, "github_mirror", None),
             "profile": profile, "system": system_tools(), "space": check_space(reservations),
             "profile_path": str(root / "profile.json"), "acceptance_scope": "Install/import/CUDA checks; three-dataset training/evaluation is separate."}
 
@@ -203,6 +204,17 @@ class Installer:
                         TORCH_EXTENSIONS_DIR=str(self.root / "torch-extensions"),
                         TORCH_CUDA_ARCH_LIST=args.arch, MAX_JOBS=str(args.jobs), NVIDIA_TF32_OVERRIDE="0",
                         QT_QPA_PLATFORM="offscreen", BUILD_NO_CUDA="0")
+        self.env.update(GIT_HTTP_LOW_SPEED_LIMIT="1024", GIT_HTTP_LOW_SPEED_TIME="30")
+        if plan.get("github_mirror"):
+            mirror = plan["github_mirror"].rstrip("/") + "/"
+            # Applies only to this installer's Git children (including nested
+            # submodules). Canonical URLs and commit pins remain in the lock.
+            count = int(self.env.get("GIT_CONFIG_COUNT", "0"))
+            self.env.update({"GIT_CONFIG_COUNT": str(count + 1),
+                             f"GIT_CONFIG_KEY_{count}": f"url.{mirror}.insteadOf",
+                             f"GIT_CONFIG_VALUE_{count}": "https://github.com/"})
+            self.manifest.setdefault("git_transports", []).append({
+                "github_mirror": mirror, "unix": time.time(), "all_source_commits_still_verified": True})
         write(self.manifest_path, self.manifest)
 
     def run(self, name, argv, *, cwd=None, env=None, retries=1):
@@ -408,6 +420,8 @@ def main(argv=None):
     parser.add_argument("--cuda124-home", type=Path)
     parser.add_argument("--jobs", type=int, default=4)
     parser.add_argument("--arch", default="8.9", help="TORCH_CUDA_ARCH_LIST; use the target GPU capability")
+    parser.add_argument("--github-mirror", default=os.environ.get("FFSPLAT_GITHUB_MIRROR"),
+                        help="Optional trusted Git base mirroring owner/repo.git paths; source commit pins are still enforced")
     parser.add_argument("--plan", action="store_true")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--install-system-deps", action="store_true")
