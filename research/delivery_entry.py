@@ -3,7 +3,7 @@ import argparse
 from pathlib import Path
 from types import SimpleNamespace
 
-from run_pipeline import recipe_flags
+from run_pipeline import ADAM_MANIFEST, recipe_flags
 
 
 def module_b_args(argv):
@@ -18,9 +18,10 @@ def module_b_args(argv):
     defaults = ['--iterations', str(args.iterations),
                 '--position_lr_max_steps', str(args.iterations),
                 '--opacity_reset_interval', '0',
-                '--densify_from_iter', str(max(20, args.iterations // 10)),
+                '--densify_from_iter', '500',
                 '--lambda_dssim', '0.6', '--scaling_lr', '0.01', '--realloc_frac', '0.0',
                 '--sh_degree', '3',
+                '--adam-backend', 'official', '--adam-manifest', str(ADAM_MANIFEST),
                 '--seed', '20261015', '--record', str(Path(args.model_path) / 'train_record.json')]
     defaults += recipe_flags(SimpleNamespace(b_recipe='bigd3500', b_iterations=args.iterations,
                                             vgg_tail=min(200, args.iterations)))

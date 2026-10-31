@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "GPU_gate_commit": "42a1db3",
+  "GPU2_600_each": 2,
+  "validated_helper_SHA": "3fe7b7274b53dfe6caa6705576ad0456c8bfba6554292526b81486f55087eb95",
+  "final_packaging_only": "SHA utility import moved to existing competition.contracts; all research Python file digests compared equal; optimizer methods unchanged",
+  "helper_current_SHA": "bf25746e6501d3f70937c1aa486c993bba7023ac8331bb2799f3cb08870c0f0d",
+  "entry_points_not_modified": [
+    "run_pipeline.py",
+    "research/train_confirmed.py"
+  ]
+}

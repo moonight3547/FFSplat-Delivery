@@ -1,0 +1,25 @@
+{
+  "n_train": 169,
+  "images_maxdiff": 0.0,
+  "wvt_maxdiff": 0.0,
+  "fpt_maxdiff": 0.0,
+  "center_maxdiff": 0.0,
+  "fov_maxdiff": 0.0,
+  "rng_exact": true,
+  "names_exact": true,
+  "extent_exact": true,
+  "image_strides_exact": true,
+  "transforms_bitwise": true,
+  "pixels_bitwise": true,
+  "pixels_1ulp_or_better": true,
+  "identical": true,
+  "seed": 2,
+  "cached_load_timings": {
+    "read_meta_seconds": 0.0018895529210567474,
+    "open_npy_seconds": 0.5153369400650263,
+    "h2d_seconds": 0.05501432530581951,
+    "gpu_convert_seconds": 0.006509210914373398,
+    "build_cams_seconds": 0.008692529052495956,
+    "total_seconds": 0.5874425582587719
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/moonight3547/FFSplat-Delivery",
+  "branch": "research/official-adam-composite",
+  "commit": "1414633b2b514b27bf9680651aaeb6192d29c267",
+  "training_source": "17d00f0",
+  "production_helper_validated_source": "42a1db3",
+  "scope": "12 formal models/3 cases/2 seeds; complete B and official TEST; not full13"
+}

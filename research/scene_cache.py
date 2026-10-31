@@ -93,6 +93,9 @@ def _seed_all(seed):
 
 
 def build(work, out_dir, model_path="/tmp/scene_cache_model", seed=20261015):
+    torch.set_default_dtype(torch.float32)
+    torch.backends.cuda.matmul.allow_tf32 = False
+    torch.backends.cudnn.allow_tf32 = False
     work = Path(work)
     _seed_all(seed)
     out = Path(out_dir)
@@ -180,7 +183,8 @@ def build(work, out_dir, model_path="/tmp/scene_cache_model", seed=20261015):
                 cameras_sha256=sha256(out / "cams.npz"),
                 rng_before=rng_before, rng_after=rng_after,
                 torch_version=str(torch.__version__),
-                native_test_count=len(scene.getTestCameras()))
+                native_test_count=len(scene.getTestCameras()),
+                precision='fp32', matmul_TF32=False, cudnn_TF32=False)
     meta["build_total_seconds"] = time.perf_counter() - began
     (out / "meta.json").write_text(json.dumps(meta, indent=2))
     (out / "_status.json").write_text(json.dumps(dict(status="built")))

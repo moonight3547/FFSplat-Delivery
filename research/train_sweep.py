@@ -183,6 +183,8 @@ def main(argv=None):
                         help="first iteration applying --lpips_weight (Codex VGG100: 4901)")
     parser.add_argument("--lpips_end", type=int, default=10**9,
                         help="last iteration applying --lpips_weight (inclusive)")
+    parser.add_argument('--lpips_render_mult', type=float, choices=(.5, 1.), default=None,
+                        help='optional historical T render for VGG only; None reuses the photometric render')
     # ---- optional staged continuation after the phase-1 delivery run (~S=5000).
     # Defaults keep phase 1 byte-identical to the delivery recipe; the stages only
     # run when the caller opts in.  See records/STAGED-LOSS-20261030.md.
@@ -485,6 +487,7 @@ def main(argv=None):
     init_s = time.perf_counter() - t0
 
     perceptual = None
+    lpips_extra_render_count = 0
     _need_perceptual = args.lpips_weight > 0 or (args.stage3_iters > 0
                                                  and args.stage3_lpips_weight > 0)
     if _need_perceptual:
@@ -689,7 +692,12 @@ def main(argv=None):
             loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim_value)
         if (perceptual is not None and args.lpips_start <= iteration <= args.lpips_end
                 and iteration % args.lpips_every == 0):
-            render_p, gt_p = image.unsqueeze(0), gt_image.unsqueeze(0)
+            from research.perceptual_render import image_for_perceptual
+            perceptual_image, extra = image_for_perceptual(
+                image, render_fastgs, viewpoint_cam, gaussians, pipe, background,
+                args.lpips_render_mult, opt.mult)
+            lpips_extra_render_count += int(extra)
+            render_p, gt_p = perceptual_image.unsqueeze(0), gt_image.unsqueeze(0)
             if args.lpips_scale != 1.0:
                 size = (max(32, int(round(render_p.shape[2] * args.lpips_scale))),
                         max(32, int(round(render_p.shape[3] * args.lpips_scale))))
@@ -1211,7 +1219,8 @@ def main(argv=None):
                       res_scales=scales, res_until=cuts,
                       lpips_weight=args.lpips_weight, lpips_every=args.lpips_every,
                       lpips_scale=args.lpips_scale, lpips_start=args.lpips_start,
-                      lpips_end=args.lpips_end, grad_abs_thresh=opt.grad_abs_thresh,
+                      lpips_end=args.lpips_end, lpips_render_mult=args.lpips_render_mult,
+                      lpips_extra_render_count=lpips_extra_render_count, grad_abs_thresh=opt.grad_abs_thresh,
                       stage2_iters=args.stage2_iters, stage2_cams=args.stage2_cams,
                       stage2_trainer=args.stage2_trainer,
                       stage2_absgrad_every=args.stage2_absgrad_every,

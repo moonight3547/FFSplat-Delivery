@@ -13,14 +13,19 @@ def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument('--record', required=True)
-    known, _ = parser.parse_known_args(argv)
+    parser.add_argument('--adam-backend', choices=('foreach', 'official'), default='foreach')
+    parser.add_argument('--adam-manifest', type=Path)
+    known, remaining = parser.parse_known_args(argv)
+    argv = [*remaining, '--record', known.record]
     if os.environ.get('FFSPLAT_OFFICIAL_ADAM') == '1' or '--fused_adam' in argv:
-        raise ValueError('Confirmed recipe requires PyTorch foreach Adam, fused=False')
+        raise ValueError('Use explicit Adam backend selection; legacy environment/fused switching is disabled')
     from research import train_sweep as trainer
     from research.perceptual_loss import load_perceptual, optimizer_clocks
     from research.vectorized_ply import save_ply_vectorized
+    from research.adam_backend import AdamBackend
     import lpips
     import torch
+    backend = AdamBackend(known.adam_backend, known.adam_manifest)
 
     if not trainer.FUSED_SSIM_AVAILABLE:
         raise RuntimeError('fused_ssim is required; refusing the silent SSIM=1 fallback')
@@ -52,11 +57,7 @@ def main(argv=None):
     setup, update, step, reset = (cls.training_setup, cls.update_learning_rate,
                                  cls.optimizer_step, cls.reset_opacity)
     def training_setup(model, options):
-        setup(model, options)
-        for optimizer in (model.optimizer, model.shoptimizer):
-            optimizer.defaults.update(foreach=True, fused=False)
-            for group in optimizer.param_groups:
-                group.update(foreach=True, fused=False)
+        backend.training_setup(model, options, setup)
         state['models'].append(model)
     def update_lr(model, iteration):
         state['iteration'] = iteration
@@ -106,21 +107,22 @@ def main(argv=None):
         return model
     patch(lpips, 'LPIPS', perceptual)
     try:
+        backend.__enter__()
         if '--no_quick_test' not in argv:
             argv.append('--no_quick_test')
         record = trainer.main(argv)
         torch.cuda.synchronize()
         model, = state['models']
-        optimizer_flags = [dict(name=g['name'], foreach=g['foreach'], fused=g['fused'])
+        optimizer_flags = [dict(name=g['name'], foreach=g.get('foreach'), fused=g.get('fused'))
                            for o in (model.optimizer, model.shoptimizer) for g in o.param_groups]
-        if not all(g['foreach'] and not g['fused'] for g in optimizer_flags):
-            raise RuntimeError('Optimizer backend changed during training')
+        backend_proof = backend.audit(model)
         values = (torch.stack(state['vgg_values']).cpu().tolist()
                   if state['vgg_values'] else [])
         record['runtime_audit'] = dict(
             seed=state['seed'], seed_restored_after_safe_state=True,
             precision='fp32', matmul_tf32=False, cudnn_tf32=False,
-            optimizer='torch_adam_foreach', optimizer_groups=optimizer_flags,
+            optimizer=('torch_adam_foreach' if known.adam_backend == 'foreach' else 'official_faster_gs_adam'),
+            backend=backend_proof, optimizer_groups=optimizer_flags,
             optimizer_calls=state['optimizer_calls'], optimizer_clocks=optimizer_clocks(model),
             opacity_reset_steps=state['resets'], vgg_steps=state['vgg_steps'],
             vgg_values=values, perceptual=state.get('perceptual'),
@@ -130,6 +132,7 @@ def main(argv=None):
         Path(known.record).write_text(json.dumps(record, indent=2) + '\n')
         return record
     finally:
+        backend.__exit__(None, None, None)
         for obj, name, original in reversed(originals):
             setattr(obj, name, original)
 

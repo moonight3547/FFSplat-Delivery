@@ -1,0 +1,58 @@
+{
+  "passed": true,
+  "exact_input": {
+    "n_train": 169,
+    "images_maxdiff": 0.0,
+    "wvt_maxdiff": 0.0,
+    "fpt_maxdiff": 0.0,
+    "center_maxdiff": 0.0,
+    "fov_maxdiff": 0.0,
+    "rng_exact": true,
+    "names_exact": true,
+    "extent_exact": true,
+    "image_strides_exact": true,
+    "transforms_bitwise": true,
+    "pixels_bitwise": true,
+    "pixels_1ulp_or_better": true,
+    "identical": true,
+    "seed": 2,
+    "cached_load_timings": {
+      "read_meta_seconds": 0.0018895529210567474,
+      "open_npy_seconds": 0.5153369400650263,
+      "h2d_seconds": 0.05501432530581951,
+      "gpu_convert_seconds": 0.006509210914373398,
+      "build_cams_seconds": 0.008692529052495956,
+      "total_seconds": 0.5874425582587719
+    }
+  },
+  "isolated_load_benchmark": {
+    "reps": 3,
+    "full_seconds": [
+      1.387,
+      1.1763,
+      1.1762
+    ],
+    "cache_seconds": [
+      0.5972,
+      0.5875,
+      0.5922
+    ],
+    "mean_full": 1.2465,
+    "mean_cache": 0.5923,
+    "mean_saving": 0.6542
+  },
+  "process_walls": {
+    "native_scene": 17.50373860821128,
+    "cached_scene": 16.713923314586282
+  },
+  "main_and_density_sampling_exact": true,
+  "clocks_exact": true,
+  "source": {
+    "train_confirmed.py": "b7bef5884e07431dc0640ae06d50fa3cc4f90f8182b9e553b05ca412776d7ae4",
+    "train_sweep.py": "156f20bc77a80c1f92eba5810445908a238605197bf4764630c2486b86c4790e",
+    "scene_cache.py": "d633cf65193f764a59063235a85dd3b7ae5075e75868a96a34a85d2e558bb18b",
+    "cache_rng.py": "656e0efccc86ddc8d57c5a659cc3ea48243e0ba16eb3801ef50583f7c8921356",
+    "cache_integrity.py": "a6590f3fb3834ba6daaa8ae2060094150cba45e87b1221a057301deec580092c"
+  },
+  "scope": "600 TRAIN steps; shortened LR and VGG401..600; no TEST selection or quality score"
+}

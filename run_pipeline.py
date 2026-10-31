@@ -36,6 +36,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent
 DEFAULT_PROFILE = REPO / "competition/profiles/delivery.json"
 CHECKPOINT = os.environ.get("FFSPLAT_CHECKPOINT", str(REPO / "resplat/pretrained/resplat-base-dl3dv-540x960-view16-a72dc6d0.pth"))
+ADAM_MANIFEST = os.environ.get('FFSPLAT_ADAM_MANIFEST', str(REPO / '.runtime/official-adam/manifest.json'))
 BASE = REPO / "competition/upstream/baseline"
 
 
@@ -79,10 +80,21 @@ def code_identity(root=REPO):
              'research/reference_native.py', 'research/vectorized_ply.py',
              'research/perceptual_loss.py', 'research/resplat_variant.py',
              'research/stage1_prepare_parallel.py', 'research/scene_cache.py',
-             'research/image_cache.py', 'research/cache_rng.py', 'research/cache_integrity.py']
+             'research/image_cache.py', 'research/cache_rng.py', 'research/cache_integrity.py',
+             'research/adam_backend.py', 'research/perceptual_render.py']
     return dict(git_commit=commit,
                 source_sha256={name: hashlib.sha256((root / name).read_bytes()).hexdigest()
                                for name in files if (root / name).is_file()})
+
+
+def verify_checkpoint(path):
+    from research.cache_integrity import sha256
+    path = Path(path)
+    expected = read(REPO / 'competition/upstream-lock.json')['observed_checkpoint_sha256']
+    actual = sha256(path)
+    if actual != expected:
+        raise ValueError('ReSplat checkpoint differs from the pinned original weights')
+    return dict(path=str(path.resolve()), sha256=actual, bytes=path.stat().st_size)
 
 
 def recipe_flags(args):
@@ -96,6 +108,8 @@ def recipe_flags(args):
         flags += ['--lpips_weight', '0.1', '--lpips_scale', '1.0',
                   '--lpips_start', str(args.b_iterations - args.vgg_tail + 1),
                   '--lpips_end', str(args.b_iterations)]
+        if getattr(args, 'vgg_render_mult', None) is not None:
+            flags += ['--lpips_render_mult', str(args.vgg_render_mult)]
     return flags
 
 
@@ -112,14 +126,17 @@ def b_command(runner, args, work, results, init_ply, budget=None, prune_keep=1.0
         else 'research.train_sweep', '--source', work, '--model_path', results / 'module_b',
         '--eval', '-r', '1', '--sh_degree', '3', '--quiet', '--init_ply', init_ply,
         '--iterations', args.b_iterations, '--position_lr_max_steps', args.b_iterations,
-        '--opacity_reset_interval', '0', '--densify_from_iter', max(20, args.b_iterations // 10),
+        '--opacity_reset_interval', '0', '--densify_from_iter',
+        max(20, args.b_iterations // 10) if args.preset == 'legacy' else 500,
         *recipe_flags(args), '--lambda_dssim', '0.6', '--scaling_lr', '0.01',
         '--realloc_frac', args.realloc_frac, '--realloc_at', max(1, args.b_iterations // 4),
         '--record', results / 'module_b/train_record.json')
     if getattr(args, 'image_cache_used', True) and not args.scene_cache:
         command += ['--image_cache', str(work / 'image_cache')]
     if args.preset == 'confirmed':
-        command += ['--seed', str(args.seed), '--no_quick_test']
+        command += ['--seed', str(args.seed), '--no_quick_test', '--adam-backend', args.adam_backend]
+        if args.adam_backend == 'official':
+            command += ['--adam-manifest', str(args.adam_manifest)]
     if args.b_fraction is not None:
         command += ['--limit_seconds', str(args.b_fraction * budget) if budget else '<budget*fraction>']
     if args.scene_cache:
@@ -141,6 +158,8 @@ def validate_completion(args, record):
             or audit['optimizer_calls'] != args.b_iterations
             or audit['vgg_steps'] != expected_vgg):
         raise RuntimeError('Incomplete confirmed recipe; no valid score may be reported')
+    if getattr(args, 'adam_backend', None) is not None and audit['backend']['actual'] != args.adam_backend:
+        raise RuntimeError('Requested optimizer backend differs from the actual backend')
 
 
 class Runner:
@@ -190,6 +209,12 @@ def main(argv=None):
     parser.add_argument('--describe', action='store_true', help='print resolved B command, without running')
     parser.add_argument('--a-workers', type=int, choices=(1, 4, 8), default=None,
                         help='pixel-identical image preparation workers; confirmed=4, legacy=1')
+    parser.add_argument('--adam-backend', choices=('foreach', 'official'), default=None,
+                        help='confirmed default official; explicit foreach reproduces the prior backend')
+    parser.add_argument('--adam-manifest', type=Path, default=Path(ADAM_MANIFEST),
+                        help='pinned isolated installation manifest for official Adam')
+    parser.add_argument('--vgg-render-mult', type=float, choices=(.5, 1.), default=None,
+                        help='optional historical T branch; default reuses the photometric render')
     parser.add_argument("--group", default="auto", choices=["auto", "dl3dv", "hw", "mipnerf360"],
                         help="dataset family; auto-detected from the scene path")
     parser.add_argument("--checkpoint", default=CHECKPOINT)
@@ -220,10 +245,10 @@ def main(argv=None):
     parser.add_argument("--num-refine", type=int, default=2)
     parser.add_argument("--context-policy", default="uniform", choices=["uniform"],
                         help="16-view policy; uniform is the organizer baseline")
-    parser.add_argument("--scene-cache", action="store_true", dest="scene_cache",
+    parser.add_argument("--scene-cache", action=argparse.BooleanOptionalAction, default=None, dest="scene_cache",
                         help="build/consume the A-side tensor scene cache (user-approved "
                              "data residency): one B-side upload, no PNG/PIL/camera-matrix "
-                             "recomputation. Default off preserves the measured recipe.")
+                             "recomputation. Exact v3 cache defaults on for confirmed; --no-scene-cache disables it.")
     # ---- optional M1 mid-training prune, gated pre-module-B on TRAIN views only.
     # See records/M1-GATE-20261030.md.  Default off so the measured 51.153
     # delivery recipe stays the default and reproducible.
@@ -244,6 +269,12 @@ def main(argv=None):
     legacy = args.preset == 'legacy'
     if args.a_workers is None:
         args.a_workers = 1 if legacy else 4
+    if args.adam_backend is None:
+        args.adam_backend = 'foreach' if legacy else 'official'
+    if args.scene_cache is None:
+        args.scene_cache = not legacy
+    if legacy and args.adam_backend != 'foreach':
+        parser.error('legacy uses its unchanged backend; official Adam belongs to confirmed mode')
     if args.b_recipe is None:
         args.b_recipe = 'delivery' if legacy else 'bigd3500'
     if args.vgg_tail is None:
@@ -267,6 +298,7 @@ def main(argv=None):
         plan = dict(preset=args.preset, b_recipe=args.b_recipe, vgg_tail=args.vgg_tail,
                     realloc_frac=args.realloc_frac, seed=args.seed,
                     a_workers=args.a_workers,
+                    adam_backend=args.adam_backend, adam_manifest=str(args.adam_manifest),
                     module_a_argv=a_command(Runner(args.profile), args, args.group, out / 'work'),
                     timing_scope='internal' if legacy else 'complete_B_process',
                     module_b_argv=b_command(Runner(args.profile), args, out / 'work',
@@ -274,8 +306,13 @@ def main(argv=None):
         print(json.dumps(plan, indent=2))
         return plan
 
+    if args.adam_backend == 'official' and not args.adam_manifest.is_file():
+        parser.error('official Adam installation manifest not found; run research.install_official_adam '
+                     'or explicitly pass --adam-backend foreach')
+
     if not args.scene.is_dir():
         raise SystemExit(f"scene directory not found: {args.scene}")
+    checkpoint_identity = verify_checkpoint(args.checkpoint)
     group = args.group
     if group == "auto":
         text = str(args.scene).lower()
@@ -299,6 +336,8 @@ def main(argv=None):
                     mid_prune_keep=args.mid_prune_keep,
                     preset=args.preset, realloc_frac=args.realloc_frac, seed=args.seed if not legacy else 0,
                     a_workers=args.a_workers,
+                    adam_backend=args.adam_backend, adam_manifest=str(args.adam_manifest),
+                    checkpoint_identity=checkpoint_identity,
                     timing_scope='internal' if legacy else 'complete_B_process', **code_identity())
     start_all = time.perf_counter()
 

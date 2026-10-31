@@ -1,0 +1,281 @@
+{
+  "passed": true,
+  "models": 12,
+  "official_models": 6,
+  "control_models": 6,
+  "canonical": "/Users/moonightxu/Documents/Projects/Hackathon/FFSplat-Delivery-OfficialAdam/private/archives/h3-official-adam-composite-20261031",
+  "core_source_SHA": {
+    "research/train_sweep.py": "8f41ad5796ee03b5df089fd7736746c4ac09a4fa550b1427b15d7473726f6946",
+    "research/train_confirmed.py": "2e86df0f2c19fe14c70d1e8f1f7b7f1ec0f83aad3ce054f5df7b39b6b751333e",
+    "research/perceptual_loss.py": "0246319c1b2a0ef7fc44046c7dcb85a2a0f0dedba5112f50e7d6732a80398eda",
+    "research/vectorized_ply.py": "4c7be9551475d91ae4d753e3ac585872c039b69bec6d93f754dea0ff4c78a404",
+    "research/reference_native.py": "0f147d7355ab31830928add9fa7ddcf94b43ab5e9393a873df3636c89ff2a7b6",
+    "competition/upstream/baseline/fastgs/scene/gaussian_model.py": "1797a5e71d831beac0d1d0d8d0968c4348814612d8314c94034edb10d6b0ce70",
+    "competition/upstream/baseline/fastgs/gaussian_renderer/__init__.py": "aa93bf9bead11b2715c8ee598e985e95d2aae58d0b1f5d1c1c8615bf18a07afe",
+    "competition/upstream/baseline/fastgs/utils/general_utils.py": "6df9a3b7d5fec9538bd51aedd92f51c2c02ef33378c9647d6f1a51fc9b10ae03"
+  },
+  "original_AST": {
+    "unique_insertions": 1,
+    "removed_insertion_restores_original_AST": true,
+    "inserted_statement": "viewpoint_cam = _official_trial_master(iteration, viewpoint_cam, cams_by_scale[scale])",
+    "original_AST_SHA": "7f198900f1f8d240ab15bdedc6a4b46cce02a28cde85bc985f3b826fcbd8ce0e",
+    "modified_AST_SHA": "84a85b7a95be65064fc5ed51a28cc18976b4ffaa0773f126d0a5853db6d5534f",
+    "native_random_pop_retained": true,
+    "density_scoring_untouched": true
+  },
+  "native_PLY": {
+    "dl3e": {
+      "points": 292498,
+      "properties": 62,
+      "all_attributes_finite": true,
+      "SHA": "39ea1f24b03996d6c64f08fb6a6e6f06a05a06e1ad302b93ea973ae28c6a3583",
+      "bytes": 72541035
+    },
+    "dl0b": {
+      "points": 286840,
+      "properties": 62,
+      "all_attributes_finite": true,
+      "SHA": "16af035c5a859299c6421aba4c5e6f84da1bb22b95d341751dab725eaf63dcd4",
+      "bytes": 71137851
+    },
+    "bicycle": {
+      "points": 767854,
+      "properties": 62,
+      "all_attributes_finite": true,
+      "SHA": "8bd39ef957322d94209ca901d122c3ef41dea11b9fabbf63b1f90745a14e9d10",
+      "bytes": 190429323
+    }
+  },
+  "model_checks": [
+    {
+      "case": "dl3e",
+      "seed": 2,
+      "backend": "foreach",
+      "PLY": {
+        "points": 906581,
+        "properties": 62,
+        "all_attributes_finite": true,
+        "SHA": "e98f382e02431c7937c154a926f9ee8955b0179523bdfd7faffd7da26102f702",
+        "bytes": 224833619
+      },
+      "PNG_verified": 78,
+      "actual_backend_and_clocks": true,
+      "actual_weight_and_VGG200": true,
+      "paired_master": true
+    },
+    {
+      "case": "dl0b",
+      "seed": 2,
+      "backend": "foreach",
+      "PLY": {
+        "points": 1063322,
+        "properties": 62,
+        "all_attributes_finite": true,
+        "SHA": "741cdaf2b0cb5949f6f959473adf802ee02048f6f2f7a49312f131f663d4d37e",
+        "bytes": 263705388
+      },
+      "PNG_verified": 96,
+      "actual_backend_and_clocks": true,
+      "actual_weight_and_VGG200": true,
+      "paired_master": true
+    },
+    {
+      "case": "bicycle",
+      "seed": 2,
+      "backend": "foreach",
+      "PLY": {
+        "points": 1651847,
+        "properties": 62,
+        "all_attributes_finite": true,
+        "SHA": "32c559f87f5fb23ea8544b80a281917eef4de8c32073287f7b76ea4dc73d164b",
+        "bytes": 409659588
+      },
+      "PNG_verified": 50,
+      "actual_backend_and_clocks": true,
+      "actual_weight_and_VGG200": true,
+      "paired_master": true
+    },
+    {
+      "case": "dl3e",
+      "seed": 2,
+      "backend": "official",
+      "PLY": {
+        "points": 901213,
+        "properties": 62,
+        "all_attributes_finite": true,
+        "SHA": "6b81ff39153d6aef7919eccf7fae522e0b6c2eb31803900a34ed714f2c19ebe0",
+        "bytes": 223502355
+      },
+      "PNG_verified": 78,
+      "actual_backend_and_clocks": true,
+      "actual_weight_and_VGG200": true,
+      "paired_master": true
+    },
+    {
+      "case": "dl0b",
+      "seed": 2,
+      "backend": "official",
+      "PLY": {
+        "points": 1053399,
+        "properties": 62,
+        "all_attributes_finite": true,
+        "SHA": "ed146fcaf9da799a92e7154998482a63b2b3f2cd43665da4b36f59e48389867c",
+        "bytes": 261244484
+      },
+      "PNG_verified": 96,
+      "actual_backend_and_clocks": true,
+      "actual_weight_and_VGG200": true,
+      "paired_master": true
+    },
+    {
+      "case": "bicycle",
+      "seed": 2,
+      "backend": "official",
+      "PLY": {
+        "points": 1655596,
+        "properties": 62,
+        "all_attributes_finite": true,
+        "SHA": "c3707a8e235b840fb4420ef21a296ac52b3262af90ca8db8524c97791c33e5e2",
+        "bytes": 410589340
+      },
+      "PNG_verified": 50,
+      "actual_backend_and_clocks": true,
+      "actual_weight_and_VGG200": true,
+      "paired_master": true
+    },
+    {
+      "case": "dl3e",
+      "seed": 3,
+      "backend": "official",
+      "PLY": {
+        "points": 911503,
+        "properties": 62,
+        "all_attributes_finite": true,
+        "SHA": "8c2d06943ec3c1c11252915a5a0e38bafb00e555b8df13e358dc389462ddae28",
+        "bytes": 226054275
+      },
+      "PNG_verified": 78,
+      "actual_backend_and_clocks": true,
+      "actual_weight_and_VGG200": true,
+      "paired_master": true
+    },
+    {
+      "case": "dl0b",
+      "seed": 3,
+      "backend": "official",
+      "PLY": {
+        "points": 1047601,
+        "properties": 62,
+        "all_attributes_finite": true,
+        "SHA": "bfdc1ee881f1e03855570d9cbecb20cd209cdabdfd19134187a6fc520e515e30",
+        "bytes": 259806580
+      },
+      "PNG_verified": 96,
+      "actual_backend_and_clocks": true,
+      "actual_weight_and_VGG200": true,
+      "paired_master": true
+    },
+    {
+      "case": "bicycle",
+      "seed": 3,
+      "backend": "official",
+      "PLY": {
+        "points": 1560267,
+        "properties": 62,
+        "all_attributes_finite": true,
+        "SHA": "483ccece2fe91d307b24766be4bec69247e88065efe1c74e49f2dd75b88e4f2a",
+        "bytes": 386947748
+      },
+      "PNG_verified": 50,
+      "actual_backend_and_clocks": true,
+      "actual_weight_and_VGG200": true,
+      "paired_master": true
+    },
+    {
+      "case": "dl3e",
+      "seed": 3,
+      "backend": "foreach",
+      "PLY": {
+        "points": 910896,
+        "properties": 62,
+        "all_attributes_finite": true,
+        "SHA": "089d1b5b767947e297ab944d971f3c9ab7e7a6f22a778b90c32aba2e63e6e51d",
+        "bytes": 225903739
+      },
+      "PNG_verified": 78,
+      "actual_backend_and_clocks": true,
+      "actual_weight_and_VGG200": true,
+      "paired_master": true
+    },
+    {
+      "case": "dl0b",
+      "seed": 3,
+      "backend": "foreach",
+      "PLY": {
+        "points": 1055562,
+        "properties": 62,
+        "all_attributes_finite": true,
+        "SHA": "2b600ad028b7201e96ee34b4efeb9cd3e7d957e13630362ed2b4cf569c460459",
+        "bytes": 261780908
+      },
+      "PNG_verified": 96,
+      "actual_backend_and_clocks": true,
+      "actual_weight_and_VGG200": true,
+      "paired_master": true
+    },
+    {
+      "case": "bicycle",
+      "seed": 3,
+      "backend": "foreach",
+      "PLY": {
+        "points": 1558692,
+        "properties": 62,
+        "all_attributes_finite": true,
+        "SHA": "d274f0b19bc0712812847032ea58a72e4698b289aa604339ae5e5caf041e3803",
+        "bytes": 386557148
+      },
+      "PNG_verified": 50,
+      "actual_backend_and_clocks": true,
+      "actual_weight_and_VGG200": true,
+      "paired_master": true
+    }
+  ],
+  "native_concurrency": {
+    "simultaneous_processes": 3,
+    "common_overlap_seconds": 112.81946396827698,
+    "overlap_fraction_of_shortest": 1.0,
+    "start_spread_seconds": 0.00012302398681640625
+  },
+  "candidate_wave_concurrency": {
+    "wave01": {
+      "simultaneous_processes": 3,
+      "common_overlap_seconds": 48.812922954559326,
+      "overlap_fraction_of_shortest": 0.9999531907420314,
+      "start_spread_seconds": 0.002285003662109375
+    },
+    "wave02": {
+      "simultaneous_processes": 3,
+      "common_overlap_seconds": 45.35535502433777,
+      "overlap_fraction_of_shortest": 0.9999808818210372,
+      "start_spread_seconds": 0.0008671283721923828
+    },
+    "wave03": {
+      "simultaneous_processes": 3,
+      "common_overlap_seconds": 44.66272807121277,
+      "overlap_fraction_of_shortest": 1.0,
+      "start_spread_seconds": 0.0011749267578125
+    },
+    "wave04": {
+      "simultaneous_processes": 3,
+      "common_overlap_seconds": 47.81998682022095,
+      "overlap_fraction_of_shortest": 0.9999818073231392,
+      "start_spread_seconds": 0.0011110305786132812
+    }
+  },
+  "independent_audit_source_SHA": "d308b54e92df797dc3408ffaf76cbe50ebb5be914a06cf73262f7acda637e141",
+  "all_inputs_before_after_equal": true,
+  "AST_hash_schema": "Python3.12 including empty type_params; normalized from Python3.9 without altering nodes",
+  "native_exact_file_directory_set_and_all_SHA_bytes": true,
+  "native_source_manifest_SHA": "050028bd3df0ec73d6be0b53c7135e3bc81ddf74d2380580533460632a29f7e8",
+  "official_score_100": null
+}

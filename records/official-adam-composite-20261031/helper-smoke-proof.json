@@ -1,0 +1,270 @@
+{
+  "passed": true,
+  "rows": [
+    {
+      "backend": "foreach",
+      "actual_clocks": {
+        "optimizer/xyz": 599.0,
+        "optimizer/f_dc": 599.0,
+        "optimizer/opacity": 599.0,
+        "optimizer/scaling": 599.0,
+        "optimizer/rotation": 599.0,
+        "shoptimizer/f_rest": 37.0
+      },
+      "calls": {
+        "official_kernel": 0,
+        "_multi_tensor_adam": 3037,
+        "_single_tensor_adam": 0,
+        "_fused_adam": 0
+      },
+      "identity": {
+        "requested": "foreach",
+        "actual": "foreach",
+        "actual_class": "Adam",
+        "actual_module": "torch.optim.adam",
+        "class_file": "/opt/conda/envs/fastgs/lib/python3.12/site-packages/torch/optim/adam.py",
+        "class_SHA": "e65c27d66e66a4dddd2b96816999a2025a58fff196ffce9f20a32492b1c7341a",
+        "extension_file": null,
+        "extension_SHA": null,
+        "official_source_commit": null,
+        "Torch": "2.4.0+cu124",
+        "CUDA": "12.4",
+        "ABI": false,
+        "calls": {
+          "official_kernel": 0,
+          "_multi_tensor_adam": 3037,
+          "_single_tensor_adam": 0,
+          "_fused_adam": 0
+        },
+        "groups": {
+          "optimizer/xyz": {
+            "lr": 0.00045763537656386393,
+            "eps": 1e-15,
+            "betas": [
+              0.9,
+              0.999
+            ],
+            "foreach": true,
+            "fused": false,
+            "state_step": 599.0,
+            "parameter_dtype": "torch.float32",
+            "parameter_device": "cuda:0"
+          },
+          "optimizer/f_dc": {
+            "lr": 0.0025,
+            "eps": 1e-15,
+            "betas": [
+              0.9,
+              0.999
+            ],
+            "foreach": true,
+            "fused": false,
+            "state_step": 599.0,
+            "parameter_dtype": "torch.float32",
+            "parameter_device": "cuda:0"
+          },
+          "optimizer/opacity": {
+            "lr": 0.025,
+            "eps": 1e-15,
+            "betas": [
+              0.9,
+              0.999
+            ],
+            "foreach": true,
+            "fused": false,
+            "state_step": 599.0,
+            "parameter_dtype": "torch.float32",
+            "parameter_device": "cuda:0"
+          },
+          "optimizer/scaling": {
+            "lr": 0.01,
+            "eps": 1e-15,
+            "betas": [
+              0.9,
+              0.999
+            ],
+            "foreach": true,
+            "fused": false,
+            "state_step": 599.0,
+            "parameter_dtype": "torch.float32",
+            "parameter_device": "cuda:0"
+          },
+          "optimizer/rotation": {
+            "lr": 0.001,
+            "eps": 1e-15,
+            "betas": [
+              0.9,
+              0.999
+            ],
+            "foreach": true,
+            "fused": false,
+            "state_step": 599.0,
+            "parameter_dtype": "torch.float32",
+            "parameter_device": "cuda:0"
+          },
+          "shoptimizer/f_rest": {
+            "lr": 0.00025,
+            "eps": 1e-15,
+            "betas": [
+              0.9,
+              0.999
+            ],
+            "foreach": true,
+            "fused": false,
+            "state_step": 37.0,
+            "parameter_dtype": "torch.float32",
+            "parameter_device": "cuda:0"
+          }
+        },
+        "optimizer_rebuilt": false,
+        "model_parameters_replaced_by_backend": false,
+        "schedule_or_gradient_accumulation_modified": false,
+        "explicit_foreach_fallback_available": true,
+        "passed": true,
+        "TRAIN_only": true,
+        "iterations": 600,
+        "VGG_updates": 200
+      },
+      "helper_audit_SHA": "5127c230977fd1145180c917ea224d3b03c6465677cbd347ab6413c4882577f1"
+    },
+    {
+      "backend": "official",
+      "actual_clocks": {
+        "optimizer/xyz": 599.0,
+        "optimizer/f_dc": 599.0,
+        "optimizer/opacity": 599.0,
+        "optimizer/scaling": 599.0,
+        "optimizer/rotation": 599.0,
+        "shoptimizer/f_rest": 37.0
+      },
+      "calls": {
+        "official_kernel": 3032,
+        "_multi_tensor_adam": 0,
+        "_single_tensor_adam": 0,
+        "_fused_adam": 0
+      },
+      "identity": {
+        "requested": "official",
+        "actual": "official",
+        "actual_class": "FusedAdam",
+        "actual_module": "FasterGSCudaBackend.torch_bindings.adam",
+        "class_file": "/root/gpufree-data/codex/official-adam-production-helper-20261031-v2/site/FasterGSCudaBackend/torch_bindings/adam.py",
+        "class_SHA": "9ea0b47233f08dbf318bb60e693e3f5417d45f9c6107a7e4cdf5e3db60601ea6",
+        "extension_file": "/root/gpufree-data/codex/official-adam-production-helper-20261031-v2/site/FasterGSCudaBackend/_C.cpython-312-x86_64-linux-gnu.so",
+        "extension_SHA": "11e8598319e903fc59f9cd4d3a9f409a846012a47dd22bd724a42f969dda0f92",
+        "official_source_commit": "d23bb784d8f19b2432d847b80418d56f0494f599",
+        "official_source": "/root/gpufree-data/codex/official-adam-production-helper-20261031-v2/official",
+        "CUDA_source_SHA": "f7fed10a3d9f97b7392797272bff83d069e7e6a1d78c5e1725ec5726201ab237",
+        "install_manifest_SHA": "65ba2b6a9735cebb21e8f6d6ecb89e87748855f30f754a2d988ca86b8fd61dbf",
+        "build_flags": [
+          "-O3",
+          "-use_fast_math",
+          "-std=c++17",
+          "TORCH_CUDA_ARCH_LIST=8.6"
+        ],
+        "numerical_bitwise_equivalence_claim": false,
+        "Torch": "2.4.0+cu124",
+        "CUDA": "12.4",
+        "ABI": false,
+        "calls": {
+          "official_kernel": 3032,
+          "_multi_tensor_adam": 0,
+          "_single_tensor_adam": 0,
+          "_fused_adam": 0
+        },
+        "groups": {
+          "optimizer/xyz": {
+            "lr": 0.00045763537656386393,
+            "eps": 1e-15,
+            "betas": [
+              0.9,
+              0.999
+            ],
+            "foreach": null,
+            "fused": null,
+            "state_step": 599.0,
+            "parameter_dtype": "torch.float32",
+            "parameter_device": "cuda:0"
+          },
+          "optimizer/f_dc": {
+            "lr": 0.0025,
+            "eps": 1e-15,
+            "betas": [
+              0.9,
+              0.999
+            ],
+            "foreach": null,
+            "fused": null,
+            "state_step": 599.0,
+            "parameter_dtype": "torch.float32",
+            "parameter_device": "cuda:0"
+          },
+          "optimizer/opacity": {
+            "lr": 0.025,
+            "eps": 1e-15,
+            "betas": [
+              0.9,
+              0.999
+            ],
+            "foreach": null,
+            "fused": null,
+            "state_step": 599.0,
+            "parameter_dtype": "torch.float32",
+            "parameter_device": "cuda:0"
+          },
+          "optimizer/scaling": {
+            "lr": 0.01,
+            "eps": 1e-15,
+            "betas": [
+              0.9,
+              0.999
+            ],
+            "foreach": null,
+            "fused": null,
+            "state_step": 599.0,
+            "parameter_dtype": "torch.float32",
+            "parameter_device": "cuda:0"
+          },
+          "optimizer/rotation": {
+            "lr": 0.001,
+            "eps": 1e-15,
+            "betas": [
+              0.9,
+              0.999
+            ],
+            "foreach": null,
+            "fused": null,
+            "state_step": 599.0,
+            "parameter_dtype": "torch.float32",
+            "parameter_device": "cuda:0"
+          },
+          "shoptimizer/f_rest": {
+            "lr": 0.00025,
+            "eps": 1e-15,
+            "betas": [
+              0.9,
+              0.999
+            ],
+            "foreach": null,
+            "fused": null,
+            "state_step": 37.0,
+            "parameter_dtype": "torch.float32",
+            "parameter_device": "cuda:0"
+          }
+        },
+        "optimizer_rebuilt": false,
+        "model_parameters_replaced_by_backend": false,
+        "schedule_or_gradient_accumulation_modified": false,
+        "explicit_foreach_fallback_available": true,
+        "passed": true,
+        "TRAIN_only": true,
+        "iterations": 600,
+        "VGG_updates": 200
+      },
+      "helper_audit_SHA": "00634440cad0b9f327816904b97c4553743dc859e12efcc3ec7a4fc0a00b6323"
+    }
+  ],
+  "manifest_SHA": "65ba2b6a9735cebb21e8f6d6ecb89e87748855f30f754a2d988ca86b8fd61dbf",
+  "scope": "TRAIN600 integration only; no TEST/PLY/full-B performance claim",
+  "formal_grid_replayed": false
+}

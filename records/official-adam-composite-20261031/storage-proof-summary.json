@@ -1,0 +1,70 @@
+{
+  "passed": true,
+  "waves": [
+    {
+      "wave": "wave01",
+      "canonical_root": "/Users/moonightxu/Documents/Projects/Hackathon/FFSplat-Delivery-OfficialAdam/private/archives/h3-official-adam-composite-20261031/wave01",
+      "files": 276,
+      "bytes": 1100886434,
+      "exact_file_and_directory_sets": true,
+      "target_all_SHA_bytes_reread": true,
+      "source_all_SHA_bytes_reread": true,
+      "no_open_FD_before_prune": true,
+      "removed_duplicate_PLY_PNG": 227,
+      "removed_bytes": 1098082979,
+      "canonical_index_SHA": "4ff4e8c92ab6ebf4ad8fbfe36ca58c3971ca2c455219e9113dbc4e43a0f43b96",
+      "source_small_evidence": "/root/delivery-official-adam-20261031/outputs/paired-v1/wave01"
+    },
+    {
+      "wave": "wave02",
+      "canonical_root": "/Users/moonightxu/Documents/Projects/Hackathon/FFSplat-Delivery-OfficialAdam/private/archives/h3-official-adam-composite-20261031/wave02",
+      "files": 270,
+      "bytes": 1098031249,
+      "exact_file_and_directory_sets": true,
+      "target_all_SHA_bytes_reread": true,
+      "source_all_SHA_bytes_reread": true,
+      "no_open_FD_before_prune": true,
+      "removed_duplicate_PLY_PNG": 227,
+      "removed_bytes": 1095251834,
+      "canonical_index_SHA": "985fd675f971142a1359bf8bf8fed403711608e5cb632aeabc2b200ea97663a0",
+      "source_small_evidence": "/root/delivery-official-adam-20261031/outputs/paired-v1/wave02"
+    },
+    {
+      "wave": "wave03",
+      "canonical_root": "/Users/moonightxu/Documents/Projects/Hackathon/FFSplat-Delivery-OfficialAdam/private/archives/h3-official-adam-composite-20261031/wave03",
+      "files": 270,
+      "bytes": 1075262533,
+      "exact_file_and_directory_sets": true,
+      "target_all_SHA_bytes_reread": true,
+      "source_all_SHA_bytes_reread": true,
+      "no_open_FD_before_prune": true,
+      "removed_duplicate_PLY_PNG": 227,
+      "removed_bytes": 1072483155,
+      "canonical_index_SHA": "6e689faf651e413cbbfd8072aca041addeab1538f7229318baa4e797c7c56a33",
+      "source_small_evidence": "/root/delivery-official-adam-20261031/outputs/paired-v1/wave03"
+    },
+    {
+      "wave": "wave04",
+      "canonical_root": "/Users/moonightxu/Documents/Projects/Hackathon/FFSplat-Delivery-OfficialAdam/private/archives/h3-official-adam-composite-20261031/wave04",
+      "files": 270,
+      "bytes": 1076647919,
+      "exact_file_and_directory_sets": true,
+      "target_all_SHA_bytes_reread": true,
+      "source_all_SHA_bytes_reread": true,
+      "no_open_FD_before_prune": true,
+      "removed_duplicate_PLY_PNG": 227,
+      "removed_bytes": 1073872660,
+      "canonical_index_SHA": "6b71431a5c16b35a082ce710a9f2ce641862134ef750447a214d277b0ea83aa0",
+      "source_small_evidence": "/root/delivery-official-adam-20261031/outputs/paired-v1/wave04"
+    }
+  ],
+  "total_files": 1086,
+  "total_bytes": 4350828135,
+  "total_removed_duplicate_files": 908,
+  "native_source_retained": "/root/gpufree-data/codex/official-adam-delivery-20261031/native-v1",
+  "native_Mac_copy": "private/native/native-v1",
+  "native_full_manifest_SHA": "050028bd3df0ec73d6be0b53c7135e3bc81ddf74d2380580533460632a29f7e8",
+  "old_VGG12_and_Delivery600_retained": true,
+  "Mac_cap_bytes": 10737418240,
+  "Mac_reserve_bytes": 107374182400
+}

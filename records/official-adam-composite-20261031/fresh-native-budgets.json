@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "cases": {
+    "dl3e": {
+      "passed": true,
+      "internal_B_seconds": 110.92,
+      "process_wall_seconds": 114.06069454364479,
+      "gpu_uuid": "GPU-5b12b7b3-a318-5173-abff-4ea2baf68b85",
+      "gpu": 0,
+      "measured_this_campaign": true,
+      "native_source_SHA": {
+        "research/train_sweep.py": "8f41ad5796ee03b5df089fd7736746c4ac09a4fa550b1427b15d7473726f6946",
+        "research/train_confirmed.py": "2e86df0f2c19fe14c70d1e8f1f7b7f1ec0f83aad3ce054f5df7b39b6b751333e",
+        "research/perceptual_loss.py": "0246319c1b2a0ef7fc44046c7dcb85a2a0f0dedba5112f50e7d6732a80398eda",
+        "research/vectorized_ply.py": "4c7be9551475d91ae4d753e3ac585872c039b69bec6d93f754dea0ff4c78a404",
+        "research/reference_native.py": "0f147d7355ab31830928add9fa7ddcf94b43ab5e9393a873df3636c89ff2a7b6",
+        "competition/upstream/baseline/fastgs/scene/gaussian_model.py": "1797a5e71d831beac0d1d0d8d0968c4348814612d8314c94034edb10d6b0ce70",
+        "competition/upstream/baseline/fastgs/gaussian_renderer/__init__.py": "aa93bf9bead11b2715c8ee598e985e95d2aae58d0b1f5d1c1c8615bf18a07afe",
+        "competition/upstream/baseline/fastgs/utils/general_utils.py": "6df9a3b7d5fec9538bd51aedd92f51c2c02ef33378c9647d6f1a51fc9b10ae03"
+      },
+      "no_image_cache": true,
+      "original_optimizer_and_PLY": true,
+      "random30K": true,
+      "original_last_step": true,
+      "parallel_case_count": 3,
+      "initial_points": 99964,
+      "final_PLY_SHA": "39ea1f24b03996d6c64f08fb6a6e6f06a05a06e1ad302b93ea973ae28c6a3583"
+    },
+    "dl0b": {
+      "passed": true,
+      "internal_B_seconds": 109.71,
+      "process_wall_seconds": 112.81945757009089,
+      "gpu_uuid": "GPU-633f7c59-0228-dc51-20f3-6f32ff6fc273",
+      "gpu": 1,
+      "measured_this_campaign": true,
+      "native_source_SHA": {
+        "research/train_sweep.py": "8f41ad5796ee03b5df089fd7736746c4ac09a4fa550b1427b15d7473726f6946",
+        "research/train_confirmed.py": "2e86df0f2c19fe14c70d1e8f1f7b7f1ec0f83aad3ce054f5df7b39b6b751333e",
+        "research/perceptual_loss.py": "0246319c1b2a0ef7fc44046c7dcb85a2a0f0dedba5112f50e7d6732a80398eda",
+        "research/vectorized_ply.py": "4c7be9551475d91ae4d753e3ac585872c039b69bec6d93f754dea0ff4c78a404",
+        "research/reference_native.py": "0f147d7355ab31830928add9fa7ddcf94b43ab5e9393a873df3636c89ff2a7b6",
+        "competition/upstream/baseline/fastgs/scene/gaussian_model.py": "1797a5e71d831beac0d1d0d8d0968c4348814612d8314c94034edb10d6b0ce70",
+        "competition/upstream/baseline/fastgs/gaussian_renderer/__init__.py": "aa93bf9bead11b2715c8ee598e985e95d2aae58d0b1f5d1c1c8615bf18a07afe",
+        "competition/upstream/baseline/fastgs/utils/general_utils.py": "6df9a3b7d5fec9538bd51aedd92f51c2c02ef33378c9647d6f1a51fc9b10ae03"
+      },
+      "no_image_cache": true,
+      "original_optimizer_and_PLY": true,
+      "random30K": true,
+      "original_last_step": true,
+      "parallel_case_count": 3,
+      "initial_points": 99900,
+      "final_PLY_SHA": "16af035c5a859299c6421aba4c5e6f84da1bb22b95d341751dab725eaf63dcd4"
+    },
+    "bicycle": {
+      "passed": true,
+      "internal_B_seconds": 127.44,
+      "process_wall_seconds": 130.49812982231379,
+      "gpu_uuid": "GPU-d66a7ede-7f93-4fa0-a4fa-70c39430c6ac",
+      "gpu": 3,
+      "measured_this_campaign": true,
+      "native_source_SHA": {
+        "research/train_sweep.py": "8f41ad5796ee03b5df089fd7736746c4ac09a4fa550b1427b15d7473726f6946",
+        "research/train_confirmed.py": "2e86df0f2c19fe14c70d1e8f1f7b7f1ec0f83aad3ce054f5df7b39b6b751333e",
+        "research/perceptual_loss.py": "0246319c1b2a0ef7fc44046c7dcb85a2a0f0dedba5112f50e7d6732a80398eda",
+        "research/vectorized_ply.py": "4c7be9551475d91ae4d753e3ac585872c039b69bec6d93f754dea0ff4c78a404",
+        "research/reference_native.py": "0f147d7355ab31830928add9fa7ddcf94b43ab5e9393a873df3636c89ff2a7b6",
+        "competition/upstream/baseline/fastgs/scene/gaussian_model.py": "1797a5e71d831beac0d1d0d8d0968c4348814612d8314c94034edb10d6b0ce70",
+        "competition/upstream/baseline/fastgs/gaussian_renderer/__init__.py": "aa93bf9bead11b2715c8ee598e985e95d2aae58d0b1f5d1c1c8615bf18a07afe",
+        "competition/upstream/baseline/fastgs/utils/general_utils.py": "6df9a3b7d5fec9538bd51aedd92f51c2c02ef33378c9647d6f1a51fc9b10ae03"
+      },
+      "no_image_cache": true,
+      "original_optimizer_and_PLY": true,
+      "random30K": true,
+      "original_last_step": true,
+      "parallel_case_count": 3,
+      "initial_points": 99879,
+      "final_PLY_SHA": "8bd39ef957322d94209ca901d122c3ef41dea11b9fabbf63b1f90745a14e9d10"
+    }
+  },
+  "concurrency": 3
+}

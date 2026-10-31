@@ -27,6 +27,8 @@ def test_confirmed_default_and_explicit_d4000_r15(tmp_path):
     argv = default['module_b_argv']
     assert default['b_recipe'] == 'bigd3500' and default['vgg_tail'] == 200
     assert default['realloc_frac'] == 0 and 'research.train_confirmed' in argv
+    assert default['adam_backend'] == 'official' and '--adam-manifest' in argv
+    assert '--scene_cache' in argv
     assert default['a_workers'] == 4 and 'research.stage1_prepare_parallel' in default['module_a_argv']
     for flag, value in [('--densify_until_iter', '3500'), ('--grad_abs_thresh', '0.0008'),
                         ('--lpips_start', '4801'), ('--lpips_end', '5000'),
@@ -54,7 +56,7 @@ def test_official_shaped_direct_b_defaults_match_pipeline(tmp_path):
     pipeline_args = plan(tmp_path)['module_b_argv']
     for flag in ('--iterations', '--position_lr_max_steps', '--densify_from_iter',
                  '--densify_until_iter', '--grad_abs_thresh', '--lambda_dssim',
-                 '--scaling_lr', '--realloc_frac', '--lpips_start', '--lpips_end', '--seed'):
+                 '--scaling_lr', '--realloc_frac', '--lpips_start', '--lpips_end', '--seed', '--adam-backend'):
         assert direct[direct.index(flag) + 1] == pipeline_args[pipeline_args.index(flag) + 1]
     assert direct[direct.index('--record') + 1] == 'model/train_record.json'
 
@@ -106,11 +108,13 @@ def test_full_process_b_and_reference_accounting(monkeypatch, tmp_path):
                 pipeline.write(out / 'results/module_b/train_record.json', dict(
                     completed_iterations=5000, stop_reason='iterations', total_seconds=20,
                     num_final_gaussians=10, runtime_audit=dict(optimizer_calls=5000,
-                    vgg_steps=list(range(4801, 5001)))))
+                    vgg_steps=list(range(4801, 5001)), backend=dict(actual='foreach'))))
             if name == 'metrics':
                 pipeline.write(out / 'results/module_b/metrics.json', dict(mean=dict(psnr=27, ssim=.85, lpips=.2)))
     monkeypatch.setattr(pipeline, 'Runner', Runner)
-    report = pipeline.main(['--scene', str(scene), '--output', str(out), '--mid-prune', 'auto'])
+    monkeypatch.setattr(pipeline, 'verify_checkpoint', lambda path: dict(path=str(path), sha256='test-identity'))
+    report = pipeline.main(['--scene', str(scene), '--output', str(out), '--mid-prune', 'auto',
+                            '--adam-backend', 'foreach'])
     assert report['budget_seconds'] == 120 and report['reference_internal_seconds'] == 90
     assert report['b_seconds'] == 45 and report['internal_b_seconds'] == 20
     assert report['proxy_score']['b_seconds'] == 45
@@ -141,6 +145,13 @@ def test_export_without_git_remains_identified(tmp_path):
     identity = pipeline.code_identity(tmp_path)
     assert identity['git_commit'] is None
     assert len(identity['source_sha256']['run_pipeline.py']) == 64
+
+
+def test_different_resplat_weights_cannot_be_run_as_the_original(tmp_path):
+    checkpoint = tmp_path / 'fake.pth'
+    checkpoint.write_bytes(b'different weights')
+    with pytest.raises(ValueError, match='pinned'):
+        pipeline.verify_checkpoint(checkpoint)
 
 
 @pytest.mark.parametrize('count', [0, 7])
