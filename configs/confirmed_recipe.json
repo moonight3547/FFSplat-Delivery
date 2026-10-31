@@ -1,0 +1,118 @@
+{
+  "recipe_id": "uniform16-resplat-fixed-big5k-d3500-vgg200-w01-foreach-vector-v1",
+  "status": "default enabled by user; verification scope tracked in docs/DELIVERY-REVIEW-20261031.md",
+  "confirmed_at_timezone": "Asia/Shanghai",
+  "date": "2026-10-31",
+  "module_A": {
+    "context_views": 16,
+    "selection": "uniform16",
+    "reference_frame": "keep the same verified original input reference and coordinate normalization; no new reference/scale change"
+  },
+  "module_R": {
+    "weights": "original resplat-base-dl3dv-540x960-view16-a72dc6d0.pth",
+    "num_refine": 2,
+    "SH_export": "corrected_basis",
+    "output": "world-frame standard PLY"
+  },
+  "module_B": {
+    "iterations": 5000,
+    "position_lr_max_steps": 5000,
+    "densify_from_iter": 500,
+    "densify_until_iter": 3500,
+    "densification_interval": 100,
+    "actual_density_iterations": "600..3400 inclusive;29 events",
+    "grad_abs_thresh": 0.0008,
+    "grad_thresh": 0.0002,
+    "dense": 0.001,
+    "loss_thresh": 0.1,
+    "mult": 0.5,
+    "lambda_dssim": 0.6,
+    "feature_lr": 0.0025,
+    "lowfeature_lr": 0.0025,
+    "highfeature_lr": 0.005,
+    "scaling_lr": 0.01,
+    "opacity_lr": 0.025,
+    "opacity_reset_interval": 5001,
+    "scheduled_opacity_resets": [],
+    "reallocation_fraction": 0,
+    "sh_degree": 3,
+    "SH_rest_update_interval": 16,
+    "SH_gradient_accumulation": "original semantics retained",
+    "optimizer": "torch Adam foreach explicitly enabled",
+    "optimizer_fused": false,
+    "lpips_net": "vgg",
+    "lpips_weight": 0.1,
+    "lpips_start": 4801,
+    "lpips_end": 5000,
+    "lpips_every": 1,
+    "lpips_scale": 1,
+    "precision": "float32",
+    "autocast": false,
+    "matmul_TF32": false,
+    "cudnn_TF32": false,
+    "train_view_sampling": "uniform random without replacement; frozen master sequence for paired research"
+  },
+  "engineering": {
+    "image_cache": "lossless pixel-equivalent",
+    "ply_writer": "lossless vectorized standard PLY",
+    "evaluation": "original official renderer, PSNR/SSIM/VGG-LPIPS; complete fixed TEST set"
+  },
+  "fixed_but_not_separately_proven_optimal": [
+    "lambda_dssim=.6",
+    "scaling_lr=.01",
+    "opacity_lr=.025",
+    "signed grad threshold=.0002",
+    "SH rest interval16",
+    "all other unchanged inherited learning rates and renderer settings"
+  ],
+  "not_included": [
+    "D4000: fresh VGG200 confirmation lower than D3500; retained for D3500/D4000 x r0/r15 follow-up",
+    "6k/7.5k/10k longer training",
+    "extraL1/border weighting",
+    "new A selection or B sampling",
+    "Faster-GS officialAdam unvalidated in this composite",
+    "opacity decay/LiteGS",
+    "global geometric scale or covariance calibration",
+    "skybox shell",
+    "gain/affine/Grid/PPISP",
+    "new SH cadence"
+  ],
+  "evidence": {
+    "weight_final_commit": "e7c26d8",
+    "density_frontier": "research/advisory/BIG_QUALITY_FRONTIER_RESULTS_20261031.md",
+    "engineering": "research/advisory/EXPERIMENT_RECORD_20261030_FINAL.md",
+    "source_repository": "https://github.com/moonight3547/FFSplat-Research"
+  },
+  "scope": {
+    "composite_cases": [
+      "bicycle",
+      "dl0b",
+      "dl3e"
+    ],
+    "seeds": [
+      2,
+      3
+    ],
+    "weight_grid_cells": 48,
+    "weight_grid_new_models": 36,
+    "weight_grid_reused_controls": 12,
+    "full13_unified_confirmation_complete": false,
+    "official_score_100": null
+  },
+  "paired_V200_vs_V100_at_weight01": {
+    "delta_PSNR": 0.025333,
+    "delta_SSIM": 0.000533,
+    "delta_LPIPS": -0.0056,
+    "delta_Q80": 1.182933,
+    "delta_B_internal_seconds": 3.444833,
+    "delta_B_only_work_proxy_internal": 0.512007,
+    "delta_B_only_work_proxy_process": 0.545683
+  },
+  "deployment": {
+    "preset": "confirmed",
+    "seed": 20261015,
+    "time_scope": "complete B process; optional TRAIN gate included",
+    "legacy_snapshot": "d7a375438955e7b515a057ae5cd89681c4afc8e4",
+    "full13_new_recipe_complete": false
+  }
+}

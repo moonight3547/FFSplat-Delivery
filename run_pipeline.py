@@ -16,7 +16,7 @@ What it does, in order, with every stage timed:
 3. **ReSplat** (resplat env): the pinned organizer entrypoint, 16 context views,
    ``num_refine=2``, unchanged weights.
 4. **module B** (fastgs env): our continuation trainer - no opacity resets,
-   wall-clock budgeted to ``--b-fraction`` of the reference, exact PLY export.
+   BigD3500, VGG200, FP32 foreach Adam, lossless vectorized PLY export.
 5. **render + metrics**: the organizer's own renderer and metric code.
 
 The report writes PSNR / SSIM / VGG-LPIPS, per-stage seconds, the measured
@@ -24,7 +24,9 @@ budget, the proxy /100 decomposition and the code/config identity. Nothing here
 reads held-out RGB during optimization.
 """
 import argparse
+import hashlib
 import json
+import math
 import os
 import subprocess
 import sys
@@ -47,6 +49,9 @@ def write(path, payload):
 
 
 def proxy(psnr, ssim, lpips, b_seconds, budget):
+    if (not all(math.isfinite(x) for x in (psnr, ssim, lpips, b_seconds, budget))
+            or budget <= 0 or b_seconds < 0):
+        raise ValueError('Metrics/times must be finite, with a positive reference budget')
     points = dict(psnr=20.0 * max(0.0, min(1.0, (psnr - 15.0) / 25.0)),
                   ssim=20.0 * max(0.0, min(1.0, (ssim - 0.70) / 0.25)),
                   lpips=40.0 * max(0.0, min(1.0, (0.25 - lpips) / 0.20)))
@@ -57,6 +62,74 @@ def proxy(psnr, ssim, lpips, b_seconds, budget):
     return dict(quality=quality, time=time_points, total=quality + time_points,
                 components=points, b_seconds=b_seconds, budget_seconds=budget,
                 valid=bool(budget) and b_seconds < budget)
+
+
+def code_identity(root=REPO):
+    """Archives without .git remain runnable and retain an auditable source identity."""
+    commit = None
+    if (root / '.git').exists():
+        try:
+            result = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=root,
+                                    text=True, capture_output=True)
+            if result.returncode == 0:
+                commit = result.stdout.strip()
+        except OSError:
+            pass
+    files = ['run_pipeline.py', 'research/train_sweep.py', 'research/train_confirmed.py',
+             'research/reference_native.py', 'research/vectorized_ply.py',
+             'research/perceptual_loss.py', 'research/resplat_variant.py']
+    return dict(git_commit=commit,
+                source_sha256={name: hashlib.sha256((root / name).read_bytes()).hexdigest()
+                               for name in files if (root / name).is_file()})
+
+
+def recipe_flags(args):
+    until = {'delivery': args.b_iterations // 4, 'bigd2500': args.b_iterations // 2,
+             'bigd3500': min(3500, args.b_iterations),
+             'bigd4000': min(4000, args.b_iterations)}[args.b_recipe]
+    flags = ['--densify_until_iter', str(max(1, until))]
+    if args.b_recipe != 'delivery':
+        flags += ['--densification_interval', '100', '--grad_abs_thresh', '0.0008']
+    if args.vgg_tail:
+        flags += ['--lpips_weight', '0.1', '--lpips_scale', '1.0',
+                  '--lpips_start', str(args.b_iterations - args.vgg_tail + 1),
+                  '--lpips_end', str(args.b_iterations)]
+    return flags
+
+
+def b_command(runner, args, work, results, init_ply, budget=None, prune_keep=1.0):
+    command = runner.conda(
+        'fastgs', '-m', 'research.train_confirmed' if args.preset == 'confirmed'
+        else 'research.train_sweep', '--source', work, '--model_path', results / 'module_b',
+        '--eval', '-r', '1', '--sh_degree', '3', '--quiet', '--init_ply', init_ply,
+        '--iterations', args.b_iterations, '--position_lr_max_steps', args.b_iterations,
+        '--opacity_reset_interval', '0', '--densify_from_iter', max(20, args.b_iterations // 10),
+        *recipe_flags(args), '--lambda_dssim', '0.6', '--scaling_lr', '0.01',
+        '--realloc_frac', args.realloc_frac, '--realloc_at', max(1, args.b_iterations // 4),
+        '--image_cache', work / 'image_cache', '--record', results / 'module_b/train_record.json')
+    if args.preset == 'confirmed':
+        command += ['--seed', str(args.seed), '--no_quick_test']
+    if args.b_fraction is not None:
+        command += ['--limit_seconds', str(args.b_fraction * budget) if budget else '<budget*fraction>']
+    if args.scene_cache:
+        command += ['--scene_cache', str(work / 'scene_tensor_cache')]
+    if prune_keep < 1.0:
+        command += ['--mid_prune_at', str(max(1, args.b_iterations // 4)),
+                    '--mid_prune_keep', str(prune_keep)]
+    return command
+
+
+def validate_completion(args, record):
+    if args.preset != 'confirmed':
+        return
+    audit = record['runtime_audit']
+    expected_vgg = (list(range(args.b_iterations - args.vgg_tail + 1, args.b_iterations + 1))
+                    if args.vgg_tail else [])
+    if (record['stop_reason'] != 'iterations'
+            or record['completed_iterations'] != args.b_iterations
+            or audit['optimizer_calls'] != args.b_iterations
+            or audit['vgg_steps'] != expected_vgg):
+        raise RuntimeError('Incomplete confirmed recipe; no valid score may be reported')
 
 
 class Runner:
@@ -87,6 +160,10 @@ def main(argv=None):
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--scene", type=Path, required=True, help="input scene directory")
     parser.add_argument("--output", type=Path, required=True, help="output directory (created)")
+    parser.add_argument('--preset', choices=('confirmed', 'legacy'), default='confirmed',
+                        help='confirmed: BigD3500/VGG200/r0; legacy: original d7a3754 defaults')
+    parser.add_argument('--seed', type=int, default=20261015)
+    parser.add_argument('--describe', action='store_true', help='print resolved B command, without running')
     parser.add_argument("--group", default="auto", choices=["auto", "dl3dv", "hw", "mipnerf360"],
                         help="dataset family; auto-detected from the scene path")
     parser.add_argument("--checkpoint", default=CHECKPOINT)
@@ -94,27 +171,26 @@ def main(argv=None):
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--budget-seconds", type=float, default=None,
                         help="skip the 30K reference and use this budget (grading-machine value)")
-    parser.add_argument("--realloc-frac", type=float, default=0.15, dest="realloc_frac",
+    parser.add_argument("--realloc-frac", type=float, default=None, dest="realloc_frac",
                         help="budget-preserving reallocation ratio (one shot at the end of the "
                              "structural window, iterations//4); the 13-case serial delivery "
                              "table (H1 outputs/scene13r15/results.jsonl, mean 49.599) was "
-                             "measured with 0.15 single-shot, so 15%% is the default")
+                             "measured with 0.15 single-shot. Confirmed default: 0; legacy: 0.15")
     parser.add_argument("--b-iterations", type=int, default=5000, dest="b_iterations",
                         help="module-B optimizer steps (matched-LR recipe; measured sweet spot)")
     parser.add_argument("--b-recipe", choices=("delivery", "bigd2500", "bigd3500", "bigd4000"),
-                        default="delivery", dest="b_recipe",
+                        default=None, dest="b_recipe",
                         help="delivery = 500->S/4 densification; bigd2500 = 500->S/2 "
                              "(19 events at S=5000); bigd3500 = 500->3500 (29 events); "
                              "bigd4000 = 500->4000 (34 events). Big recipes use interval "
-                             "100 and native grad_abs_thresh 0.0008. Default remains the "
-                             "measured delivery recipe until a full 13-case validation.")
-    parser.add_argument("--vgg-tail", type=int, default=0, choices=(0, 100, 200),
+                             "100 and native grad_abs_thresh 0.0008. Confirmed default: bigd3500.")
+    parser.add_argument("--vgg-tail", type=int, default=None, choices=(0, 100, 200),
                         dest="vgg_tail",
                         help="full-resolution VGG-LPIPS weight 0.1 in the LAST N of the "
                              "same B iterations (not a post-S continuation): 100 => 4901-5000, "
                              "200 => 4801-5000 at S=5000")
-    parser.add_argument("--b-fraction", type=float, default=0.5,
-                        help="hard safety cap: module-B wall clock as a fraction of the budget")
+    parser.add_argument("--b-fraction", type=float, default=None,
+                        help="optional training-loop cap; incomplete confirmed runs are rejected")
     parser.add_argument("--num-refine", type=int, default=2)
     parser.add_argument("--context-policy", default="uniform", choices=["uniform"],
                         help="16-view policy; uniform is the organizer baseline")
@@ -139,6 +215,35 @@ def main(argv=None):
                         help="kept Gaussian fraction when the gate fires")
     args = parser.parse_args(argv)
 
+    legacy = args.preset == 'legacy'
+    if args.b_recipe is None:
+        args.b_recipe = 'delivery' if legacy else 'bigd3500'
+    if args.vgg_tail is None:
+        args.vgg_tail = 0 if legacy else 200
+    if args.realloc_frac is None:
+        args.realloc_frac = 0.15 if legacy else 0.0
+    if legacy and args.b_fraction is None:
+        args.b_fraction = 0.5
+    if args.b_iterations <= 0 or args.vgg_tail > args.b_iterations:
+        parser.error('iterations must be positive and at least vgg-tail')
+    if (not math.isfinite(args.realloc_frac) or not 0 <= args.realloc_frac < 1
+            or (args.b_fraction is not None and
+                (not math.isfinite(args.b_fraction) or args.b_fraction <= 0))):
+        parser.error('invalid reallocation fraction or time cap')
+    if args.budget_seconds is not None and (not math.isfinite(args.budget_seconds) or args.budget_seconds <= 0):
+        parser.error('budget-seconds must be finite and positive')
+    if not legacy and args.num_refine != 2:
+        parser.error('confirmed recipe fixes num-refine=2')
+    if args.describe:
+        out = args.output.resolve()
+        plan = dict(preset=args.preset, b_recipe=args.b_recipe, vgg_tail=args.vgg_tail,
+                    realloc_frac=args.realloc_frac, seed=args.seed,
+                    timing_scope='internal' if legacy else 'complete_B_process',
+                    module_b_argv=b_command(Runner(args.profile), args, out / 'work',
+                        out / 'results', out / 'results/resplat/resplat_world.ply', args.budget_seconds))
+        print(json.dumps(plan, indent=2))
+        return plan
+
     if not args.scene.is_dir():
         raise SystemExit(f"scene directory not found: {args.scene}")
     group = args.group
@@ -162,8 +267,8 @@ def main(argv=None):
                     context_policy=args.context_policy, scene_cache=args.scene_cache,
                     mid_prune=args.mid_prune, mid_prune_tau=args.mid_prune_tau,
                     mid_prune_keep=args.mid_prune_keep,
-                    git_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO,
-                                                       text=True).strip())
+                    preset=args.preset, realloc_frac=args.realloc_frac, seed=args.seed if not legacy else 0,
+                    timing_scope='internal' if legacy else 'complete_B_process', **code_identity())
     start_all = time.perf_counter()
 
     # ---- module A -----------------------------------------------------------
@@ -176,12 +281,15 @@ def main(argv=None):
         budget = args.budget_seconds
         budget_source = "provided"
     else:
+        reference_entry = ([BASE / 'module_b/train_from_ply_fastgs.py'] if legacy
+                           else ['-m', 'research.reference_native'])
         runner.run("reference", runner.conda(
-            "fastgs", BASE / "module_b/train_from_ply_fastgs.py", "-s", work, "--eval", "-r", "1",
+            "fastgs", *reference_entry, "-s", work, "--eval", "-r", "1",
             "--sh_degree", "3", "--quiet", "-m", results / "reference_fastgs",
             "--iterations", "30000", "--position_lr_max_steps", "30000",
             "--densify_until_iter", "15000", "--init_random"), logs)
-        budget = read(results / "reference_fastgs/module_b.json")["total_seconds"]
+        reference_internal = read(results / 'reference_fastgs/module_b.json')['total_seconds']
+        budget = reference_internal if legacy else runner.stage_seconds['reference']
         budget_source = "measured_fastgs_random30k"
 
     # ---- ReSplat ------------------------------------------------------------
@@ -215,8 +323,7 @@ def main(argv=None):
     b_init_ply = results / "resplat/resplat_world.ply"
 
     # ---- optional M1 gate (pre-module-B, TRAIN views only) ------------------
-    # Runs BEFORE the module-B timer starts, so the gate cost is outside the
-    # scored B time.  Rule: if the init-PLY train-view LPIPS is above --mid-prune-tau
+    # Confirmed mode charges this TRAIN-only initialization gate to B time.  Rule: if the init-PLY train-view LPIPS is above --mid-prune-tau
     # (a monotone proxy for "delivered test LPIPS is past the 0.25 scoring cliff",
     # Spearman 0.973 over the 13 cases), prune the least-important Gaussians at
     # iteration//4 and continue the same run.  Default off: delivery is unchanged.
@@ -239,48 +346,11 @@ def main(argv=None):
     # Recipe measured on this class of GPU (see docs/RESEARCH-20261030.md): a short
     # continuation with the position-LR schedule matched to the run length beats a
     # long one because the default 30k schedule barely decays inside 4k steps.
-    # --limit_seconds is only a validity safety net, not the normal stop condition.
-    b_limit = args.b_fraction * budget
-    if args.b_recipe in ("bigd2500", "bigd3500", "bigd4000"):
-        dense_until = {"bigd2500": args.b_iterations // 2,
-                       "bigd3500": min(3500, args.b_iterations),
-                       "bigd4000": min(4000, args.b_iterations)}[args.b_recipe]
-        recipe_flags = ["--densify_until_iter", str(max(1, dense_until)),
-                        "--densification_interval", "100",
-                        "--grad_abs_thresh", "0.0008"]
-    else:
-        recipe_flags = ["--densify_until_iter", str(max(1, args.b_iterations // 4))]
-    if args.vgg_tail:
-        recipe_flags += ["--lpips_weight", "0.1", "--lpips_scale", "1.0",
-                         "--lpips_start", str(args.b_iterations - args.vgg_tail + 1),
-                         "--lpips_end", str(args.b_iterations)]
-    runner.run("module_b", runner.conda(
-        "fastgs", "-m", "research.train_sweep", "--source", work, "--model_path", results / "module_b",
-        "--eval", "-r", "1", "--sh_degree", "3", "--quiet",
-        "--init_ply", b_init_ply,
-        "--iterations", args.b_iterations,
-        "--position_lr_max_steps", args.b_iterations,
-        "--opacity_reset_interval", "0",
-        # Densify always starts at S//10.  `delivery` stops at S//4;
-        # `bigd2500` extends the window to S//2 with the Codex native threshold.
-        "--densify_from_iter", max(20, args.b_iterations // 10),
-        *recipe_flags,
-        "--lambda_dssim", "0.6", "--scaling_lr", "0.01",
-        "--realloc_frac", str(args.realloc_frac),
-        # ONE shot at the end of the structural window (module-B steps // 4). This is the
-        # recipe of the measured 13-case serial delivery table (scene13r15/results.jsonl,
-        # 41.371 -> 49.599; DELIVERY.md 2.1 has the exact command). Multi-shot (8 shots at
-        # iterations*k/20) was retracted: same-config runs differed by 4.3 quality points
-        # (6.55 vs 10.86 on mip/bicycle) with +15.7 s B-time spread, see
-        # research/advisory/HANDOFF_MULTISHOT_REALLOC_20261030.md.
-        "--realloc_at", str(max(1, args.b_iterations // 4)),
-        "--image_cache", str(cache_dir),
-        "--limit_seconds", b_limit, "--record", results / "module_b/train_record.json")
-        + (["--scene_cache", str(scene_cache_dir)] if args.scene_cache else [])
-        + (["--mid_prune_at", str(max(1, args.b_iterations // 4)),
-            "--mid_prune_keep", str(mid_prune["keep"])]
-           if mid_prune["fired"] else []), logs)
+    # Confirmed mode completes all iterations; an explicit cap cannot yield a partial valid score.
+    runner.run("module_b", b_command(runner, args, work, results, b_init_ply,
+                                     budget, mid_prune["keep"]), logs)
     record = read(results / "module_b/train_record.json")
+    validate_completion(args, record)
     iterations = record["completed_iterations"]
 
     # ---- render + metrics ---------------------------------------------------
@@ -293,11 +363,15 @@ def main(argv=None):
         "--device", args.device), logs)
 
     metrics = read(results / "module_b/metrics.json")["mean"]
-    b_seconds = record["total_seconds"]
+    b_seconds = (record["total_seconds"] if legacy else
+                 runner.stage_seconds["module_b"] + runner.stage_seconds.get("prune_gate", 0.0))
     score = proxy(metrics["psnr"], metrics["ssim"], metrics["lpips"], b_seconds, budget)
     report = dict(identity=identity, metrics=metrics, budget_seconds=budget,
                   mid_prune=mid_prune,
                   budget_source=budget_source, b_seconds=b_seconds,
+                  timing_scope=identity["timing_scope"],
+                  internal_b_seconds=record["total_seconds"],
+                  reference_internal_seconds=(reference_internal if args.budget_seconds is None else None),
                   b_iterations=iterations, b_stop_reason=record["stop_reason"],
                   b_gaussians=record["num_final_gaussians"],
                   stage_seconds=runner.stage_seconds,
