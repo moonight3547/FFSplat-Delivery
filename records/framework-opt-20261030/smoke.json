@@ -1,0 +1,27 @@
+{
+  "torch": "2.4.0+cu124",
+  "cuda": "12.4",
+  "nvcc": "12.8",
+  "arch": "sm_89",
+  "so_path": "FasterGSCudaBackend/_C.cpython-312-x86_64-linux-gnu.so",
+  "so_bytes": 6007648,
+  "so_sha256": "c7b176953fd4f8eec51dca21114635fb4a82f77dd3340006d7f04bef7586ebd6",
+  "class_name": "FasterGSCudaBackend.torch_bindings.adam.FusedAdam",
+  "adam_py_sha256": "9ea0b47233f08dbf318bb60e693e3f5417d45f9c6107a7e4cdf5e3db60601ea6",
+  "class_bases": [
+    "FusedAdam",
+    "Adam",
+    "Optimizer",
+    "object"
+  ],
+  "has_adam_step": true,
+  "numeric_steps": 35,
+  "numeric_max_abs": {
+    "param": 7.152557373046875e-07,
+    "m": 1.7881393432617188e-07,
+    "v": 5.913898348808289e-07
+  },
+  "numeric_ok": true,
+  "build_seconds_approx": 150,
+  "note": "35 steps vs torch.optim.Adam incl state expansion at step 12 and zero-grad step"
+}

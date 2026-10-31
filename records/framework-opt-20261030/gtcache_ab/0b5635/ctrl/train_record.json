@@ -1,0 +1,465 @@
+{
+  "init_ply": "/root/projects/FFSplat-Hackathon/outputs/curve/dl3dv-0b5635d53b3b33294d7e49d75d96046c1157ad0713571138e51f1524a164cfce/resplat/resplat_world.ply",
+  "init_mode": "ply:resplat_world.ply",
+  "num_init_gaussians": 450206,
+  "num_final_gaussians": 1098637,
+  "iterations": 5000,
+  "completed_iterations": 5000,
+  "stop_reason": "iterations",
+  "final_ply": "/root/gpufree-data/outputs/framework-opt-20261030/gtcache_ab/0b5635/ctrl/sweep/model/point_cloud/iteration_5000/point_cloud.ply",
+  "limit_seconds": null,
+  "snapshots": [
+    {
+      "iteration": 5000,
+      "train_seconds": 40.59042379632592,
+      "num_gaussians": 1098637,
+      "ply": "/root/gpufree-data/outputs/framework-opt-20261030/gtcache_ab/0b5635/ctrl/sweep/snaps/iter05000.ply"
+    }
+  ],
+  "scene_load_seconds": 0.275,
+  "init_seconds": 0.622,
+  "train_seconds": 47.811,
+  "total_seconds": 58.579,
+  "stage1_seconds": 47.811,
+  "stage2_seconds": 0.0,
+  "stage3_seconds": 0.0,
+  "stage1_iterations": 5000,
+  "stage2_iterations": 0,
+  "stage3_iterations": 0,
+  "total_iterations": 5000,
+  "stage2_trainer": "standard",
+  "stage2_cams": 1,
+  "stage2_lr_from": null,
+  "stage2_lr_final": null,
+  "stage3_lpips_weight": 0.0,
+  "prune_keep": 1.0,
+  "prune_views": 24,
+  "eng": {
+    "train_cameras_only": false,
+    "lean_step": false,
+    "scene_cache": "/root/gpufree-data/outputs/b-eng-20261030/scene_cache/0b5635"
+  },
+  "lpips_tail": {
+    "gt_feature_cache": false,
+    "max_views": 0,
+    "stats": null,
+    "cache_bytes": null,
+    "cache_views": null,
+    "calls": 200,
+    "gpu_seconds": 3.445040119171143,
+    "gpu_peak_mb": 5314.09130859375
+  },
+  "pgsr": {
+    "planar_weight": 0.0,
+    "normal_weight": 0.0,
+    "normal_from": 1250,
+    "normal_rebuild": null,
+    "shape_stats": [],
+    "shape_stats_every": 0
+  },
+  "depth_reg": {
+    "weight": 0.0,
+    "every": 10,
+    "from_iter": 4000,
+    "until_iter": 5000,
+    "events": []
+  },
+  "mid_prune_at": 1250,
+  "mid_prune_keep": 1.0,
+  "prune_events": [],
+  "densification_events": [
+    {
+      "iteration": 600,
+      "before": 450206,
+      "after": 521412,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 700,
+      "before": 521412,
+      "after": 593613,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 800,
+      "before": 593613,
+      "after": 665483,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 900,
+      "before": 665483,
+      "after": 724682,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1000,
+      "before": 724682,
+      "after": 774097,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1100,
+      "before": 774097,
+      "after": 814086,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1200,
+      "before": 814086,
+      "after": 852806,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1300,
+      "before": 980726,
+      "after": 992446,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1400,
+      "before": 992446,
+      "after": 1011614,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1500,
+      "before": 1011614,
+      "after": 1031508,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1600,
+      "before": 1031508,
+      "after": 1041897,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1700,
+      "before": 1041897,
+      "after": 1054741,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1800,
+      "before": 1054741,
+      "after": 1061693,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 1900,
+      "before": 1061693,
+      "after": 1069589,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2000,
+      "before": 1069589,
+      "after": 1075723,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2100,
+      "before": 1075723,
+      "after": 1083247,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2200,
+      "before": 1083247,
+      "after": 1084306,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2300,
+      "before": 1084306,
+      "after": 1085610,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2400,
+      "before": 1085610,
+      "after": 1089543,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2500,
+      "before": 1089543,
+      "after": 1090526,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2600,
+      "before": 1090526,
+      "after": 1095982,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2700,
+      "before": 1095982,
+      "after": 1100449,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2800,
+      "before": 1100449,
+      "after": 1104358,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 2900,
+      "before": 1104358,
+      "after": 1102794,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 3000,
+      "before": 1102794,
+      "after": 1102910,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 3100,
+      "before": 1102910,
+      "after": 1101644,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 3200,
+      "before": 1101644,
+      "after": 1101031,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 3300,
+      "before": 1101031,
+      "after": 1100029,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    },
+    {
+      "iteration": 3400,
+      "before": 1100029,
+      "after": 1098637,
+      "actual_native_parameters": {
+        "mult": 0.5,
+        "loss_thresh": 0.1,
+        "grad_abs_thresh": 0.0008,
+        "grad_thresh": 0.0002,
+        "dense": 0.001
+      }
+    }
+  ],
+  "timing_breakdown": null,
+  "iterations_per_second": 104.58,
+  "quick_test_psnr": null,
+  "num_train_views": 333,
+  "num_test_views": 0,
+  "res_scales": [
+    1.0
+  ],
+  "res_until": [],
+  "settings": {
+    "position_lr_max_steps": 5000,
+    "position_lr_init": 0.00016,
+    "position_lr_final": 1.6e-06,
+    "densify_from_iter": 500,
+    "densify_until_iter": 3500,
+    "densification_interval": 100,
+    "opacity_reset_interval": 5001,
+    "mult": 0.5,
+    "lambda_dssim": 0.6,
+    "scaling_lr": 0.01,
+    "opacity_lr": 0.025,
+    "position_lr_delay_mult": 0.01,
+    "no_densify": false,
+    "seed": 20261015,
+    "res_scales": [
+      1.0
+    ],
+    "res_until": [],
+    "lpips_weight": 0.1,
+    "lpips_every": 1,
+    "lpips_scale": 1.0,
+    "lpips_start": 4801,
+    "lpips_end": 5000,
+    "grad_abs_thresh": 0.0008,
+    "stage2_iters": 0,
+    "stage2_cams": 1,
+    "stage2_trainer": "standard",
+    "stage2_absgrad_every": 200,
+    "stage2_split_frac": 0.01,
+    "stage2_lr_final": null,
+    "stage3_iters": 0,
+    "stage3_lpips_weight": 0.0,
+    "densify_count_thresh": null,
+    "max_gaussians": null
+  }
+}

@@ -181,6 +181,14 @@ def main(argv=None):
                         help="downscale factor for the perceptual term (1.0 = full res)")
     parser.add_argument("--lpips_start", type=int, default=1,
                         help="first iteration applying --lpips_weight (Codex VGG100: 4901)")
+    parser.add_argument("--gt_feature_cache", action="store_true",
+                        help="cache the immutable GT VGG-LPIPS features during the tail "
+                             "(removes only the GT forward; loss math is identical). "
+                             "Default off; see research/gt_feature_cache.py")
+    parser.add_argument("--gt_feature_cache_views", type=int, default=0,
+                        help="LRU bound on cached GT views (0 = unbounded)")
+    parser.add_argument("--lpips_timing", action="store_true",
+                        help="record per-step LPIPS GPU time via CUDA events (record only)")
     parser.add_argument("--lpips_end", type=int, default=10**9,
                         help="last iteration applying --lpips_weight (inclusive)")
     # ---- optional staged continuation after the phase-1 delivery run (~S=5000).
@@ -485,6 +493,12 @@ def main(argv=None):
             parameter.requires_grad_(False)
         print(f"[sweep] LPIPS loss weight={args.lpips_weight} every={args.lpips_every} "
               f"scale={args.lpips_scale} (phase3 weight={args.stage3_lpips_weight})")
+        if args.gt_feature_cache:
+            from .gt_feature_cache import GTCachedLPIPS
+            perceptual = GTCachedLPIPS(perceptual, args.gt_feature_cache_views).cuda().eval()
+            for parameter in perceptual.parameters():
+                parameter.requires_grad_(False)
+            print("[sweep] GT LPIPS feature cache enabled (GT forward removed)")
 
     bg_color = [1, 1, 1] if dataset.white_background else [0, 0, 0]
     background = torch.tensor(bg_color, dtype=torch.float32, device="cuda")
@@ -594,6 +608,7 @@ def main(argv=None):
             or args.normal_weight > 0.0):
         shape_stats.append(_shape_stats(0))
     depth_reg_events = []
+    lpips_events = []
     # pure elimination: this string parse used to run on EVERY iteration
     _realloc_ats = [int(x) for x in str(args.realloc_at).split(",") if str(x).strip()]
 
@@ -686,7 +701,19 @@ def main(argv=None):
                         max(32, int(round(render_p.shape[3] * args.lpips_scale))))
                 render_p = torch.nn.functional.interpolate(render_p, size=size, mode="area")
                 gt_p = torch.nn.functional.interpolate(gt_p, size=size, mode="area")
-            perceptual_loss = perceptual(render_p * 2.0 - 1.0, gt_p * 2.0 - 1.0).mean()
+            _ev = None
+            if args.lpips_timing:
+                _ev = (torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True))
+                _ev[0].record()
+            _cache = getattr(perceptual, "_cache", None)
+            if _cache is not None:
+                perceptual_loss = perceptual(render_p * 2.0 - 1.0, gt_p * 2.0 - 1.0,
+                                             key=viewpoint_cam.uid).mean()
+            else:
+                perceptual_loss = perceptual(render_p * 2.0 - 1.0, gt_p * 2.0 - 1.0).mean()
+            if _ev is not None:
+                _ev[1].record()
+                lpips_events.append(_ev)
             loss = loss + args.lpips_weight * perceptual_loss
         if (args.depth_reg_weight > 0.0
                 and args.depth_reg_from <= iteration <= args.depth_reg_until
@@ -1175,6 +1202,17 @@ def main(argv=None):
         eng=dict(train_cameras_only=bool(args.train_cameras_only),
                  lean_step=bool(args.lean_step),
                  scene_cache=args.scene_cache),
+        lpips_tail=dict(
+            gt_feature_cache=bool(args.gt_feature_cache),
+            max_views=args.gt_feature_cache_views,
+            stats=(getattr(perceptual, "stats", None) if perceptual is not None else None),
+            cache_bytes=(perceptual.cache_bytes() if args.gt_feature_cache else None),
+            cache_views=(perceptual.cache_views() if args.gt_feature_cache else None),
+            calls=len(lpips_events),
+            gpu_seconds=(sum(e0.elapsed_time(e1) for e0, e1 in lpips_events) * 1e-3
+                         if lpips_events else None),
+            gpu_peak_mb=(torch.cuda.max_memory_allocated() / 2**20
+                         if torch.cuda.is_available() else None)),
         pgsr=dict(pgsr, shape_stats=shape_stats,
                   shape_stats_every=args.shape_stats_every),
         depth_reg=dict(weight=args.depth_reg_weight, every=args.depth_reg_every,
