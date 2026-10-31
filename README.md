@@ -47,9 +47,3 @@ bash run_eval.sh     # 一键评测 + 汇总
   下载后放入 `resplat/pretrained/`（本仓库不含大文件）
 - 数据集（`datasets/examples/{DL3DV,hw,mipnerf360}`）需从主办方链接下载后放到
   `baseline/../datasets/examples/`（与 `baseline/`、`resplat/` 平级）
-
-## 队伍信息
-
-- 方案名称：FFSplat
-- 维护账号：[moonight3547](https://github.com/moonight3547)
-- 提交仓库：[FFSplat-Delivery](https://github.com/moonight3547/FFSplat-Delivery)
