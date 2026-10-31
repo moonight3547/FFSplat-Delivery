@@ -303,7 +303,7 @@ def _verify(work, cache_dir):
                fov_maxdiff=None, rng_exact=out_rng_equal,
                names_exact=([c.image_name for c in ref.getTrainCameras()] ==
                             [c.image_name for c in cached.getTrainCameras()]),
-               extent_exact=ref.cameras_extent == cached.cameras_extent)
+               extent_exact=bool(ref.cameras_extent == cached.cameras_extent))
     out['image_strides_exact'] = all(a.original_image.stride() == b.original_image.stride()
         for a, b in zip(ref_cams, cached.getTrainCameras()))
     md = 0.0

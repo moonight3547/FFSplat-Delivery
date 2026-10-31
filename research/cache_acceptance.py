@@ -15,15 +15,21 @@ def main():
     parser.add_argument('--init-ply', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--seed', type=int, default=2)
+    parser.add_argument('--resume-built-cache', action='store_true',
+                        help='resume input verification only; refuses any existing B records')
     args = parser.parse_args()
-    if args.out.exists():
+    if args.out.exists() and not args.resume_built_cache:
         raise FileExistsError('A fresh gate output is required')
-    args.out.mkdir(parents=True)
+    if args.resume_built_cache and any((args.out / label).exists()
+                                     for label in ('native_scene', 'cached_scene')):
+        raise FileExistsError('Cannot overwrite any prior B model during cache-build recovery')
+    args.out.mkdir(parents=True, exist_ok=True)
     work = args.out / 'prepared'
-    work.mkdir()
-    (work / 'images').symlink_to((args.work / 'images').resolve(), target_is_directory=True)
-    shutil.copytree(args.work / 'sparse', work / 'sparse')
-    shutil.copy2(args.work / 'split.json', work / 'split.json')
+    if not work.exists():
+        work.mkdir()
+        (work / 'images').symlink_to((args.work / 'images').resolve(), target_is_directory=True)
+        shutil.copytree(args.work / 'sparse', work / 'sparse')
+        shutil.copy2(args.work / 'split.json', work / 'split.json')
     import torch
     torch.set_default_dtype(torch.float32)
     torch.backends.cuda.matmul.allow_tf32 = False
