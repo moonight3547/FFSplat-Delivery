@@ -12,4 +12,8 @@ if __name__ == '__main__':
             argv += [flag, value]
     if '--init_random' not in argv:
         argv.append('--init_random')
+    if '--eval' not in argv:
+        argv.append('--eval')
+    if not any(a in ('-r', '--resolution') or a.startswith('--resolution=') for a in argv):
+        argv += ['-r', '1']
     main(argv)

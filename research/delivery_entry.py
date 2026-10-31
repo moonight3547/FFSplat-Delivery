@@ -9,6 +9,7 @@ from run_pipeline import recipe_flags
 def module_b_args(argv):
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument('-m', '--model_path', required=True)
+    parser.add_argument('--init_ply', required=True)
     parser.add_argument('--iterations', type=int, default=5000)
     args, _ = parser.parse_known_args(argv)
     result = list(argv)

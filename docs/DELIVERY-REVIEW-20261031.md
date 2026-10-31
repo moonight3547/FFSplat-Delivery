@@ -23,7 +23,7 @@ competition/upstream 保持原样。已检查的 densify 参数传播及 native 
 
 ## 验证状态
 
-- CPU：68项通过，包含原始50项及新增命令/计时/不完整训练拒绝/PLY逐字节兼容/官方结构与三组预览测试；上游快照校验包含在原始测试中。
+- CPU：69项通过，包含原始50项及新增命令/计时/不完整训练拒绝/PLY逐字节兼容/官方结构与三组预览测试；上游快照校验包含在原始测试中。
 - CUDA：H3 GPU2 / source407505c 的600步真实训练通过，实际 VGG401–600 共200次、foreach六组/FP32、.0008实际增密、native600有599调用；导出147,735,627字节PLY并由官方 renderer 重载，完整25张TEST及25张GT均输出。该600步检查缩短LR日程及VGG位置，只验证机制，不声称5K质量或最终TIME。见 records/delivery-runtime-gate-20261031。
 - 完整 A→R→B 和新默认的统一13例/同机native30K完整B预算：尚未完成，不宣称全局最优或51.153已复现。
 
@@ -34,3 +34,5 @@ competition/upstream 保持原样。已检查的 densify 参数传播及 native 
 原目录后续13个未提交精简改动独立保存并push为 deepseek-final-working-snapshot / 7734515b9d7311d402fd1c677c1339cdb7879287。其r15、自动M1剪枝、scene-cache默认并非当前组合已验配方，未默认合入；历史代码及建议保留可审查，没有丢弃。用户已确认后续仅Codex修改仓库、依据实验决定最终setting。
 
 新增官方 Faster-GS Adam组合验证：D3500/5K/VGG200/.1/r0 固定，其余保持一致，foreach vs官方组件；3 badcase×2seed=12 fresh，完整B及同范围native预算。旧C0/VGG100微小净收益不能代替该验证。正式SH网格顺延，Adam默认不提前切换。
+
+提交包4709558初验：3,776个源文件、约21.8MB ZIP，逐文件SHA256全部匹配；无.git/权重/数据/研究raw，解压后在无.git目录成功预览BigD3500/VGG200及模块B参数。该次包的可核对身份见 records/delivery-runtime-gate-20261031/submission-check.json；后续最终包由当前HEAD重新构建，具体身份在ZIP内SUBMISSION.json和旁侧验收文件中。

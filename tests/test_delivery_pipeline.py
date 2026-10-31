@@ -14,6 +14,7 @@ from plyfile import PlyData, PlyElement
 import run_pipeline as pipeline
 from research.vectorized_ply import save_ply_vectorized
 from research.delivery_entry import module_b_args
+from research.reference_native import main as reference_native
 
 
 def plan(tmp_path, *args):
@@ -119,6 +120,13 @@ def test_partial_optimizer_or_vgg_run_cannot_be_reported_valid():
             pipeline.validate_completion(args, {**record, 'runtime_audit': {**record['runtime_audit'], **change}})
     with pytest.raises(RuntimeError):
         pipeline.validate_completion(args, {**record, 'stop_reason': 'wall_clock'})
+
+
+def test_reference_budget_rejects_resplat_continuation_before_cuda_imports():
+    with pytest.raises(ValueError):
+        reference_native(['-m', 'out', '--init_random', '--init_ply', 'resplat.ply'])
+    with pytest.raises(ValueError):
+        reference_native(['-m', 'out'])
 
 
 def test_export_without_git_remains_identified(tmp_path):

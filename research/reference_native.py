@@ -16,7 +16,11 @@ def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument('-m', '--model_path', required=True)
+    parser.add_argument('--init_ply')
+    parser.add_argument('--init_random', action='store_true')
     args, _ = parser.parse_known_args(argv)
+    if args.init_ply or not args.init_random:
+        raise ValueError('Reference budget requires native random initialization, never ReSplat PLY')
     baseline = Path(__file__).resolve().parents[1] / 'competition/upstream/baseline'
     sys.path.insert(0, str(baseline / 'fastgs'))
     from scene import Scene, GaussianModel
