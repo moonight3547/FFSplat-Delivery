@@ -1,10 +1,12 @@
 """Confirmed FastGS runtime, leaving the pinned upstream implementation untouched."""
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
 import sys
 import time
+import random
 
 
 def main(argv=None):
@@ -28,6 +30,8 @@ def main(argv=None):
     torch.set_float32_matmul_precision('highest')
     state = dict(seed=0, iteration=0, optimizer_calls=0, resets=[],
                  vgg_steps=[], vgg_values=[], exports=[], models=[])
+    camera_hash = hashlib.sha256()
+    sampling = dict(render_calls=0, density=[])
     originals = []
 
     def patch(obj, name, replacement):
@@ -74,6 +78,21 @@ def main(argv=None):
     patch(cls, 'reset_opacity', reset_opacity)
     patch(cls, 'save_ply', save_ply)
 
+    original_render, original_score = trainer.render_fastgs, trainer.compute_gaussian_score_fastgs
+    def render(camera, *args, **kwargs):
+        camera_hash.update((str(camera.image_name) + '\n').encode())
+        sampling['render_calls'] += 1
+        return original_render(camera, *args, **kwargs)
+    def score(cameras, *args, **kwargs):
+        event = dict(iteration=state['iteration'], cameras=[c.image_name for c in cameras],
+                     rng_before=hashlib.sha256(repr(random.getstate()).encode()).hexdigest())
+        result = original_score(cameras, *args, **kwargs)
+        event['rng_after'] = hashlib.sha256(repr(random.getstate()).encode()).hexdigest()
+        sampling['density'].append(event)
+        return result
+    patch(trainer, 'render_fastgs', render)
+    patch(trainer, 'compute_gaussian_score_fastgs', score)
+
     constructor = lpips.LPIPS
     def perceptual(*args, **kwargs):
         if args or kwargs.get('net') != 'vgg':
@@ -106,6 +125,7 @@ def main(argv=None):
             opacity_reset_steps=state['resets'], vgg_steps=state['vgg_steps'],
             vgg_values=values, perceptual=state.get('perceptual'),
             ply_backend='vectorized_lossless', exports=state['exports'],
+            sampling_audit=dict(**sampling, view_sequence_sha256=camera_hash.hexdigest()),
             quick_test_disabled=True, timing_scope='internal scene load through final export')
         Path(known.record).write_text(json.dumps(record, indent=2) + '\n')
         return record

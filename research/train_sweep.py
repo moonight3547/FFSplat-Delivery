@@ -322,15 +322,24 @@ def main(argv=None):
     cuts = [float(x) for x in args.res_until.split(",") if x.strip()]
     if len(cuts) != len(scales) - 1:
         raise SystemExit("--res_until needs one cut per resolution transition")
+    scene_cache_fallback = None
     if args.scene_cache:
         from .scene_cache import load as _load_scene_cache
         t0 = time.perf_counter()
-        scene = _load_scene_cache(dataset.source_path, args.scene_cache,
-                                  want_test=not args.no_quick_test)
+        try:
+            scene = _load_scene_cache(dataset.source_path, args.scene_cache,
+                                      want_test=not args.no_quick_test)
+        except (OSError, ValueError, KeyError) as error:
+            # Corrupt/stale optional residency data must not change the recipe.
+            # Failed load cost stays inside B, and native Scene preserves its RNG.
+            args.scene_cache = None
+            scene_cache_fallback = str(error)
+            print(f'[sweep] scene cache fallback: {type(error).__name__}: {error}')
         torch.cuda.synchronize() if torch.cuda.is_available() else None
         scene_load_s = time.perf_counter() - t0
-        print(f"[sweep] scene_cache load {scene_load_s:.3f}s "
-              f"timings={getattr(scene, 'load_timings', None)}")
+        if args.scene_cache:
+            print(f"[sweep] scene_cache load {scene_load_s:.3f}s "
+                  f"timings={getattr(scene, 'load_timings', None)}")
     elif args.train_cameras_only:
         # Test cameras/images are loaded and converted to GPU by Scene but are only
         # used by the diagnostic quick_test after training; strip them before Scene
@@ -1174,6 +1183,7 @@ def main(argv=None):
         prune_keep=args.prune_keep, prune_views=args.prune_views,
         eng=dict(train_cameras_only=bool(args.train_cameras_only),
                  lean_step=bool(args.lean_step),
+                 scene_cache_fallback=scene_cache_fallback,
                  scene_cache=args.scene_cache),
         pgsr=dict(pgsr, shape_stats=shape_stats,
                   shape_stats_every=args.shape_stats_every),

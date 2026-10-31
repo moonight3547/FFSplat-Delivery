@@ -27,6 +27,7 @@ def test_confirmed_default_and_explicit_d4000_r15(tmp_path):
     argv = default['module_b_argv']
     assert default['b_recipe'] == 'bigd3500' and default['vgg_tail'] == 200
     assert default['realloc_frac'] == 0 and 'research.train_confirmed' in argv
+    assert default['a_workers'] == 4 and 'research.stage1_prepare_parallel' in default['module_a_argv']
     for flag, value in [('--densify_until_iter', '3500'), ('--grad_abs_thresh', '0.0008'),
                         ('--lpips_start', '4801'), ('--lpips_end', '5000'),
                         ('--seed', '20261015')]:
@@ -45,6 +46,7 @@ def test_legacy_snapshot_stays_explicit(tmp_path):
     assert 'research.train_sweep' in argv and '--seed' not in argv
     assert argv[argv.index('--densify_until_iter') + 1] == '1250'
     assert '--limit_seconds' in argv
+    assert legacy['a_workers'] == 1 and 'research.stage1_prepare_parallel' not in legacy['module_a_argv']
 
 
 def test_official_shaped_direct_b_defaults_match_pipeline(tmp_path):
@@ -85,8 +87,13 @@ def test_full_process_b_and_reference_accounting(monkeypatch, tmp_path):
     class Runner:
         def __init__(self, profile):
             self.stage_seconds = {}
+            self.optional_status = {}
         def conda(self, runtime, *args):
             return [str(a) for a in args]
+        def optional(self, name, argv, logs):
+            self.run(name, argv, logs)
+            self.optional_status[name] = 'ok'
+            return True
         def run(self, name, argv, logs):
             self.stage_seconds[name] = {'reference': 120, 'module_b': 40, 'prune_gate': 5}.get(name, 1)
             if name == 'reference':

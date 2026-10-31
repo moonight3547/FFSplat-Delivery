@@ -40,8 +40,10 @@ sys.path.insert(0, str(BASELINE / "fastgs"))
 from arguments import ModelParams, OptimizationParams, PipelineParams  # noqa: E402
 from scene import Scene, GaussianModel  # noqa: E402
 from research.image_cache import CachedImages  # noqa: E402
+from research.cache_integrity import sha256, scene_identity
+from research import cache_rng
 
-CACHE_VERSION = "scene-cache-v1"
+CACHE_VERSION = "scene-cache-v3-exact"
 
 
 def _sha256(path):
@@ -62,15 +64,8 @@ def _args_for(work, model_path):
     return lp.extract(a), op.extract(a), pp.extract(a)
 
 
-def version_of(work):
-    work = Path(work)
-    cache_manifest = work / "image_cache" / "manifest.json"
-    split = work / "split.json"
-    payload = [CACHE_VERSION, str(work.resolve())]
-    for path in (cache_manifest, split):
-        if path.exists():
-            payload.append(_sha256(path))
-    return hashlib.sha256("|".join(payload).encode()).hexdigest()
+def version_of(work, seed=20261015):
+    return scene_identity(work, seed, CACHE_VERSION)
 
 
 def install_image_cache(work):
@@ -85,7 +80,7 @@ def install_image_cache(work):
             return PILImage.fromarray(cache.get(name))
         return orig_open(path, *a, **k)
 
-    readers.Image.open = cached_open
+    readers.Image = type("CachedPIL", (), {"open": staticmethod(cached_open)})
     return cache
 
 
@@ -102,12 +97,39 @@ def build(work, out_dir, model_path="/tmp/scene_cache_model", seed=20261015):
     _seed_all(seed)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
+    began = time.perf_counter()
+    current_version = version_of(work, seed)
+    try:
+        old = json.loads((out / "meta.json").read_text())
+        if (old.get("cache_version") == CACHE_VERSION and old.get("seed") == seed
+                and old.get("version") == current_version
+                and old.get("torch_version") == str(torch.__version__)
+                and old.get("images_sha256") == sha256(out / "images_u8.npy")
+                and old.get("cameras_sha256") == sha256(out / "cams.npz")):
+            (out / "_status.json").write_text(json.dumps(dict(status="reused")))
+            return old
+    except (OSError, ValueError, KeyError):
+        pass
     t0 = time.perf_counter()
     cache = install_image_cache(work)
     ds, opt, pipe = _args_for(work, model_path)
     os.makedirs(model_path, exist_ok=True)
     g = GaussianModel(3, "default")
+    rng_before = cache_rng.capture()
     scene = Scene(ds, g, resolution_scales=[1.0])
+    rng_after = cache_rng.capture()
+    stable_version = version_of(work, seed)
+    if stable_version != current_version:
+        # Native loaders can create a fallback points3D.ply on the first read.
+        # B will see that existing file, so capture its steady input/RNG path.
+        del scene, g
+        _seed_all(seed)
+        g = GaussianModel(3, "default")
+        rng_before = cache_rng.capture()
+        scene = Scene(ds, g, resolution_scales=[1.0])
+        rng_after = cache_rng.capture()
+        if version_of(work, seed) != stable_version:
+            raise ValueError("Prepared inputs changed while building the scene cache")
     torch.cuda.synchronize()
     build_scene_s = time.perf_counter() - t0
     cams = scene.getTrainCameras()
@@ -135,13 +157,13 @@ def build(work, out_dir, model_path="/tmp/scene_cache_model", seed=20261015):
     wvt = torch.stack([c.world_view_transform.cpu() for c in cams]).numpy().astype(np.float32)
     fpt = torch.stack([c.full_proj_transform.cpu() for c in cams]).numpy().astype(np.float32)
     centers = torch.stack([c.camera_center.cpu() for c in cams]).numpy().astype(np.float32)
-    fovx = np.array([float(c.FoVx) for c in cams], dtype=np.float32)
-    fovy = np.array([float(c.FoVy) for c in cams], dtype=np.float32)
+    fovx = np.array([float(c.FoVx) for c in cams], dtype=np.float64)
+    fovy = np.array([float(c.FoVy) for c in cams], dtype=np.float64)
     names = np.array([os.path.basename(c.image_name) for c in cams])
     np.savez(out / "cams.npz", wvt=wvt, fpt=fpt, centers=centers, fovx=fovx,
              fovy=fovy, names=names, width=np.int32(W), height=np.int32(H),
-             cameras_extent=np.float32(scene.cameras_extent),
-             version=np.array(version_of(work)))
+             cameras_extent=np.float64(scene.cameras_extent),
+             version=np.array(stable_version))
     save_cams_s = time.perf_counter() - t0
     total = time.perf_counter() - t0
     bytes_total = int((out / "images_u8.npy").stat().st_size + (out / "cams.npz").stat().st_size)
@@ -153,8 +175,15 @@ def build(work, out_dir, model_path="/tmp/scene_cache_model", seed=20261015):
                 save_cams_seconds=round(save_cams_s, 3), bytes=bytes_total,
                 images_bytes=int((out / "images_u8.npy").stat().st_size),
                 gpu_images_f32_bytes=int(n * 3 * H * W * 4),
-                version=version_of(work))
+                version=stable_version,
+                images_sha256=sha256(out / "images_u8.npy"),
+                cameras_sha256=sha256(out / "cams.npz"),
+                rng_before=rng_before, rng_after=rng_after,
+                torch_version=str(torch.__version__),
+                native_test_count=len(scene.getTestCameras()))
+    meta["build_total_seconds"] = time.perf_counter() - began
     (out / "meta.json").write_text(json.dumps(meta, indent=2))
+    (out / "_status.json").write_text(json.dumps(dict(status="built")))
     del scene, g
     torch.cuda.empty_cache()
     return meta
@@ -177,7 +206,7 @@ class CachedCamera:
         self.image_height = int(height)
         self.image_name = name
         self.uid = int(uid)
-        self.data_device = torch.device("cuda")
+        self.data_device = image.device
         self.znear, self.zfar = 0.01, 100.0
         self.R, self.T = None, None
 
@@ -204,8 +233,15 @@ def load(work, cache_dir, want_test=False, device="cuda"):
     cams_npz = np.load(out / "cams.npz", allow_pickle=False)
     meta = json.loads((out / "meta.json").read_text())
     timings["read_meta_seconds"] = time.perf_counter() - t0
-    if str(cams_npz["version"]) != version_of(work):
-        raise SystemExit("stale scene cache: rebuild it (%s)" % out)
+    if (meta.get("cache_version") != CACHE_VERSION
+            or str(cams_npz["version"]) != version_of(work, meta["seed"])
+            or meta.get("torch_version") != str(torch.__version__)):
+        raise ValueError("stale scene cache: rebuild it (%s)" % out)
+    if (sha256(out / "images_u8.npy") != meta["images_sha256"]
+            or sha256(out / "cams.npz") != meta["cameras_sha256"]):
+        raise ValueError("corrupt scene cache: rebuild it (%s)" % out)
+    if cache_rng.identity(cache_rng.capture()) != cache_rng.identity(meta["rng_before"]):
+        raise ValueError("Scene-cache seed/RNG does not match the native loader")
     images = np.load(out / "images_u8.npy", mmap_mode="r")
     timings["open_npy_seconds"] = time.perf_counter() - t0 - timings["read_meta_seconds"]
     n, C, H, W = images.shape
@@ -213,7 +249,14 @@ def load(work, cache_dir, want_test=False, device="cuda"):
     u8_gpu = torch.from_numpy(np.ascontiguousarray(images)).to(device, non_blocking=False)
     timings["h2d_seconds"] = time.perf_counter() - t0
     t0 = time.perf_counter()
-    f32 = u8_gpu.to(torch.float32).div_(255.0)
+    # CPU division exactly matches the pinned PILtoTorch operation for all 256
+    # possible channel values; lookup avoids CPU/CUDA reciprocal-rounding drift.
+    lut = torch.arange(256, dtype=torch.float32).div_(255.0).to(device)
+    f32 = lut[u8_gpu.to(torch.int32)]
+    # Native PILtoTorch creates HWC storage viewed as CHW. Retain those strides
+    # so VGG/SSIM do not select a different layout-dependent kernel.
+    f32 = f32.contiguous(memory_format=torch.channels_last)
+    del u8_gpu
     timings["gpu_convert_seconds"] = time.perf_counter() - t0
     t0 = time.perf_counter()
     wvt = torch.from_numpy(cams_npz["wvt"]).to(device)
@@ -235,6 +278,8 @@ def load(work, cache_dir, want_test=False, device="cuda"):
         test_cams = cameraList_from_camInfos(info.test_cameras, 1.0, ds)
     scene = CachedScene(cams, test_cams, float(cams_npz["cameras_extent"]))
     scene.load_timings = timings
+    scene.native_test_count = meta["native_test_count"]
+    cache_rng.restore(meta["rng_after"])
     return scene
 
 
@@ -248,11 +293,19 @@ def _verify(work, cache_dir):
     os.makedirs("/tmp/scene_cache_model", exist_ok=True)
     g = GaussianModel(3, "default")
     ref = Scene(ds, g, resolution_scales=[1.0])
+    expected_rng = cache_rng.capture()
+    _seed_all(meta.get("seed", 20261015))
     cached = load(work, cache_dir, want_test=False)
+    out_rng_equal = cache_rng.identity(cache_rng.capture()) == cache_rng.identity(expected_rng)
     ref_cams = ref.getTrainCameras()
     out = dict(n_train=len(ref_cams), images_maxdiff=None,
                wvt_maxdiff=None, fpt_maxdiff=None, center_maxdiff=None,
-               fov_maxdiff=None)
+               fov_maxdiff=None, rng_exact=out_rng_equal,
+               names_exact=([c.image_name for c in ref.getTrainCameras()] ==
+                            [c.image_name for c in cached.getTrainCameras()]),
+               extent_exact=ref.cameras_extent == cached.cameras_extent)
+    out['image_strides_exact'] = all(a.original_image.stride() == b.original_image.stride()
+        for a, b in zip(ref_cams, cached.getTrainCameras()))
     md = 0.0
     for a, b in zip(ref_cams, cached.getTrainCameras()):
         md = max(md, float((a.original_image - b.original_image).abs().max()))
@@ -265,15 +318,16 @@ def _verify(work, cache_dir):
         out["fpt_maxdiff"] = max(out["fpt_maxdiff"] or 0.0, md_f)
         out["center_maxdiff"] = max(out["center_maxdiff"] or 0.0, md_c)
         out["fov_maxdiff"] = max(out["fov_maxdiff"] or 0.0, md_fov)
-    # Camera tensors are copied verbatim from a normal Scene and must match
-    # bitwise.  Pixels go through uint8/255 on GPU vs PIL->np/255 upstream and
-    # may differ by one float32 rounding step (~6e-8); that is not a semantic
-    # difference, so report both exactness levels instead of forcing rebuilds.
+    # The v3 LUT, float64 scalar metadata and saved native RNG progression must
+    # all agree exactly. Approximate pixels are diagnostic only, never a pass.
     transform_keys = ("wvt_maxdiff", "fpt_maxdiff", "center_maxdiff")
     out["transforms_bitwise"] = all((out[k] or 0.0) == 0.0 for k in transform_keys)
     out["pixels_bitwise"] = (out.get("images_maxdiff") or 0.0) == 0.0
     out["pixels_1ulp_or_better"] = (out.get("images_maxdiff") or 0.0) <= 1e-6
-    out["identical"] = bool(out["transforms_bitwise"] and out["pixels_1ulp_or_better"])
+    out["identical"] = bool(out["transforms_bitwise"] and out["pixels_bitwise"]
+                            and (out["fov_maxdiff"] or 0.0) == 0.0
+                            and out["rng_exact"] and out["names_exact"] and out["extent_exact"]
+                            and out['image_strides_exact'])
     out["seed"] = meta.get("seed", 20261015)
     out["cached_load_timings"] = cached.load_timings
     return out
@@ -300,6 +354,7 @@ def _bench(work, cache_dir, reps=3):
                 del scene, g
             else:
                 t0 = time.perf_counter()
+                _seed_all(meta.get("seed", 20261015))
                 scene = load(work, cache_dir, want_test=False)
                 torch.cuda.synchronize()
                 cache_times.append(time.perf_counter() - t0)
@@ -316,12 +371,12 @@ def _bench(work, cache_dir, reps=3):
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     sub = p.add_subparsers(dest="cmd", required=True)
-    b = sub.add_parser("build"); b.add_argument("--work", required=True); b.add_argument("--out", required=True)
+    b = sub.add_parser("build"); b.add_argument("--work", required=True); b.add_argument("--out", required=True); b.add_argument("--seed", type=int, default=20261015)
     v = sub.add_parser("verify"); v.add_argument("--work", required=True); v.add_argument("--cache", required=True)
     m = sub.add_parser("bench"); m.add_argument("--work", required=True); m.add_argument("--cache", required=True); m.add_argument("--reps", type=int, default=3)
     args = p.parse_args(argv)
     if args.cmd == "build":
-        print(json.dumps(build(args.work, args.out), indent=2))
+        print(json.dumps(build(args.work, args.out, seed=args.seed), indent=2))
     elif args.cmd == "verify":
         print(json.dumps(_verify(args.work, args.cache), indent=2))
     else:

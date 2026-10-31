@@ -11,12 +11,31 @@ the same PNGs twice. The cache is a single .npy plus a JSON manifest of file nam
 import argparse
 import json
 import os
+from pathlib import Path
 
 import numpy as np
 from PIL import Image
+from research.cache_integrity import sha256, source_identity
+
+
+def valid(work, out):
+    try:
+        root = Path(out)
+        manifest = json.loads((root / 'manifest.json').read_text())
+        payload = root / 'images_u8.npy'
+        return (manifest.get('schema_version') == 2
+                and manifest['source_fingerprint'] == source_identity(work)
+                and manifest['file_bytes'] == payload.stat().st_size
+                and manifest['content_sha256'] == sha256(payload))
+    except (OSError, ValueError, KeyError):
+        return False
 
 
 def build(work, out):
+    if valid(work, out):
+        manifest = json.loads((Path(out) / 'manifest.json').read_text())
+        (Path(out) / '_status.json').write_text(json.dumps(dict(status='reused'), indent=2))
+        return manifest
     images = os.path.join(work, "images")
     names = sorted(n for n in os.listdir(images) if os.path.splitext(n)[1].lower() in
                    (".png", ".jpg", ".jpeg"))
@@ -32,11 +51,15 @@ def build(work, out):
     data = np.stack(arrays, axis=0)
     os.makedirs(out, exist_ok=True)
     np.save(os.path.join(out, "images_u8.npy"), data)
-    manifest = dict(names=names, shape=[int(x) for x in data.shape[1:]],
+    payload = Path(out) / 'images_u8.npy'
+    manifest = dict(schema_version=2, names=names, shape=[int(x) for x in data.shape[1:]],
                     count=int(data.shape[0]), bytes=int(data.nbytes),
+                    source_fingerprint=source_identity(work), file_bytes=payload.stat().st_size,
+                    content_sha256=sha256(payload),
                     note="uint8 RGB, module-B reads these instead of decoding PNGs")
     with open(os.path.join(out, "manifest.json"), "w") as stream:
         json.dump(manifest, stream, indent=2)
+    (Path(out) / '_status.json').write_text(json.dumps(dict(status='built'), indent=2))
     print(json.dumps(dict(status="cached", count=manifest["count"], shape=manifest["shape"],
                           mb=round(data.nbytes / 1e6, 1)), indent=2))
     return manifest
@@ -47,6 +70,13 @@ class CachedImages:
 
     def __init__(self, cache_dir):
         manifest = json.load(open(os.path.join(cache_dir, "manifest.json")))
+        if manifest.get('schema_version') == 2:
+            payload = Path(cache_dir) / 'images_u8.npy'
+            if (payload.stat().st_size != manifest['file_bytes']
+                    or sha256(payload) != manifest['content_sha256']):
+                raise ValueError('Corrupt image cache; rebuild from prepared PNGs')
+        if len(set(manifest['names'])) != len(manifest['names']):
+            raise ValueError('Duplicate cached image names')
         self.index = {n: i for i, n in enumerate(manifest["names"])}
         self.data = np.load(os.path.join(cache_dir, "images_u8.npy"), mmap_mode="r")
 

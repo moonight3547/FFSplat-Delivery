@@ -77,7 +77,9 @@ def code_identity(root=REPO):
             pass
     files = ['run_pipeline.py', 'research/train_sweep.py', 'research/train_confirmed.py',
              'research/reference_native.py', 'research/vectorized_ply.py',
-             'research/perceptual_loss.py', 'research/resplat_variant.py']
+             'research/perceptual_loss.py', 'research/resplat_variant.py',
+             'research/stage1_prepare_parallel.py', 'research/scene_cache.py',
+             'research/image_cache.py', 'research/cache_rng.py', 'research/cache_integrity.py']
     return dict(git_commit=commit,
                 source_sha256={name: hashlib.sha256((root / name).read_bytes()).hexdigest()
                                for name in files if (root / name).is_file()})
@@ -97,6 +99,13 @@ def recipe_flags(args):
     return flags
 
 
+def a_command(runner, args, group, work):
+    entry = ([BASE / 'module_a/preprocess.py'] if args.a_workers == 1
+             else ['-m', 'research.stage1_prepare_parallel', '--workers', args.a_workers])
+    return runner.conda('resplat', *entry, '--scene_dir', args.scene, '--group', group,
+                        '--out', work, '--num_context', '16', '--llffhold', '8', '--max_resolution', '960')
+
+
 def b_command(runner, args, work, results, init_ply, budget=None, prune_keep=1.0):
     command = runner.conda(
         'fastgs', '-m', 'research.train_confirmed' if args.preset == 'confirmed'
@@ -106,7 +115,9 @@ def b_command(runner, args, work, results, init_ply, budget=None, prune_keep=1.0
         '--opacity_reset_interval', '0', '--densify_from_iter', max(20, args.b_iterations // 10),
         *recipe_flags(args), '--lambda_dssim', '0.6', '--scaling_lr', '0.01',
         '--realloc_frac', args.realloc_frac, '--realloc_at', max(1, args.b_iterations // 4),
-        '--image_cache', work / 'image_cache', '--record', results / 'module_b/train_record.json')
+        '--record', results / 'module_b/train_record.json')
+    if getattr(args, 'image_cache_used', True) and not args.scene_cache:
+        command += ['--image_cache', str(work / 'image_cache')]
     if args.preset == 'confirmed':
         command += ['--seed', str(args.seed), '--no_quick_test']
     if args.b_fraction is not None:
@@ -136,6 +147,7 @@ class Runner:
     def __init__(self, profile):
         self.profile = read(profile)
         self.stage_seconds = {}
+        self.optional_status = {}
 
     def conda(self, runtime, *argv):
         env = self.profile["environments"][runtime]
@@ -154,6 +166,18 @@ class Runner:
         self.stage_seconds[name] = time.perf_counter() - start
         return self.stage_seconds[name]
 
+    def optional(self, name, argv, log_dir):
+        began = time.perf_counter()
+        try:
+            self.run(name, argv, log_dir)
+            self.optional_status[name] = 'ok'
+            return True
+        except (OSError, subprocess.CalledProcessError) as error:
+            self.stage_seconds[name] = time.perf_counter() - began
+            self.optional_status[name] = 'failed:' + type(error).__name__
+            print(f'[{name}] optional cache unavailable; continuing with native loading', flush=True)
+            return False
+
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__,
@@ -164,6 +188,8 @@ def main(argv=None):
                         help='confirmed: BigD3500/VGG200/r0; legacy: original d7a3754 defaults')
     parser.add_argument('--seed', type=int, default=20261015)
     parser.add_argument('--describe', action='store_true', help='print resolved B command, without running')
+    parser.add_argument('--a-workers', type=int, choices=(1, 4, 8), default=None,
+                        help='pixel-identical image preparation workers; confirmed=4, legacy=1')
     parser.add_argument("--group", default="auto", choices=["auto", "dl3dv", "hw", "mipnerf360"],
                         help="dataset family; auto-detected from the scene path")
     parser.add_argument("--checkpoint", default=CHECKPOINT)
@@ -216,6 +242,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     legacy = args.preset == 'legacy'
+    if args.a_workers is None:
+        args.a_workers = 1 if legacy else 4
     if args.b_recipe is None:
         args.b_recipe = 'delivery' if legacy else 'bigd3500'
     if args.vgg_tail is None:
@@ -238,6 +266,8 @@ def main(argv=None):
         out = args.output.resolve()
         plan = dict(preset=args.preset, b_recipe=args.b_recipe, vgg_tail=args.vgg_tail,
                     realloc_frac=args.realloc_frac, seed=args.seed,
+                    a_workers=args.a_workers,
+                    module_a_argv=a_command(Runner(args.profile), args, args.group, out / 'work'),
                     timing_scope='internal' if legacy else 'complete_B_process',
                     module_b_argv=b_command(Runner(args.profile), args, out / 'work',
                         out / 'results', out / 'results/resplat/resplat_world.ply', args.budget_seconds))
@@ -268,13 +298,12 @@ def main(argv=None):
                     mid_prune=args.mid_prune, mid_prune_tau=args.mid_prune_tau,
                     mid_prune_keep=args.mid_prune_keep,
                     preset=args.preset, realloc_frac=args.realloc_frac, seed=args.seed if not legacy else 0,
+                    a_workers=args.a_workers,
                     timing_scope='internal' if legacy else 'complete_B_process', **code_identity())
     start_all = time.perf_counter()
 
     # ---- module A -----------------------------------------------------------
-    runner.run("module_a", runner.conda(
-        "resplat", BASE / "module_a/preprocess.py", "--scene_dir", args.scene, "--group", group,
-        "--out", work, "--num_context", "16", "--llffhold", "8", "--max_resolution", "960"), logs)
+    runner.run('module_a', a_command(runner, args, group, work), logs)
 
     # ---- reference budget ---------------------------------------------------
     if args.budget_seconds is not None:
@@ -308,13 +337,13 @@ def main(argv=None):
     # module-B budget). A is our own artifact, so we pre-decode it once; measured
     # +1.20 / +1.15 / +0.16 points on DL3DV / counter / hw with identical quality.
     cache_dir = work / "image_cache"
-    runner.run("image_cache", runner.conda(
+    args.image_cache_used = runner.optional("image_cache", runner.conda(
         "fastgs", "-m", "research.image_cache", "--work", work, "--out", cache_dir), logs)
     scene_cache_dir = work / "scene_tensor_cache"
     if args.scene_cache:
-        runner.run("scene_tensor_cache", runner.conda(
+        args.scene_cache = runner.optional("scene_tensor_cache", runner.conda(
             "fastgs", "-m", "research.scene_cache", "build",
-            "--work", work, "--out", scene_cache_dir), logs)
+            "--work", work, "--out", scene_cache_dir, '--seed', 0 if legacy else args.seed), logs)
 
     # ---- module B init ------------------------------------------------------
     # Matched 3-case A/B (research/experiments/init_ab3.sh): the raw ReSplat PLY
@@ -375,6 +404,7 @@ def main(argv=None):
                   b_iterations=iterations, b_stop_reason=record["stop_reason"],
                   b_gaussians=record["num_final_gaussians"],
                   stage_seconds=runner.stage_seconds,
+                  optional_stage_status=runner.optional_status,
                   total_wall_seconds=time.perf_counter() - start_all,
                   proxy_score=score,
                   artifacts=dict(ply=str(results / f"module_b/point_cloud/iteration_{iterations}/point_cloud.ply"),
