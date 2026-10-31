@@ -135,7 +135,8 @@ def main(argv=None):
         row=evaluate_case(group,scene,out,args.profile,args.device);cases.append(row)
         print(f"{group}/{scene}: {row['evaluation_status']}"+(f" — {row['error']}" if row['error'] else ''),flush=True)
     summary=write_summary(output_root,cases,scope,groups)
-    print(f"Evaluation: {summary['completed_cases']}/{summary['expected_cases']}; summary: {output_root/'summary.json'}",flush=True)
+    print(f"Evaluation {summary['status']}: {summary['completed_cases']}/{summary['expected_cases']} evaluated, "
+          f"{summary['valid_budget_cases']}/{summary['expected_cases']} within budget; summary: {output_root/'summary.json'}",flush=True)
     return 0 if summary['success'] else 1
 
 
