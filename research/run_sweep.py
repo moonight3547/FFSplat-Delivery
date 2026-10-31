@@ -127,12 +127,6 @@ def main(argv=None):
                         help="engineering audit: pure per-step eliminations")
     parser.add_argument("--scene-cache", default=None, dest="scene_cache",
                         help="A-side scene tensor cache dir (research.scene_cache)")
-    parser.add_argument("--gt-feature-cache", action="store_true", dest="gt_feature_cache",
-                        help="cache immutable GT VGG-LPIPS features during the tail")
-    parser.add_argument("--gt-feature-cache-views", type=int, default=None,
-                        dest="gt_feature_cache_views")
-    parser.add_argument("--lpips-timing", action="store_true", dest="lpips_timing",
-                        help="record per-step LPIPS GPU time via CUDA events")
     # ---- staged post-S continuation pass-through (optional; see train_sweep.py)
     parser.add_argument("--stage2-iters", type=int, default=None, dest="stage2_iters")
     parser.add_argument("--stage2-cams", type=int, default=None, dest="stage2_cams")
@@ -259,12 +253,6 @@ def main(argv=None):
         train_argv.append("--lean_step")
     if args.scene_cache:
         train_argv.extend(["--scene_cache", args.scene_cache])
-    if args.gt_feature_cache:
-        train_argv.append("--gt_feature_cache")
-    if args.gt_feature_cache_views is not None:
-        train_argv.extend(["--gt_feature_cache_views", str(args.gt_feature_cache_views)])
-    if args.lpips_timing:
-        train_argv.append("--lpips_timing")
     if args.residual_weight > 0:
         train_argv += ["--residual_weight", str(args.residual_weight)]
     if args.max_sh_degree < 3:
