@@ -1,0 +1,3 @@
+# The organizer's network dependencies, unchanged. CUDA packages are separate.
+-r ../resplat/requirements.txt
+rich==13.9.4

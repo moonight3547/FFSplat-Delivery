@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "lock_scope": "Direct package versions and Git source commits. Resolved transitive packages, Conda URLs and compiled extension SHA256 are recorded after installation; this file is not a wheel hash lock.",
+  "python": "3.12.10",
+  "conda_channel": "conda-forge",
+  "runtimes": {
+    "resplat": {"torch": "2.7.0", "torchvision": "0.22.0", "cuda": "12.8", "index_url": "https://download.pytorch.org/whl/cu128"},
+    "fastgs": {"torch": "2.4.0", "torchvision": "0.19.0", "cuda": "12.4", "index_url": "https://download.pytorch.org/whl/cu124"}
+  },
+  "sources": {
+    "gsplat": {"url": "https://github.com/nerfstudio-project/gsplat.git", "commit": "937e29912570c372bed6747a5c9bf85fed877bae", "version": "1.5.3"},
+    "fastgs": {"url": "https://github.com/fastgs/FastGS.git", "commit": "44e02a5c1d5e9ed64d2ecd4af1cbba14ac92150f"},
+    "official_adam": {"url": "https://github.com/nerficg-project/faster-gaussian-splatting.git", "commit": "d23bb784d8f19b2432d847b80418d56f0494f599", "component": "FasterGSCudaBackend.torch_bindings.adam.FusedAdam; installing it does not select the optimizer"}
+  },
+  "cuda_components": {
+    "12.4": {"channel": "nvidia/label/cuda-12.4.1", "packages": ["cuda-nvcc=12.4.131", "cuda-cudart-dev=12.4.127", "cuda-cudart=12.4.127", "cuda-cccl=12.4.127", "libcurand-dev=10.3.5.147", "libcurand=10.3.5.147"]},
+    "12.8": {"channel": "nvidia/label/cuda-12.8.0", "packages": ["cuda-nvcc=12.8.61", "cuda-cudart-dev=12.8.57", "cuda-cudart=12.8.57", "cuda-cccl=12.8.55", "libcurand-dev=10.3.9.55", "libcurand=10.3.9.55"]}
+  },
+  "primary_references": ["https://pytorch.org/get-started/previous-versions/", "https://docs.nvidia.com/cuda/cuda-installation-guide-linux/", "https://github.com/nerfstudio-project/gsplat/tree/v1.5.3"]
+}
