@@ -1,0 +1,277 @@
+{
+  "passed": true,
+  "fresh_models": 30,
+  "original_reference_models": 12,
+  "summary": {
+    "P1a": [
+      {
+        "setting": "V100/.1 original",
+        "models": 6,
+        "psnr": 24.502666666666666,
+        "ssim": 0.8043666666666667,
+        "lpips": 0.20475,
+        "Q80_from_mean_raw": 25.001466666666673,
+        "casewise_clipped_Q80_diagnostic": 25.001466666666673,
+        "points": 1187908.1666666667,
+        "internal": {
+          "B_seconds": 44.53616666666667,
+          "budget_valid": 6,
+          "TIME20": 13.551369738998746,
+          "B_only_work_total": 38.55283640566542
+        },
+        "process": {
+          "B_seconds": 47.70647162819902,
+          "budget_valid": 6,
+          "TIME20": 13.17368148927787,
+          "B_only_work_total": 38.17514815594454
+        }
+      },
+      {
+        "setting": "V150/.1 fresh",
+        "models": 6,
+        "psnr": 24.514666666666667,
+        "ssim": 0.8045,
+        "lpips": 0.2017,
+        "Q80_from_mean_raw": 25.631733333333337,
+        "casewise_clipped_Q80_diagnostic": 25.631733333333333,
+        "points": 1185882.5,
+        "internal": {
+          "B_seconds": 46.43333333333334,
+          "budget_valid": 6,
+          "TIME20": 13.18311534916595,
+          "B_only_work_total": 38.81484868249929
+        },
+        "process": {
+          "B_seconds": 49.70227361718813,
+          "budget_valid": 6,
+          "TIME20": 12.796256562395117,
+          "B_only_work_total": 38.42798989572845
+        }
+      },
+      {
+        "setting": "V200/.1 original",
+        "models": 6,
+        "psnr": 24.528000000000002,
+        "ssim": 0.8049,
+        "lpips": 0.19915000000000002,
+        "Q80_from_mean_raw": 26.184399999999997,
+        "casewise_clipped_Q80_diagnostic": 26.184400000000007,
+        "points": 1188211.1666666667,
+        "internal": {
+          "B_seconds": 47.981,
+          "budget_valid": 6,
+          "TIME20": 12.880443721745507,
+          "B_only_work_total": 39.064843721745504
+        },
+        "process": {
+          "B_seconds": 51.061232714292906,
+          "budget_valid": 6,
+          "TIME20": 12.536431255321105,
+          "B_only_work_total": 38.7208312553211
+        }
+      }
+    ],
+    "P1b": [
+      {
+        "setting": "D3500/V200/.1 fresh",
+        "models": 6,
+        "psnr": 24.537000000000003,
+        "ssim": 0.805,
+        "lpips": 0.19909999999999997,
+        "Q80_from_mean_raw": 26.209600000000016,
+        "casewise_clipped_Q80_diagnostic": 26.209600000000005,
+        "points": 1186384.1666666667,
+        "internal": {
+          "B_seconds": 47.99883333333333,
+          "budget_valid": 6,
+          "TIME20": 12.877008171691138,
+          "B_only_work_total": 39.086608171691154
+        },
+        "process": {
+          "B_seconds": 51.22807543538511,
+          "budget_valid": 6,
+          "TIME20": 12.50578928340684,
+          "B_only_work_total": 38.71538928340686
+        }
+      },
+      {
+        "setting": "D4000/V200/.1 fresh",
+        "models": 6,
+        "psnr": 24.483999999999998,
+        "ssim": 0.8046666666666668,
+        "lpips": 0.19938333333333333,
+        "Q80_from_mean_raw": 26.083866666666673,
+        "casewise_clipped_Q80_diagnostic": 26.08386666666667,
+        "points": 1207764.6666666667,
+        "internal": {
+          "B_seconds": 48.714166666666664,
+          "budget_valid": 6,
+          "TIME20": 12.740115735903032,
+          "B_only_work_total": 38.823982402569705
+        },
+        "process": {
+          "B_seconds": 51.94887972840419,
+          "budget_valid": 6,
+          "TIME20": 12.371090112942381,
+          "B_only_work_total": 38.454956779609056
+        }
+      }
+    ],
+    "P2": [
+      {
+        "setting": "V200/W075 fresh",
+        "models": 6,
+        "psnr": 24.5445,
+        "ssim": 0.8058000000000001,
+        "lpips": 0.20006666666666664,
+        "Q80_from_mean_raw": 26.08626666666668,
+        "casewise_clipped_Q80_diagnostic": 26.08626666666667,
+        "points": 1185746.0,
+        "internal": {
+          "B_seconds": 47.91866666666667,
+          "budget_valid": 6,
+          "TIME20": 12.892363230008366,
+          "B_only_work_total": 38.978629896675045
+        },
+        "process": {
+          "B_seconds": 51.15258739857624,
+          "budget_valid": 6,
+          "TIME20": 12.519543098045196,
+          "B_only_work_total": 38.60580976471188
+        }
+      },
+      {
+        "setting": "V200/.1 original",
+        "models": 6,
+        "psnr": 24.528000000000002,
+        "ssim": 0.8049,
+        "lpips": 0.19915000000000002,
+        "Q80_from_mean_raw": 26.184399999999997,
+        "casewise_clipped_Q80_diagnostic": 26.184400000000007,
+        "points": 1188211.1666666667,
+        "internal": {
+          "B_seconds": 47.981,
+          "budget_valid": 6,
+          "TIME20": 12.880443721745507,
+          "B_only_work_total": 39.064843721745504
+        },
+        "process": {
+          "B_seconds": 51.061232714292906,
+          "budget_valid": 6,
+          "TIME20": 12.536431255321105,
+          "B_only_work_total": 38.7208312553211
+        }
+      },
+      {
+        "setting": "V200/W125 fresh",
+        "models": 6,
+        "psnr": 24.491333333333333,
+        "ssim": 0.8036666666666666,
+        "lpips": 0.19899999999999998,
+        "Q80_from_mean_raw": 26.086400000000005,
+        "casewise_clipped_Q80_diagnostic": 26.0864,
+        "points": 1184648.5,
+        "internal": {
+          "B_seconds": 48.144,
+          "budget_valid": 6,
+          "TIME20": 12.84902859245085,
+          "B_only_work_total": 38.935428592450855
+        },
+        "process": {
+          "B_seconds": 51.38875104455898,
+          "budget_valid": 6,
+          "TIME20": 12.474940654329515,
+          "B_only_work_total": 38.56134065432952
+        }
+      }
+    ]
+  },
+  "paired_comparisons": {
+    "V150-vs-original100": {
+      "Q80_pair_wins": 6,
+      "delta_psnr": 0.01199999999999927,
+      "delta_ssim": 0.00013333333333333716,
+      "delta_lpips": -0.003049999999999997,
+      "delta_casewise_Q80": 0.6302666666666651,
+      "delta_complete_B": 1.897166666666666,
+      "delta_process_wall_B": 1.9958019889891148
+    },
+    "V150-vs-original200": {
+      "Q80_pair_wins": 0,
+      "delta_psnr": -0.013333333333333641,
+      "delta_ssim": -0.00040000000000001146,
+      "delta_lpips": 0.002550000000000006,
+      "delta_casewise_Q80": -0.5526666666666683,
+      "delta_complete_B": -1.5476666666666692,
+      "delta_process_wall_B": -1.358959097104768
+    },
+    "fresh3500-replication-vs-original": {
+      "Q80_pair_wins": 3,
+      "delta_psnr": 0.009000000000000341,
+      "delta_ssim": 9.999999999998899e-05,
+      "delta_lpips": -4.999999999999912e-05,
+      "delta_casewise_Q80": 0.025200000000000482,
+      "delta_complete_B": 0.01783333333333322,
+      "delta_process_wall_B": 0.16684272109220424
+    },
+    "W075-vs-fresh3500-diagnostic": {
+      "Q80_pair_wins": 2,
+      "delta_psnr": 0.0074999999999991,
+      "delta_ssim": 0.0008000000000000229,
+      "delta_lpips": 0.0009666666666666712,
+      "delta_casewise_Q80": -0.12333333333333485,
+      "delta_complete_B": -0.08016666666666812,
+      "delta_process_wall_B": -0.07548803680886824
+    },
+    "W075-vs-original100weight": {
+      "Q80_pair_wins": 3,
+      "delta_psnr": 0.016499999999999442,
+      "delta_ssim": 0.0009000000000000119,
+      "delta_lpips": 0.0009166666666666721,
+      "delta_casewise_Q80": -0.09813333333333436,
+      "delta_complete_B": -0.062333333333334906,
+      "delta_process_wall_B": 0.091354684283336
+    },
+    "D4000-vs-fresh3500": {
+      "Q80_pair_wins": 2,
+      "delta_psnr": -0.053000000000000824,
+      "delta_ssim": -0.00033333333333333365,
+      "delta_lpips": 0.0002833333333333345,
+      "delta_casewise_Q80": -0.12573333333333636,
+      "delta_complete_B": 0.71533333333333,
+      "delta_process_wall_B": 0.7208042930190762
+    },
+    "W125-vs-fresh3500-diagnostic": {
+      "Q80_pair_wins": 1,
+      "delta_psnr": -0.04566666666666682,
+      "delta_ssim": -0.001333333333333316,
+      "delta_lpips": -9.999999999999824e-05,
+      "delta_casewise_Q80": -0.12320000000000124,
+      "delta_complete_B": 0.14516666666666347,
+      "delta_process_wall_B": 0.16067560917387405
+    },
+    "W125-vs-original100weight": {
+      "Q80_pair_wins": 2,
+      "delta_psnr": -0.03666666666666648,
+      "delta_ssim": -0.001233333333333327,
+      "delta_lpips": -0.00014999999999999736,
+      "delta_casewise_Q80": -0.09800000000000075,
+      "delta_complete_B": 0.1629999999999967,
+      "delta_process_wall_B": 0.3275183302660783
+    }
+  },
+  "archive": {
+    "ordinary_files": 2760,
+    "bytes": 10874840043,
+    "removed_duplicate_PLY_PNG": 2270,
+    "freed_H3_bytes": 10851247901
+  },
+  "default_supported": "Big5k-D3500/VGG200/weight0.1; no experiment default changed by this report",
+  "aggregation": "For each setting, six raw P/S/L means -> Q80; mean of each model B/same-case same-GPU native -> TIME20; internal and process separately",
+  "source_commits": {
+    "training": "dee6f24641208fe638b79c45d78d02340da78cbb",
+    "receiver_and_relocation": "b924292d092828ad6149caa64648ed81f59f81d1",
+    "independent_audit": "b2df94fce6a84ff54053299b216e63b0f1a1a7fd"
+  },
+  "official_score": null
+}

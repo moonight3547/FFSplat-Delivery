@@ -1,0 +1,33 @@
+{
+  "scope": "Final30 compact report plus complete immutable audit; no raw PLY/PNG copied",
+  "files": {
+    "RESULTS.md": {
+      "bytes": 6397,
+      "SHA256": "2524c317b09d1bb3047b89bd526018c2c971f685c4486c0066cdc231429ec4b8"
+    },
+    "all30_metrics.csv": {
+      "bytes": 4753,
+      "SHA256": "d746cc47deb7b010f6f6d3aa70a2cf21e9057683842fba88da37399ba97775fc"
+    },
+    "independent-final-audit.json": {
+      "bytes": 1708819,
+      "SHA256": "2411142f0c58fc64b97adbd31bc5d7e40df879d43034e6b8f5ffaca29d827b20"
+    },
+    "macro-score-summary.json": {
+      "bytes": 9200,
+      "SHA256": "dd81178629ed7b0a7d6251334f30680fd6f51e1392aee0c74f432d7e17e87c7d"
+    },
+    "reuse-proof.json": {
+      "bytes": 210487,
+      "SHA256": "6d86839a7415c1f62de00f413d891882229d6ae357c7ed90615072a9edfc7994"
+    },
+    "smoke-proof.json": {
+      "bytes": 2518,
+      "SHA256": "5ec1e702ccc19fd2242b73037b9840d3d5206f76a38657fcd41acafc85fac91d"
+    },
+    "verification-summary.json": {
+      "bytes": 1467,
+      "SHA256": "e091488fbc6426bcfd8d2bef90ef0e077445f1f12edfc74cb6fa058d96572822"
+    }
+  }
+}

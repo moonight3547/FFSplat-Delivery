@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "fresh_models": 30,
+  "phase_counts": {
+    "P1a": 6,
+    "P1b": 12,
+    "P2": 12
+  },
+  "cases": [
+    "bicycle",
+    "dl0b",
+    "dl3e"
+  ],
+  "seeds": [
+    2,
+    3
+  ],
+  "same_case_seed_GPU": {
+    "dl3e": 0,
+    "dl0b": 1,
+    "bicycle": 3
+  },
+  "completed_GS_schedule_calls_each": 5000,
+  "D3500_actual_density_events": 29,
+  "D4000_actual_density_events": 34,
+  "D3500_actual_Adam": {
+    "five_FG": 4971,
+    "SH_rest": 305
+  },
+  "D4000_actual_Adam": {
+    "five_FG": 4966,
+    "SH_rest": 304
+  },
+  "TRAIN_master_step_by_step_equal": true,
+  "prepared_cache_R_SHA_before_after_equal": true,
+  "FP32_fullres_VGG_actual_weights_and_steps_checked": true,
+  "all_PLY_finite_before_archive_and_target_SHA_bound": true,
+  "all_official_TEST_views_and_PNG_sets_complete": true,
+  "archive_target_full_file_directory_set_SHA_bytes_reread": true,
+  "source_reverified_and_no_open_FD_before_only_duplicate_PLY_PNG_prune": true,
+  "original_dot1_PLY_records_rehashed": true,
+  "same_GPU_native_random30k_budget": true,
+  "all_new_models_internal_and_process_budget_valid": true,
+  "independent_audit_filename": "independent-final-audit.json",
+  "independent_audit_SHA256": "2411142f0c58fc64b97adbd31bc5d7e40df879d43034e6b8f5ffaca29d827b20",
+  "immutable_audit_code_commit": "b2df94fce6a84ff54053299b216e63b0f1a1a7fd",
+  "data_scope": "Three badcases times two seeds; working Q80+TIME20 proxy, not official13 score",
+  "official_score": null
+}

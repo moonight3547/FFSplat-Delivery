@@ -34,8 +34,8 @@ import time
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent
-DEFAULT_PROFILE = REPO / "competition/profiles/compshare-20261029.json"
-CHECKPOINT = "/workspace/organizer-assets/resplat-base-dl3dv-540x960-view16-a72dc6d0.pth"
+DEFAULT_PROFILE = REPO / "competition/profiles/delivery.json"
+CHECKPOINT = os.environ.get("FFSPLAT_CHECKPOINT", str(REPO / "resplat/pretrained/resplat-base-dl3dv-540x960-view16-a72dc6d0.pth"))
 BASE = REPO / "competition/upstream/baseline"
 
 

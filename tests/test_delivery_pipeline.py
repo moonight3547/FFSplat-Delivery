@@ -2,6 +2,8 @@
 import ast
 import json
 from pathlib import Path
+import subprocess
+import sys
 from types import SimpleNamespace
 
 import numpy as np
@@ -11,6 +13,7 @@ from plyfile import PlyData, PlyElement
 
 import run_pipeline as pipeline
 from research.vectorized_ply import save_ply_vectorized
+from research.delivery_entry import module_b_args
 
 
 def plan(tmp_path, *args):
@@ -41,6 +44,30 @@ def test_legacy_snapshot_stays_explicit(tmp_path):
     assert 'research.train_sweep' in argv and '--seed' not in argv
     assert argv[argv.index('--densify_until_iter') + 1] == '1250'
     assert '--limit_seconds' in argv
+
+
+def test_official_shaped_direct_b_defaults_match_pipeline(tmp_path):
+    direct = module_b_args(['-s', 'prepared', '-m', 'model', '--init_ply', 'init.ply'])
+    pipeline_args = plan(tmp_path)['module_b_argv']
+    for flag in ('--iterations', '--position_lr_max_steps', '--densify_from_iter',
+                 '--densify_until_iter', '--grad_abs_thresh', '--lambda_dssim',
+                 '--scaling_lr', '--realloc_frac', '--lpips_start', '--lpips_end', '--seed'):
+        assert direct[direct.index(flag) + 1] == pipeline_args[pipeline_args.index(flag) + 1]
+    assert direct[direct.index('--record') + 1] == 'model/train_record.json'
+
+
+def test_top_level_vendored_libraries_remain_byte_identical():
+    for name in ('baseline/fastgs', 'baseline/3dgs', 'resplat'):
+        source, mirror = pipeline.REPO / 'competition/upstream' / name, pipeline.REPO / name
+        for path in source.rglob('*'):
+            if path.is_file() and '__pycache__' not in path.parts and path.suffix != '.pyc':
+                assert (mirror / path.relative_to(source)).read_bytes() == path.read_bytes()
+
+
+def test_official_shaped_group_entry_can_preview_default_three_cases():
+    result = subprocess.run([sys.executable, str(pipeline.REPO / 'baseline/run_suite.py'), '--describe'],
+                            cwd=pipeline.REPO, capture_output=True, text=True, check=True)
+    assert result.stdout.count('"b_recipe": "bigd3500"') == 3
 
 
 @pytest.mark.parametrize('args', [('--b-iterations', '100'), ('--budget-seconds', 'nan'),

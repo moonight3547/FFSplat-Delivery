@@ -1,0 +1,14 @@
+{
+  "dl3dv": {
+    "scene": "001dccbc1f78146a9f03861026613d8e73f39f372b545b26118e37a23c740d5f",
+    "source": "datasets/examples/DL3DV"
+  },
+  "hw": {
+    "scene": "billboard",
+    "source": "datasets/examples/hw"
+  },
+  "mipnerf360": {
+    "scene": "counter",
+    "source": "datasets/examples/mipnerf360"
+  }
+}

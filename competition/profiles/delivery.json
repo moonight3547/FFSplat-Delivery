@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "profile": "delivery-portable",
+  "execution_os": "linux",
+  "device": "cuda:0",
+  "conda": "conda",
+  "environments": {
+    "resplat": "resplat",
+    "fastgs": "fastgs"
+  },
+  "environment": {
+    "OMP_NUM_THREADS": "8",
+    "OPENBLAS_NUM_THREADS": "8",
+    "MAX_JOBS": "4",
+    "NVIDIA_TF32_OVERRIDE": "0",
+    "QT_QPA_PLATFORM": "offscreen"
+  }
+}

@@ -1,6 +1,6 @@
 # FFSplat-Delivery 交接（2026-10-31）
 
-主仓：https://github.com/moonight3547/FFSplat-Delivery （private）。源 `45feb68` 保存在 `deepseek-testing-45feb68`；实际目录快照 `d7a3754` 保存在历史。DeepSeek 正在测试的本地原目录未被重写；Codex 在独立 worktree / `codex/delivery-hardening` 开发。
+主仓：https://github.com/moonight3547/FFSplat-Delivery （private）。源 `45feb68` 保存在 `deepseek-testing-45feb68`；实际目录快照 `d7a3754` 保存在历史。用户确认 DeepSeek 后续不再修改仓库，只由用户转达建议；Codex 负责实验裁决及最终 setting。原测试版本仍保存在历史，开发在独立 worktree 进行。
 
 用户已启用默认 **BigD3500 + VGG200**；confirmed 模式使用 r0、5000 步匹配 LR、foreach Adam、FP32、关闭 TF32、修正 SH 导出和无损 PLY。README 和 configs/confirmed_recipe.json 是当前入口；DELIVERY.md 的旧 clean13 是 legacy 证据，不能用于新配方成绩声明。
 

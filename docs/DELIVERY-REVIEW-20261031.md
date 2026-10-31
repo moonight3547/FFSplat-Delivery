@@ -23,6 +23,14 @@ competition/upstream 保持原样。已检查的 densify 参数传播及 native 
 
 ## 验证状态
 
-- CPU：65项通过，包含原始50项及新增命令/计时/不完整训练拒绝/PLY逐字节兼容测试；上游快照校验包含在原始测试中。
-- CUDA：待运行 H3 GPU2 的600步真实训练 smoke，检查实际200次VGG与优化器/精度/PLY审计；另以native短程核对 wrapper 不改变调用数。
+- CPU：68项通过，包含原始50项及新增命令/计时/不完整训练拒绝/PLY逐字节兼容/官方结构与三组预览测试；上游快照校验包含在原始测试中。
+- CUDA：H3 GPU2 / source407505c 的600步真实训练通过，实际 VGG401–600 共200次、foreach六组/FP32、.0008实际增密、native600有599调用；导出147,735,627字节PLY并由官方 renderer 重载，完整25张TEST及25张GT均输出。该600步检查缩短LR日程及VGG位置，只验证机制，不声称5K质量或最终TIME。见 records/delivery-runtime-gate-20261031。
 - 完整 A→R→B 和新默认的统一13例/同机native30K完整B预算：尚未完成，不宣称全局最优或51.153已复现。
+
+## 目录和后续版本
+
+官方仓 master HEAD实查仍为 cb29814af7e260f03f7565e6edadb35bf42c5a93。顶层新增完整 baseline/、resplat/ 实体目录；网络、FastGS 和3dgs库与受保护快照逐字节一致，入口脚本负责连接已审计的自有实现。原始快照未动，Git对象自动共享相同文件内容。默认环境 profile 改为可移植 conda/resplat/fastgs，默认权重路径与官方 resplat/pretrained 对齐。
+
+原目录后续13个未提交精简改动独立保存并push为 deepseek-final-working-snapshot / 7734515b9d7311d402fd1c677c1339cdb7879287。其r15、自动M1剪枝、scene-cache默认并非当前组合已验配方，未默认合入；历史代码及建议保留可审查，没有丢弃。用户已确认后续仅Codex修改仓库、依据实验决定最终setting。
+
+新增官方 Faster-GS Adam组合验证：D3500/5K/VGG200/.1/r0 固定，其余保持一致，foreach vs官方组件；3 badcase×2seed=12 fresh，完整B及同范围native预算。旧C0/VGG100微小净收益不能代替该验证。正式SH网格顺延，Adam默认不提前切换。

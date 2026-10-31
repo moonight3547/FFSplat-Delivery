@@ -1,0 +1,26 @@
+{
+  "trainer": "fastgs",
+  "init_mode": "random:99879",
+  "num_init_gaussians": 99879,
+  "num_final_gaussians": 99925,
+  "iterations": 600,
+  "mult": 0.5,
+  "num_train_views": 169,
+  "num_test_views": 25,
+  "scene_load_seconds": 6.53,
+  "init_seconds": 0.08,
+  "train_seconds": 2.11,
+  "total_seconds": 9.42,
+  "test_psnr_quick": null,
+  "runtime_audit": {
+    "optimizer_calls": 599,
+    "opacity_reset_steps": [],
+    "quick_test_disabled": true,
+    "source_sha256": "429257cb017b7ae29e58574738524c838f08391c7c0bd415af766e0b7ebcd641",
+    "optimizer": "native_unmodified",
+    "ply_backend": "native_unmodified",
+    "precision": "fp32",
+    "matmul_tf32": false,
+    "cudnn_tf32": false
+  }
+}

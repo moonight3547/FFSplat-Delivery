@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/moonight3547/FFSplat-Research",
+  "commit": "03bda662ca09b1bbc749f878e943519b950ad94c",
+  "report": "research/advisory/FASTER_GS_CVPR2026_COMPONENT_RESULTS_20261031.md",
+  "scope": "C0 plus VGG100; not BigD3500 VGG200 evidence"
+}
