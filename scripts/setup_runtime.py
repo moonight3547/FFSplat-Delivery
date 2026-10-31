@@ -172,8 +172,17 @@ class Installer:
         self.identity = identity
         if self.manifest_path.exists():
             self.manifest = read(self.manifest_path)
-            if not args.resume or self.manifest["identity"] != identity:
+            prior = json.loads(json.dumps(self.manifest["identity"]))
+            current = json.loads(json.dumps(identity))
+            old_installer = prior["source_sha256"].pop("scripts/setup_runtime.py")
+            new_installer = current["source_sha256"].pop("scripts/setup_runtime.py")
+            if not args.resume or prior != current:
                 raise FileExistsError("Existing installer root: use --resume only for the identical installer/lock/prefixes, or a fresh --root")
+            if old_installer != new_installer:
+                self.manifest.setdefault("installer_revisions", []).append({
+                    "original_sha256": old_installer, "resumed_sha256": new_installer,
+                    "unix": time.time(), "scope": "Installer-only repair; lock, dependencies, vendored build sources and prefixes unchanged"})
+            self.manifest["status"] = "building"
         else:
             for prefix in plan["prefixes"].values():
                 if Path(prefix).exists():
@@ -196,9 +205,11 @@ class Installer:
                         QT_QPA_PLATFORM="offscreen", BUILD_NO_CUDA="0")
         write(self.manifest_path, self.manifest)
 
-    def run(self, name, argv, *, cwd=None, env=None):
+    def run(self, name, argv, *, cwd=None, env=None, retries=1):
         previous = self.manifest["steps"].get(name)
         if previous and previous["status"] == "complete":
+            if previous["argv"] != list(map(str, argv)):
+                raise RuntimeError(f"Completed step command changed: {name}; use a fresh installer root")
             return
         for location in (self.root, *map(Path, self.plan["prefixes"].values())):
             if shutil.disk_usage(existing_parent(location)).free < 2 * GIB:
@@ -210,8 +221,20 @@ class Installer:
         print(json.dumps({"step": name, "argv": record["argv"], "log": str(log)}), flush=True)
         try:
             with log.open("a") as stream:
-                subprocess.run(record["argv"], cwd=cwd or REPO, env=env or self.env,
-                               stdout=stream, stderr=subprocess.STDOUT, check=True)
+                record["attempts"] = []
+                for attempt in range(1, retries + 1):
+                    row = {"attempt": attempt, "started_unix": time.time()}
+                    record["attempts"].append(row)
+                    try:
+                        subprocess.run(record["argv"], cwd=cwd or REPO, env=env or self.env,
+                                       stdout=stream, stderr=subprocess.STDOUT, check=True)
+                        row["status"] = "complete"
+                        break
+                    except subprocess.CalledProcessError:
+                        row["status"] = "failed"
+                        if attempt == retries:
+                            raise
+                        time.sleep(attempt)
         except BaseException:
             record["status"] = "failed_preserve_evidence"
             self.manifest["status"] = "failed_preserve_evidence"
@@ -226,9 +249,19 @@ class Installer:
         spec = self.plan["lock"]["sources"][name]
         destination = self.root / "sources" / name
         if not destination.exists():
-            self.run(f"{name}-clone", ["git", "clone", "--no-checkout", spec["url"], str(destination)])
+            self.run(f"{name}-init", ["git", "init", str(destination)])
+            self.run(f"{name}-remote", ["git", "remote", "add", "origin", spec["url"]], cwd=destination)
+        if not (destination / ".git").is_dir():
+            raise RuntimeError(f"Preserve incomplete source directory and select a fresh root: {destination}")
+        # Fetch the pin directly: no unrelated repository history/assets. TLS
+        # interruptions remain in the per-attempt log and are retried finitely.
+        self.run(f"{name}-fetch", ["git", "-c", "http.version=HTTP/1.1", "fetch", "--depth", "1", "origin", spec["commit"]],
+                 cwd=destination, retries=3)
+        if f"{name}-clone" in self.manifest["steps"] and self.manifest["steps"][f"{name}-clone"]["status"] != "complete":
+            self.manifest["steps"][f"{name}-clone"]["superseded_by"] = f"{name}-fetch"
         self.run(f"{name}-checkout", ["git", "checkout", "--detach", spec["commit"]], cwd=destination)
-        self.run(f"{name}-submodules", ["git", "submodule", "update", "--init", "--recursive"], cwd=destination)
+        self.run(f"{name}-submodules", ["git", "-c", "http.version=HTTP/1.1", "submodule", "update", "--init", "--recursive", "--depth", "1"],
+                 cwd=destination, retries=3)
         head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=destination, text=True).strip()
         if head != spec["commit"]:
             raise RuntimeError(f"Source commit mismatch: {name}")

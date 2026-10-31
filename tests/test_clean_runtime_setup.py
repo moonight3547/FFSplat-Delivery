@@ -90,3 +90,32 @@ def test_resume_does_not_repeat_successful_commands(planning,tmp_path,monkeypatc
     install.run('one',['true']);install.run('one',['true'])
     assert len(calls)==1
     assert json.loads(install.manifest_path.read_text())['steps']['one']['status']=='complete'
+
+
+def test_completed_command_cannot_silently_change_on_resume(planning,tmp_path,monkeypatch):
+    a=args(tmp_path);install=setup.Installer(a,setup.build_plan(a))
+    monkeypatch.setattr(setup.subprocess,'run',lambda *a,**k:None)
+    install.run('one',['true'])
+    with pytest.raises(RuntimeError,match='command changed'):
+        install.run('one',['true','different'])
+
+
+def test_resume_accepts_audited_installer_only_repair_but_not_dependency_change(planning,tmp_path):
+    a=args(tmp_path);plan=setup.build_plan(a);setup.Installer(a,plan)
+    a.resume=True
+    plan=setup.build_plan(a);plan['source_sha256']['scripts/setup_runtime.py']='new-installer-hash'
+    resumed=setup.Installer(a,plan)
+    assert resumed.manifest['installer_revisions'][-1]['resumed_sha256']=='new-installer-hash'
+    plan['source_sha256']['requirements/fastgs.txt']='different-dependency'
+    with pytest.raises(FileExistsError):setup.Installer(a,plan)
+
+
+def test_transient_git_error_is_bounded_and_recorded(planning,tmp_path,monkeypatch):
+    a=args(tmp_path);install=setup.Installer(a,setup.build_plan(a));calls=[]
+    def flaky(*argv,**kwargs):
+        calls.append(argv)
+        if len(calls)==1:raise setup.subprocess.CalledProcessError(128,argv[0])
+    monkeypatch.setattr(setup.subprocess,'run',flaky)
+    monkeypatch.setattr(setup.time,'sleep',lambda _:None)
+    install.run('fetch',['git','fetch'],retries=3)
+    assert [x['status'] for x in install.manifest['steps']['fetch']['attempts']]==['failed','complete']
