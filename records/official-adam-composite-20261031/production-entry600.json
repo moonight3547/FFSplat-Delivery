@@ -1,0 +1,145 @@
+{
+  "passed": true,
+  "source": "cc6556e2bde84903dda1b5e9cfa34b6ec0d090ef",
+  "completed_iterations": 600,
+  "VGG_calls": 200,
+  "backend": {
+    "requested": "official",
+    "actual": "official",
+    "actual_class": "FusedAdam",
+    "actual_module": "FasterGSCudaBackend.torch_bindings.adam",
+    "class_file": "/root/gpufree-data/codex/official-adam-production-helper-20261031-v2/site/FasterGSCudaBackend/torch_bindings/adam.py",
+    "class_SHA": "9ea0b47233f08dbf318bb60e693e3f5417d45f9c6107a7e4cdf5e3db60601ea6",
+    "extension_file": "/root/gpufree-data/codex/official-adam-production-helper-20261031-v2/site/FasterGSCudaBackend/_C.cpython-312-x86_64-linux-gnu.so",
+    "extension_SHA": "11e8598319e903fc59f9cd4d3a9f409a846012a47dd22bd724a42f969dda0f92",
+    "official_source_commit": "d23bb784d8f19b2432d847b80418d56f0494f599",
+    "official_source": "/root/gpufree-data/codex/official-adam-production-helper-20261031-v2/official",
+    "CUDA_source_SHA": "f7fed10a3d9f97b7392797272bff83d069e7e6a1d78c5e1725ec5726201ab237",
+    "install_manifest_SHA": "65ba2b6a9735cebb21e8f6d6ecb89e87748855f30f754a2d988ca86b8fd61dbf",
+    "build_flags": [
+      "-O3",
+      "-use_fast_math",
+      "-std=c++17",
+      "TORCH_CUDA_ARCH_LIST=8.6"
+    ],
+    "numerical_bitwise_equivalence_claim": false,
+    "Torch": "2.4.0+cu124",
+    "CUDA": "12.4",
+    "ABI": false,
+    "calls": {
+      "official_kernel": 3032,
+      "_multi_tensor_adam": 0,
+      "_single_tensor_adam": 0,
+      "_fused_adam": 0
+    },
+    "groups": {
+      "optimizer/xyz": {
+        "lr": 7.952791366577145e-06,
+        "eps": 1e-15,
+        "betas": [
+          0.9,
+          0.999
+        ],
+        "foreach": null,
+        "fused": null,
+        "state_step": 599.0,
+        "parameter_dtype": "torch.float32",
+        "parameter_device": "cuda:0"
+      },
+      "optimizer/f_dc": {
+        "lr": 0.0025,
+        "eps": 1e-15,
+        "betas": [
+          0.9,
+          0.999
+        ],
+        "foreach": null,
+        "fused": null,
+        "state_step": 599.0,
+        "parameter_dtype": "torch.float32",
+        "parameter_device": "cuda:0"
+      },
+      "optimizer/opacity": {
+        "lr": 0.025,
+        "eps": 1e-15,
+        "betas": [
+          0.9,
+          0.999
+        ],
+        "foreach": null,
+        "fused": null,
+        "state_step": 599.0,
+        "parameter_dtype": "torch.float32",
+        "parameter_device": "cuda:0"
+      },
+      "optimizer/scaling": {
+        "lr": 0.01,
+        "eps": 1e-15,
+        "betas": [
+          0.9,
+          0.999
+        ],
+        "foreach": null,
+        "fused": null,
+        "state_step": 599.0,
+        "parameter_dtype": "torch.float32",
+        "parameter_device": "cuda:0"
+      },
+      "optimizer/rotation": {
+        "lr": 0.001,
+        "eps": 1e-15,
+        "betas": [
+          0.9,
+          0.999
+        ],
+        "foreach": null,
+        "fused": null,
+        "state_step": 599.0,
+        "parameter_dtype": "torch.float32",
+        "parameter_device": "cuda:0"
+      },
+      "shoptimizer/f_rest": {
+        "lr": 0.00025,
+        "eps": 1e-15,
+        "betas": [
+          0.9,
+          0.999
+        ],
+        "foreach": null,
+        "fused": null,
+        "state_step": 37.0,
+        "parameter_dtype": "torch.float32",
+        "parameter_device": "cuda:0"
+      }
+    },
+    "optimizer_rebuilt": false,
+    "model_parameters_replaced_by_backend": false,
+    "schedule_or_gradient_accumulation_modified": false,
+    "explicit_foreach_fallback_available": true
+  },
+  "sampling": {
+    "render_calls": 600,
+    "density": [
+      {
+        "iteration": 600,
+        "cameras": [
+          "_DSC8722",
+          "_DSC8822",
+          "_DSC8764",
+          "_DSC8773",
+          "_DSC8780",
+          "_DSC8701",
+          "_DSC8742",
+          "_DSC8861",
+          "_DSC8734",
+          "_DSC8699"
+        ],
+        "rng_before": "fd6016c6ef7acac7ff42524e442c90b8e47a73a6154fe13de308ccbfb28c8e12",
+        "rng_after": "fd6016c6ef7acac7ff42524e442c90b8e47a73a6154fe13de308ccbfb28c8e12"
+      }
+    ],
+    "view_sequence_sha256": "31346163f0db3cf827ec02c39b9c766ac241b14f1f4db4272c4e8d602a49ee41"
+  },
+  "cache_used": true,
+  "scope": "production train_confirmed + official Adam + exact scene cache; TRAIN600; no TEST score"
+}

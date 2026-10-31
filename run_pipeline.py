@@ -34,7 +34,9 @@ import time
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent
-DEFAULT_PROFILE = REPO / "competition/profiles/delivery.json"
+DEFAULT_PROFILE = Path(os.environ.get('FFSPLAT_PROFILE',
+    str(REPO / '.runtime/profile.json' if (REPO / '.runtime/profile.json').is_file()
+        else REPO / 'competition/profiles/delivery.json')))
 CHECKPOINT = os.environ.get("FFSPLAT_CHECKPOINT", str(REPO / "resplat/pretrained/resplat-base-dl3dv-540x960-view16-a72dc6d0.pth"))
 ADAM_MANIFEST = os.environ.get('FFSPLAT_ADAM_MANIFEST', str(REPO / '.runtime/official-adam/manifest.json'))
 BASE = REPO / "competition/upstream/baseline"
@@ -110,6 +112,8 @@ def recipe_flags(args):
                   '--lpips_end', str(args.b_iterations)]
         if getattr(args, 'vgg_render_mult', None) is not None:
             flags += ['--lpips_render_mult', str(args.vgg_render_mult)]
+    if getattr(args, 'extra_l1_weight', 0):
+        flags += ['--extra_l1_weight', str(args.extra_l1_weight)]
     return flags
 
 
@@ -169,13 +173,25 @@ class Runner:
         self.optional_status = {}
 
     def conda(self, runtime, *argv):
-        env = self.profile["environments"][runtime]
-        return [self.profile["conda"], "run", "--no-capture-output", "-n", env, "python", *map(str, argv)]
+        env = str(self.profile["environments"][runtime])
+        selector = '-p' if Path(env).is_absolute() else '-n'
+        return [self.profile["conda"], "run", "--no-capture-output", selector, env, str(Path(env) / "bin/python") if selector == "-p" else "python", *map(str, argv)]
+
+    def environment_for(self, argv):
+        environment = os.environ.copy()
+        environment['PYTHONPATH'] = str(REPO)
+        environment.update(self.profile.get('environment', {}))
+        selector = '-p' if '-p' in argv[:6] else '-n'
+        if selector in argv[:6]:
+            target = argv[argv.index(selector) + 1]
+            for runtime, value in self.profile['environments'].items():
+                if str(value) == str(target):
+                    environment.update(self.profile.get('environment_by_runtime', {}).get(runtime, {}))
+                    break
+        return environment
 
     def run(self, name, argv, log_dir):
-        environment = os.environ.copy()
-        environment["PYTHONPATH"] = str(REPO)
-        environment.update(self.profile.get("environment", {}))
+        environment = self.environment_for(argv)
         log_dir.mkdir(parents=True, exist_ok=True)
         start = time.perf_counter()
         print(f"[{name}] " + " ".join(map(str, argv)), flush=True)
@@ -211,10 +227,12 @@ def main(argv=None):
                         help='pixel-identical image preparation workers; confirmed=4, legacy=1')
     parser.add_argument('--adam-backend', choices=('foreach', 'official'), default=None,
                         help='confirmed default official; explicit foreach reproduces the prior backend')
-    parser.add_argument('--adam-manifest', type=Path, default=Path(ADAM_MANIFEST),
+    parser.add_argument('--adam-manifest', type=Path, default=None,
                         help='pinned isolated installation manifest for official Adam')
     parser.add_argument('--vgg-render-mult', type=float, choices=(.5, 1.), default=None,
                         help='optional historical T branch; default reuses the photometric render')
+    parser.add_argument('--extra-l1-weight', type=float, default=None,
+                        help='confirmed default 1.0, legacy 0; uniform extra raw L1, never border weighting')
     parser.add_argument("--group", default="auto", choices=["auto", "dl3dv", "hw", "mipnerf360"],
                         help="dataset family; auto-detected from the scene path")
     parser.add_argument("--checkpoint", default=CHECKPOINT)
@@ -264,7 +282,10 @@ def main(argv=None):
     parser.add_argument("--mid-prune-keep", type=float, default=0.6,
                         dest="mid_prune_keep",
                         help="kept Gaussian fraction when the gate fires")
+    parser.add_argument("--skip-eval", action="store_true", help="train only; run baseline/run_eval.sh separately")
     args = parser.parse_args(argv)
+    if args.adam_manifest is None:
+        args.adam_manifest = Path(os.environ.get("FFSPLAT_ADAM_MANIFEST") or read(args.profile).get("official_adam_manifest", ADAM_MANIFEST))
 
     legacy = args.preset == 'legacy'
     if args.a_workers is None:
@@ -273,6 +294,10 @@ def main(argv=None):
         args.adam_backend = 'foreach' if legacy else 'official'
     if args.scene_cache is None:
         args.scene_cache = not legacy
+    if args.extra_l1_weight is None:
+        args.extra_l1_weight = 0.0 if legacy else 1.0
+    if not math.isfinite(args.extra_l1_weight) or args.extra_l1_weight < 0:
+        parser.error('extra-l1-weight must be finite and nonnegative')
     if legacy and args.adam_backend != 'foreach':
         parser.error('legacy uses its unchanged backend; official Adam belongs to confirmed mode')
     if args.b_recipe is None:
@@ -299,6 +324,7 @@ def main(argv=None):
                     realloc_frac=args.realloc_frac, seed=args.seed,
                     a_workers=args.a_workers,
                     adam_backend=args.adam_backend, adam_manifest=str(args.adam_manifest),
+                    extra_l1_weight=args.extra_l1_weight,
                     module_a_argv=a_command(Runner(args.profile), args, args.group, out / 'work'),
                     timing_scope='internal' if legacy else 'complete_B_process',
                     module_b_argv=b_command(Runner(args.profile), args, out / 'work',
@@ -337,6 +363,7 @@ def main(argv=None):
                     preset=args.preset, realloc_frac=args.realloc_frac, seed=args.seed if not legacy else 0,
                     a_workers=args.a_workers,
                     adam_backend=args.adam_backend, adam_manifest=str(args.adam_manifest),
+                    extra_l1_weight=args.extra_l1_weight,
                     checkpoint_identity=checkpoint_identity,
                     timing_scope='internal' if legacy else 'complete_B_process', **code_identity())
     start_all = time.perf_counter()
@@ -421,20 +448,23 @@ def main(argv=None):
     validate_completion(args, record)
     iterations = record["completed_iterations"]
 
-    # ---- render + metrics ---------------------------------------------------
-    runner.run("render", runner.conda(
-        "fastgs", BASE / "render_test.py", "-s", work, "-m", results / "module_b",
-        "--backend", "fastgs", "--iteration", iterations, "--eval", "-r", "1",
-        "--sh_degree", "3", "--quiet"), logs)
-    runner.run("metrics", runner.conda(
-        "resplat", BASE / "evaluate.py", "--model_path", results / "module_b",
-        "--device", args.device), logs)
+    metrics = None
+    if not args.skip_eval:
+        runner.run("render", runner.conda(
+            "fastgs", BASE / "render_test.py", "-s", work, "-m", results / "module_b",
+            "--backend", "fastgs", "--iteration", iterations, "--eval", "-r", "1",
+            "--sh_degree", "3", "--quiet"), logs)
+        runner.run("metrics", runner.conda(
+            "resplat", BASE / "evaluate.py", "--model_path", results / "module_b",
+            "--device", args.device), logs)
 
-    metrics = read(results / "module_b/metrics.json")["mean"]
+        metrics = read(results / "module_b/metrics.json")["mean"]
     b_seconds = (record["total_seconds"] if legacy else
                  runner.stage_seconds["module_b"] + runner.stage_seconds.get("prune_gate", 0.0))
-    score = proxy(metrics["psnr"], metrics["ssim"], metrics["lpips"], b_seconds, budget)
+    score = None if metrics is None else proxy(metrics["psnr"], metrics["ssim"], metrics["lpips"], b_seconds, budget)
     report = dict(identity=identity, metrics=metrics, budget_seconds=budget,
+                  status="trained" if args.skip_eval else "complete",
+                  evaluation_status="pending" if args.skip_eval else "complete",
                   mid_prune=mid_prune,
                   budget_source=budget_source, b_seconds=b_seconds,
                   timing_scope=identity["timing_scope"],
@@ -450,8 +480,8 @@ def main(argv=None):
                                  renders=str(results / "module_b/test_renders"),
                                  metrics=str(results / "module_b/metrics.json")))
     write(out / "report.json", report)
-    print(json.dumps(dict(psnr=metrics["psnr"], ssim=metrics["ssim"], lpips=metrics["lpips"],
-                          b_seconds=b_seconds, budget=budget, score=score["total"],
+    print(json.dumps(dict(metrics=metrics, b_seconds=b_seconds, budget=budget,
+                          score=None if score is None else score["total"],
                           report=str(out / "report.json")), indent=2))
     return report
 

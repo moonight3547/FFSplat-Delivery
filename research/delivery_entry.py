@@ -22,6 +22,7 @@ def module_b_args(argv):
                 '--lambda_dssim', '0.6', '--scaling_lr', '0.01', '--realloc_frac', '0.0',
                 '--sh_degree', '3',
                 '--adam-backend', 'official', '--adam-manifest', str(ADAM_MANIFEST),
+                '--extra_l1_weight', '1.0',
                 '--seed', '20261015', '--record', str(Path(args.model_path) / 'train_record.json')]
     defaults += recipe_flags(SimpleNamespace(b_recipe='bigd3500', b_iterations=args.iterations,
                                             vgg_tail=min(200, args.iterations)))

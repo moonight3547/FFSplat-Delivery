@@ -1,5 +1,5 @@
 {
-  "recipe_id": "uniform16-resplat-fixed-big5k-d3500-vgg200-w01-foreach-vector-v1",
+  "recipe_id": "uniform16-resplat-fixed-big5k-d3500-vgg200-w01-official-adam-uniform-l1-v2",
   "status": "default enabled by user; verification scope tracked in docs/DELIVERY-REVIEW-20261031.md",
   "confirmed_at_timezone": "Asia/Shanghai",
   "date": "2026-10-31",
@@ -38,8 +38,8 @@
     "sh_degree": 3,
     "SH_rest_update_interval": 16,
     "SH_gradient_accumulation": "original semantics retained",
-    "optimizer": "torch Adam foreach explicitly enabled",
-    "optimizer_fused": false,
+    "optimizer": "official Faster-GS CUDA Adam, pinned installation manifest required",
+    "optimizer_fused": true,
     "lpips_net": "vgg",
     "lpips_weight": 0.1,
     "lpips_start": 4801,
@@ -50,12 +50,16 @@
     "autocast": false,
     "matmul_TF32": false,
     "cudnn_TF32": false,
-    "train_view_sampling": "uniform random without replacement; frozen master sequence for paired research"
+    "train_view_sampling": "uniform random without replacement; frozen master sequence for paired research",
+    "extra_l1_weight": 1.0,
+    "photometric_loss": "1.4 * raw L1 + 0.6 * (1 - SSIM); VGG tail unchanged"
   },
   "engineering": {
     "image_cache": "lossless pixel-equivalent",
     "ply_writer": "lossless vectorized standard PLY",
-    "evaluation": "original official renderer, PSNR/SSIM/VGG-LPIPS; complete fixed TEST set"
+    "evaluation": "original official renderer, PSNR/SSIM/VGG-LPIPS; complete fixed TEST set",
+    "scene_cache": "exact scene cache v3 with native loader fallback",
+    "A_image_workers": 4
   },
   "fixed_but_not_separately_proven_optimal": [
     "lambda_dssim=.6",
@@ -68,14 +72,13 @@
   "not_included": [
     "D4000: fresh VGG200 confirmation lower than D3500; retained for D3500/D4000 x r0/r15 follow-up",
     "6k/7.5k/10k longer training",
-    "extraL1/border weighting",
     "new A selection or B sampling",
-    "Faster-GS officialAdam unvalidated in this composite",
     "opacity decay/LiteGS",
     "global geometric scale or covariance calibration",
     "skybox shell",
     "gain/affine/Grid/PPISP",
-    "new SH cadence"
+    "new SH cadence",
+    "border-weighted EDGE"
   ],
   "evidence": {
     "weight_final_commit": "e7c26d8",

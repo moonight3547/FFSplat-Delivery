@@ -26,6 +26,7 @@ def main():
         spec = scenes[group]
         family = Path(spec['source']).name
         command = [sys.executable, str(ROOT / 'run_pipeline.py'), '--group', group,
+                   '--skip-eval',
                    '--scene', str(args.data_root / family / spec['scene']),
                    '--output', str(args.output_root / group / spec['scene']),
                    '--checkpoint', args.checkpoint, '--profile', str(args.profile)]

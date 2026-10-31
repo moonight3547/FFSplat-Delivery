@@ -185,6 +185,8 @@ def main(argv=None):
                         help="last iteration applying --lpips_weight (inclusive)")
     parser.add_argument('--lpips_render_mult', type=float, choices=(.5, 1.), default=None,
                         help='optional historical T render for VGG only; None reuses the photometric render')
+    parser.add_argument('--extra_l1_weight', type=float, default=0.0,
+                        help='uniform extra raw L1, added without renormalizing the original objective')
     # ---- optional staged continuation after the phase-1 delivery run (~S=5000).
     # Defaults keep phase 1 byte-identical to the delivery recipe; the stages only
     # run when the caller opts in.  See records/STAGED-LOSS-20261030.md.
@@ -672,6 +674,7 @@ def main(argv=None):
         gt_image = (viewpoint_cam.original_image if args.lean_step
                     else viewpoint_cam.original_image.cuda())
         Ll1 = l1_loss(image, gt_image)
+        raw_l1 = Ll1
         if FUSED_SSIM_AVAILABLE:
             ssim_value = fast_ssim(image.unsqueeze(0), gt_image.unsqueeze(0))
         else:
@@ -690,6 +693,9 @@ def main(argv=None):
             loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim_value)
         else:
             loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim_value)
+        if args.extra_l1_weight:
+            from research.photometric_loss import add_uniform_l1
+            loss = add_uniform_l1(loss, raw_l1, args.extra_l1_weight)
         if (perceptual is not None and args.lpips_start <= iteration <= args.lpips_end
                 and iteration % args.lpips_every == 0):
             from research.perceptual_render import image_for_perceptual
@@ -1214,6 +1220,7 @@ def main(argv=None):
                       opacity_reset_interval=opt.opacity_reset_interval,
                       mult=opt.mult, lambda_dssim=opt.lambda_dssim,
                       scaling_lr=opt.scaling_lr, opacity_lr=opt.opacity_lr,
+                      extra_l1_weight=args.extra_l1_weight,
                       position_lr_delay_mult=opt.position_lr_delay_mult,
                       no_densify=args.no_densify, seed=args.seed,
                       res_scales=scales, res_until=cuts,
