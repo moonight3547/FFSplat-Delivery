@@ -101,6 +101,28 @@ def runtime_header_paths(prefix, cuda_home):
     return os.pathsep.join(map(str, [Path(cuda_home) / "include", *sorted(base.glob("*/include"))]))
 
 
+def same_completed_command(previous, current, source_hashes):
+    """Allow a relocated checkout only for byte-identical locked requirements.
+
+    Prefixes, output/build paths and all other arguments remain exact. This
+    permits a production setup wrapper to verify the same owned installation
+    initially created from a separately pinned installer checkout.
+    """
+    if len(previous) != len(current):
+        return False
+    allowed = ("requirements/build.txt", "requirements/resplat.txt", "requirements/fastgs.txt")
+    for old, new in zip(previous, current):
+        if old == new:
+            continue
+        relative = next((name for name in allowed if old.endswith("/" + name) and new.endswith("/" + name)), None)
+        if relative is None or relative not in source_hashes:
+            return False
+        paths = [Path(old), Path(new)]
+        if not all(p.is_absolute() and p.is_file() and digest(p) == source_hashes[relative] for p in paths):
+            return False
+    return True
+
+
 def find_toolkit(version, explicit=None):
     if explicit:
         home = Path(explicit).resolve()
@@ -220,9 +242,12 @@ class Installer:
     def run(self, name, argv, *, cwd=None, env=None, retries=1):
         previous = self.manifest["steps"].get(name)
         if previous and previous["status"] == "complete":
-            if previous["argv"] != list(map(str, argv)):
+            acceptance = name.endswith(("-doctor", "-verify"))
+            if not acceptance and not same_completed_command(previous["argv"], list(map(str, argv)), self.identity["source_sha256"]):
                 raise RuntimeError(f"Completed step command changed: {name}; use a fresh installer root")
-            return
+            if not acceptance:
+                return
+            self.manifest.setdefault("step_history", []).append(dict(step=name, record=json.loads(json.dumps(previous))))
         for location in (self.root, *map(Path, self.plan["prefixes"].values())):
             if shutil.disk_usage(existing_parent(location)).free < 2 * GIB:
                 raise RuntimeError(f"Filesystem buffer below 2GiB before {name}: {location}; preserve partial install")

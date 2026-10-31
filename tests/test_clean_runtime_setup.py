@@ -119,3 +119,22 @@ def test_transient_git_error_is_bounded_and_recorded(planning,tmp_path,monkeypat
     monkeypatch.setattr(setup.time,'sleep',lambda _:None)
     install.run('fetch',['git','fetch'],retries=3)
     assert [x['status'] for x in install.manifest['steps']['fetch']['attempts']]==['failed','complete']
+
+
+def test_relocated_checkout_requires_actual_identical_locked_bytes(tmp_path):
+    old=tmp_path/'old/requirements/build.txt';new=tmp_path/'production/requirements/build.txt'
+    for p in (old,new):p.parent.mkdir(parents=True);p.write_text('setuptools==75.8.0\n')
+    hashes={'requirements/build.txt':setup.digest(old)}
+    assert setup.same_completed_command(['pip','-r',str(old)],['pip','-r',str(new)],hashes)
+    new.write_text('setuptools==80.0.0\n')
+    assert not setup.same_completed_command(['pip','-r',str(old)],['pip','-r',str(new)],hashes)
+    assert not setup.same_completed_command(['pip','-p','/old/env'],['pip','-p','/new/env'],hashes)
+
+
+def test_acceptance_checks_are_rerun_from_the_current_checkout(planning,tmp_path,monkeypatch):
+    a=args(tmp_path);install=setup.Installer(a,setup.build_plan(a));calls=[]
+    monkeypatch.setattr(setup.subprocess,'run',lambda *a,**k:calls.append(a))
+    install.run('resplat-doctor',['python','old-doctor'])
+    install.run('resplat-doctor',['python','new-doctor'])
+    assert len(calls)==2
+    assert install.manifest['step_history'][0]['record']['argv']==['python','old-doctor']
